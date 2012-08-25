@@ -88,6 +88,10 @@ public final class GameBoard {
 		return skillDecks.get(skillColor).size() == 0;
 	}
 	
+	public List<PlayerBoard> getPlayers() {
+		return Collections.unmodifiableList( players );
+	}
+	
 	
 	public void drawEnvironment() {
 		environmentDiscardDeck.add(currentEnvironment);

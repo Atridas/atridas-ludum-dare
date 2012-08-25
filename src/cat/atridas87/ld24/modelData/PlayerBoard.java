@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import cat.atridas87.ld24.render.ImageManager;
+
 public final class PlayerBoard {
 
 	private final HashSet<Creature> creatures = new HashSet<>();
@@ -52,5 +54,64 @@ public final class PlayerBoard {
 		creatureSkills.get(creature).add(card);
 	}
 	
+	public void drawCreatures(float x, float y, float w, float h) {
+		ImageManager im = ImageManager.getInstance();
+		
+		float hUnit = w / 8;
+		float vUnit = h / 7;
+		
+		float cardSizeW = w / (creatures.size() + 1);
+		float cardSizeH = cardSizeW * 3 / 2;
+		
+		float interCardW = cardSizeW / (creatures.size() + 1);
+		
+		float posX = x + interCardW;
+		for(Creature creature : creatures) {
+			float posY = y + 2 * vUnit - cardSizeW;
+			
+			im.getCreatureImage(creature).draw(posX, posY, cardSizeW, cardSizeW);
+			
+			float interCardH;
+			ArrayList<SkillCard> skills = creatureSkills.get(creature);
+			int numSkills = skills.size();
+			if(numSkills > 0) {
+				interCardH = 2.5f * vUnit / numSkills; 
+			} else {
+				interCardH = 0;
+			}
+			
+			posY = y + 2.5f * vUnit;
+			
+			for(SkillCard card : skills) {
+				card.draw(posX, posY, cardSizeW, cardSizeH);
+				posY += interCardH;
+			}
+			
+			posX += interCardW + cardSizeW;
+		}
+		
+	}
+	
+	public Creature creatureHitTest(int x, int y, int w, int h, int mouseX, int mouseY) {
+		//float hUnit = w / 8;
+		float vUnit = h / 7;
+		
+		float cardSizeW = w / (creatures.size() + 1);
+		//float cardSizeH = cardSizeW * 3 / 2;
+		
+		float interCardW = cardSizeW / (creatures.size() + 1);
+		
+		float posX = x + interCardW;
+		for(Creature creature : creatures) {
+			float posY = y + 2 * vUnit - cardSizeW;
+			
+			if(mouseX >= posX && mouseY >= posY) {
+				if(mouseX <= posX + cardSizeW && mouseY <= posY + cardSizeW) {
+					return creature;
+				}
+			}
+		}
+		return null;
+	}
 	
 }

@@ -7,6 +7,7 @@ public abstract class Resources {
 
 	public static enum State
 	{
-		GAMEPLAY_STATE;
+		EMPTY_STATE,
+		NEW_GAME_STATE_1,
 	}
 }

@@ -4,6 +4,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import cat.atridas87.ld24.modelData.Attribute;
+import cat.atridas87.ld24.modelData.Creature;
 import cat.atridas87.ld24.modelData.EnvironmentCard.EnvironmentType;
 import cat.atridas87.ld24.modelData.SkillCard.SkillColor;
 
@@ -15,6 +16,10 @@ public final class ImageManager {
 	private Image redBackSide, greenBackSide, blueBackSide, yellowBackSide;
 	
 	private Image period1Background, period2Background, periodChangeBackground, environmentBackSide;
+	
+	private Image background;
+	
+	private Image[] creatures;
 	
 	public void init() throws SlickException {
 		strength = new Image("resources/images/skill icons/strength skill.png");
@@ -39,6 +44,13 @@ public final class ImageManager {
 		period2Background = new Image("resources/images/card backgrounds/period2 card.png");
 		periodChangeBackground = new Image("resources/images/card backgrounds/change to phase 2 card.png");
 		environmentBackSide = new Image("resources/images/card backgrounds/environment card back side.png");
+	
+		background = new Image("resources/images/Vintage_Background_For_Portraits.png");
+		
+		creatures = new Image[Creature.values().length];
+		for(int i = 0; i < Creature.values().length; i++) {
+			creatures[i] = new Image("resources/images/creatures/creature " + i + ".png");
+		}
 	}
 	
 	public Image getCardBackground(SkillColor color) {
@@ -99,12 +111,20 @@ public final class ImageManager {
 		}
 	}
 	
+	public Image getCreatureImage(Creature creature) {
+		return creatures[creature.ordinal()];
+	}
+	
 	public Image getEnvironmentBackSide() {
 		return environmentBackSide;
 	}
 	
 	public Image getStar() {
 		return star;
+	}
+	
+	public Image getBackground() {
+		return background;
 	}
 	
 	private static ImageManager im = new ImageManager();
