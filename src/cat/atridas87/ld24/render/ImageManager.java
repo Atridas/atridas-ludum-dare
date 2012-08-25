@@ -10,6 +10,7 @@ import cat.atridas87.ld24.modelData.SkillCard.SkillColor;
 public final class ImageManager {
 
 	private Image strength, speed, intelligence, camouflage;
+	private Image star;
 	private Image red, green, blue, yellow;
 	
 	private Image period1Background, period2Background, periodChangeBackground;
@@ -19,6 +20,8 @@ public final class ImageManager {
 		speed = new Image("resources/images/skill icons/speed skill.png");
 		intelligence = new Image("resources/images/skill icons/intelligence skill.png");
 		camouflage = new Image("resources/images/skill icons/camouflage skill.png");
+		
+		star = new Image("resources/images/skill icons/star.png");
 		
 		red = new Image("resources/images/card backgrounds/red card.png");
 		green = new Image("resources/images/card backgrounds/green card.png");
@@ -72,6 +75,10 @@ public final class ImageManager {
 		default:
 			return null;
 		}
+	}
+	
+	public Image getStar() {
+		return star;
 	}
 	
 	private static ImageManager im = new ImageManager();

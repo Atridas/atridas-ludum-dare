@@ -282,6 +282,10 @@ public final class GameBoard {
 			card.initGraphics();
 		}
 		
-		// TODO
+		for(ArrayList<SkillCard> deck : skillDecks.values()) {
+			for(SkillCard card : deck) {
+				card.initGraphics();
+			}
+		}
 	}
 }
