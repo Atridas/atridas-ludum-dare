@@ -2,6 +2,7 @@ package cat.atridas87.ld24;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -81,11 +82,19 @@ public class NewGameState1 extends BasicGameState {
 	}
 
 	@Override
-	public void update(GameContainer container, StateBasedGame game, int delta)
+	public void update(GameContainer container, StateBasedGame _game, int delta)
 			throws SlickException {
 
 		if(skillsToPlace.size() == 0) {
-			// TODO go to next state
+			// we have added all skills
+			for(Entry<Creature, ArrayList<SkillCard>> entry : skillsPlaced.entrySet()) {
+				Creature creature = entry.getKey();
+				for(SkillCard card : entry.getValue()) {
+					game.mainPlayer.addCardToCreature(creature, card);
+				}
+			}
+			
+			game.enterState(Resources.State.GAME_PHASE_1.ordinal());
 		}
 
 	}

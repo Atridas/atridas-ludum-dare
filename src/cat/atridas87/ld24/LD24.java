@@ -21,6 +21,7 @@ public class LD24 extends StateBasedGame {
 
 		addState(new EmptyState());
 		addState(new NewGameState1());
+		addState(new GamePhase1());
 		
 		this.enterState(Resources.State.EMPTY_STATE.ordinal());
 	}
@@ -31,6 +32,7 @@ public class LD24 extends StateBasedGame {
 
 		this.getState(Resources.State.EMPTY_STATE.ordinal()).init(container, this);
 		this.getState(Resources.State.NEW_GAME_STATE_1.ordinal()).init(container, this);
+		this.getState(Resources.State.GAME_PHASE_1.ordinal()).init(container, this);
 	}
 
 	public static void main(String[] args) throws SlickException {

@@ -9,5 +9,6 @@ public abstract class Resources {
 	{
 		EMPTY_STATE,
 		NEW_GAME_STATE_1,
+		GAME_PHASE_1,
 	}
 }

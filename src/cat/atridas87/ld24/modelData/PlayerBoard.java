@@ -50,7 +50,7 @@ public final class PlayerBoard {
 		creatureSkills.get(creature).remove(card);
 	}
 	
-	public void addCardFromCreature(Creature creature, SkillCard card) {
+	public void addCardToCreature(Creature creature, SkillCard card) {
 		creatureSkills.get(creature).add(card);
 	}
 	
