@@ -4,27 +4,32 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public final class EnvironmentCard {
+import org.newdawn.slick.Image;
 
+import cat.atridas87.ld24.render.ImageManager;
+
+public final class EnvironmentCard {
 	
-	private final Type type;
+	private final EnvironmentType type;
 	private final Set<Attribute> attributes;
 
+	private Image backgroundImage;
+	private Image[] iconImages;
 	
 	public EnvironmentCard() {
-		type = Type.PERIOD_CHANGE;
+		type = EnvironmentType.PERIOD_CHANGE;
 		attributes = Collections.emptySet();
 	}
 	
 	public EnvironmentCard(Attribute attribute) {
-		type = Type.PERIOD_1;
+		type = EnvironmentType.PERIOD_1;
 		HashSet<Attribute> atts = new HashSet<>();
 		atts.add(attribute);
 		attributes = Collections.unmodifiableSet(atts);
 	}
 	
 	public EnvironmentCard(Attribute attribute, Attribute attribute2) {
-		type = Type.PERIOD_2;
+		type = EnvironmentType.PERIOD_2;
 		HashSet<Attribute> atts = new HashSet<>(2);
 		atts.add(attribute);
 		atts.add(attribute2);
@@ -33,9 +38,9 @@ public final class EnvironmentCard {
 	
 	public EnvironmentCard(boolean period1) {
 		if(period1) {
-			type = Type.PERIOD_1;
+			type = EnvironmentType.PERIOD_1;
 		} else {
-			type = Type.PERIOD_2;
+			type = EnvironmentType.PERIOD_2;
 		}
 		HashSet<Attribute> atts = new HashSet<>(Attribute.values().length);
 		for(Attribute attribute : Attribute.values()) {
@@ -44,7 +49,21 @@ public final class EnvironmentCard {
 		attributes = Collections.unmodifiableSet(atts);
 	}
 	
-	public Type getType() {
+	public void initGraphics() {
+		ImageManager im = ImageManager.getInstance();
+		backgroundImage = im.getEnvironmentBackground(type);
+		
+		iconImages = new Image[attributes.size()];
+		int i = 0;
+		for(Attribute attribute : attributes) {
+			iconImages[i] = im.getAttributeIcon(attribute);
+			
+			i++;
+		}
+		
+	}
+	
+	public EnvironmentType getType() {
 		return type;
 	}
 	
@@ -56,7 +75,61 @@ public final class EnvironmentCard {
 		return attributes.contains(attribute);
 	}
 	
-	
+	public void draw(int x, int y, int w, int h) {
+		backgroundImage.draw(x, y, w, h);
+		
+		int hUnit = w / 4;
+		int vUnit = h / 6;
+		
+		switch(iconImages.length) {
+		case 0:
+			break;
+		case 1:
+			iconImages[0].draw(
+					x + hUnit,
+					y + 3 * vUnit,
+					2 * hUnit,
+					2 * hUnit);
+			break;
+		case 2:
+			iconImages[0].draw(
+					x + hUnit / 2,
+					y + vUnit * 7 / 2,
+					hUnit * 5 / 4,
+					hUnit * 5 / 4);
+			iconImages[1].draw(
+					x + hUnit * 9 / 4,
+					y + vUnit * 7 / 2,
+					hUnit * 5 / 4,
+					hUnit * 5 / 4);
+			break;
+		case 4:
+			iconImages[0].draw(
+					x + hUnit / 2,
+					y + vUnit * 5 / 2,
+					hUnit * 5 / 4,
+					hUnit * 5 / 4);
+			iconImages[1].draw(
+					x + hUnit * 9 / 4,
+					y + vUnit * 5 / 2,
+					hUnit * 5 / 4,
+					hUnit * 5 / 4);
+			iconImages[2].draw(
+					x + hUnit / 2,
+					y + vUnit * 17 / 4,
+					hUnit * 5 / 4,
+					hUnit * 5 / 4);
+			iconImages[3].draw(
+					x + hUnit * 9 / 4,
+					y + vUnit * 17 / 4,
+					hUnit * 5 / 4,
+					hUnit * 5 / 4);
+			break;
+		default:
+			throw new IllegalStateException();
+		}
+		
+	}
 	
 	@Override
 	public int hashCode() {
@@ -88,7 +161,7 @@ public final class EnvironmentCard {
 	}
 	
 
-	public static enum Type {
+	public static enum EnvironmentType {
 		PERIOD_1,
 		PERIOD_2,
 		PERIOD_CHANGE

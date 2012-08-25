@@ -7,15 +7,17 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import cat.atridas87.ld24.modelData.GameBoard;
+import cat.atridas87.ld24.render.ImageManager;
+
 import static cat.atridas87.ld24.Resources.State.*;
 
 public class GameplayState extends BasicGameState {
 
 	private Image background, background2;
 	
-	private boolean pressed;
-	private boolean changeState;
-
+	private GameBoard gameBoard;
+	
 	@Override
 	public int getID() {
 		return GAMEPLAY_STATE.ordinal();
@@ -24,40 +26,39 @@ public class GameplayState extends BasicGameState {
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
+		ImageManager.getInstance().init();
+		
 		background  = new Image("resources/images/test.png");
 		background2 = new Image("resources/images/test2.png");
+		
+		
+		gameBoard = new GameBoard(0); //TODO rnd
+		
+		gameBoard.initGame();
+		
+		gameBoard.initGraphics();
 	}
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
 
-		if(!pressed)
-		{
-			background.draw(0, 0, container.getWidth(), container.getHeight());
-		} else {
-			background2.draw(0, 0, container.getWidth(), container.getHeight());
-		}
+		background.draw(0, 0, container.getWidth(), container.getHeight());
+		
+		gameBoard.getCurrentEnvironment().draw(300, 225, 100, 150);
+
 	}
 
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta)
 			throws SlickException {
-		if(changeState) {
-			game.enterState(GAMEPLAY_STATE_2.ordinal());
-			changeState = false;
-		}
+
 	}
 	
 	@Override
 	public void mouseClicked(int button, int x, int y, int clickCount) {
 		super.mouseClicked(button, x, y, clickCount);
-
-		if(button == 0)
-		{
-			pressed = !pressed;
-		} else if(button == 1){
-			changeState = true;
-		}
+		
+		
 	}
 }

@@ -14,7 +14,6 @@ public class LD24 extends StateBasedGame {
 		super(APP_NAME);
 
 		addState(new GameplayState());
-		addState(new GameplayState2());
 		
 		this.enterState(GAMEPLAY_STATE.ordinal());
 	}
@@ -22,7 +21,6 @@ public class LD24 extends StateBasedGame {
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {
 		this.getState(GAMEPLAY_STATE.ordinal()).init(container, this);
-		this.getState(GAMEPLAY_STATE_2.ordinal()).init(container, this);
 	}
 
 	public static void main(String[] args) throws SlickException {

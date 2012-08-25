@@ -270,4 +270,18 @@ public final class GameBoard {
 		
 		return deck;
 	}
+	
+	public void initGraphics() {
+		currentEnvironment.initGraphics();
+		nextEnvironment.initGraphics();
+		combatCard.initGraphics();
+		for(EnvironmentCard card : environmentDeck) {
+			card.initGraphics();
+		}
+		for(EnvironmentCard card : combatDeck) {
+			card.initGraphics();
+		}
+		
+		// TODO
+	}
 }
