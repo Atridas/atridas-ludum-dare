@@ -15,50 +15,98 @@ import cat.atridas87.ld24.modelData.SkillCard.SkillColor;
 import cat.atridas87.ld24.render.ImageManager;
 
 public class NewGameState1 extends BasicGameState {
-	
+
 	private ArrayList<SkillCard> skillsToPlace;
 	private HashMap<Creature, ArrayList<SkillCard>> skillsPlaced;
 
-	@Override
-	public void init(GameContainer container, StateBasedGame game)
-			throws SlickException {
-		// TODO Auto-generated method stub
+	private float w, h;
+	private LD24 game;
 
+	@Override
+	public void init(GameContainer container, StateBasedGame _game)
+			throws SlickException {
+		game = (LD24) _game;
 	}
 
 	@Override
 	public void render(GameContainer container, StateBasedGame _game, Graphics g)
 			throws SlickException {
 		ImageManager im = ImageManager.getInstance();
-		LD24 l_game = (LD24)_game;
 
-		float w = container.getWidth();
-		float h = container.getHeight();
-		
+		w = container.getWidth();
+		h = container.getHeight();
+
 		float hUnit = w / 16;
 		float vUnit = h / 12;
-		
+
 		im.getBackground().draw(0, 0, w, h);
-		
-		l_game.board.draw(0, 0, w, h);
-		
-		l_game.mainPlayer.drawCreatures(8 * hUnit, 5 * vUnit, 8 * hUnit, 7 * vUnit);
-		
+
+		game.board.draw(0, 0, w, h);
+
+		game.mainPlayer.drawCreatures(8 * hUnit, 5 * vUnit, 8 * hUnit,
+				7 * vUnit);
+
+		// skills to be placed
 		float posY = 9 * hUnit;
-		
-		for(SkillCard card : skillsToPlace) {
-			
-			im.getCardBackground(card.getSkillColor()).draw(5 * hUnit, posY, 2 * hUnit, 3 * hUnit);
-			
+
+		for (SkillCard card : skillsToPlace) {
+
+			im.getCardBackSide(card.getSkillColor()).draw(5 * hUnit, posY,
+					2 * hUnit, 3 * hUnit);
+
 			posY += 0.5f * hUnit;
+		}
+
+		// skills placed
+		float cardSizeW = 8 * hUnit / (4 + 1);
+		float cardSizeH = cardSizeW * 3 / 2;
+		
+		float interCardW = cardSizeW / (4 + 1);
+		
+		float posX = 8 * hUnit + interCardW;
+		for(Creature creature : game.mainPlayer.getCreatures()) {
+			float interCardH = 2.5f * vUnit / 5; 
+			
+			
+			posY = 5 * vUnit + 2.5f * vUnit;
+			
+			for(SkillCard card : skillsPlaced.get(creature)) {
+				//card.draw(posX, posY, cardSizeW, cardSizeH);
+				im.getCardBackSide(card.getSkillColor()).draw(posX, posY, cardSizeW, cardSizeH);
+				posY += interCardH;
+			}
+			
+			posX += interCardW + cardSizeW;
 		}
 	}
 
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta)
 			throws SlickException {
-		// TODO Auto-generated method stub
 
+		if(skillsToPlace.size() == 0) {
+			// TODO go to next state
+		}
+
+	}
+
+	public void mouseClicked(int button, int x, int y, int clickCount) {
+		if (button == 0 && clickCount == 1 && skillsToPlace.size() > 0) {
+
+			float hUnit = w / 16;
+			float vUnit = h / 12;
+
+			Creature creature = game.mainPlayer.creatureHitTest(8 * hUnit,
+					5 * vUnit, 8 * hUnit, 7 * vUnit, (float) x, (float) y);
+			
+			if(creature != null) {
+				ArrayList<SkillCard> skills = skillsPlaced.get(creature);
+				if(skills.size() < 5) {
+					skills.add(skillsToPlace.remove(0));
+				}
+			}
+			
+		}
 	}
 
 	@Override
@@ -67,20 +115,20 @@ public class NewGameState1 extends BasicGameState {
 	}
 
 	public void reset(LD24 game) {
-		skillsToPlace = new ArrayList<>( 4 * 5 );
+		skillsToPlace = new ArrayList<>(4 * 5);
 		skillsPlaced = new HashMap<>();
-		for(Creature creature : game.mainPlayer.getCreatures()) {
+		for (Creature creature : game.mainPlayer.getCreatures()) {
 			skillsPlaced.put(creature, new ArrayList<SkillCard>(5));
 		}
-		
-		for(SkillColor color : SkillColor.values()) {
-			
+
+		for (SkillColor color : SkillColor.values()) {
+
 			skillsToPlace.add(game.board.drawSkill(color));
 			skillsToPlace.add(game.board.drawSkill(color));
 			skillsToPlace.add(game.board.drawSkill(color));
 			skillsToPlace.add(game.board.drawSkill(color));
 			skillsToPlace.add(game.board.drawSkill(color));
-			
+
 		}
 	}
 }

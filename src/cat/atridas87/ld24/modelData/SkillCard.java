@@ -1,6 +1,5 @@
 package cat.atridas87.ld24.modelData;
 
-import java.awt.MultipleGradientPaint.ColorSpaceType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

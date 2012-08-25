@@ -57,7 +57,7 @@ public final class PlayerBoard {
 	public void drawCreatures(float x, float y, float w, float h) {
 		ImageManager im = ImageManager.getInstance();
 		
-		float hUnit = w / 8;
+		//float hUnit = w / 8;
 		float vUnit = h / 7;
 		
 		float cardSizeW = w / (creatures.size() + 1);
@@ -92,7 +92,7 @@ public final class PlayerBoard {
 		
 	}
 	
-	public Creature creatureHitTest(int x, int y, int w, int h, int mouseX, int mouseY) {
+	public Creature creatureHitTest(float x, float y, float w, float h, float mouseX, float mouseY) {
 		//float hUnit = w / 8;
 		float vUnit = h / 7;
 		
@@ -110,6 +110,7 @@ public final class PlayerBoard {
 					return creature;
 				}
 			}
+			posX += interCardW + cardSizeW;
 		}
 		return null;
 	}
