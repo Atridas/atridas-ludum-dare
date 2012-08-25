@@ -11,9 +11,9 @@ public final class SkillCard {
 	private final SkillColor skillColor;
 	private final List<Attribute> attributes;
 	
-	public SkillCard() {
+	public SkillCard(SkillColor color) {
 		type = Type.STAR;
-		skillColor = null;
+		skillColor = color;
 		attributes = Collections.emptyList();
 	}
 	
@@ -68,10 +68,16 @@ public final class SkillCard {
 	}
 	
 	public static enum SkillColor {
-		RED,
-		BLUE,
-		GREEN,
-		YELLOW
+		RED(Attribute.STRENGTH),
+		BLUE(Attribute.SPEED),
+		GREEN(Attribute.CAMOUFLAGE),
+		YELLOW(Attribute.INTELLIGENCE);
+		
+		public final Attribute mainAttribute;
+		
+		private SkillColor(Attribute _relatedAttribute) {
+			mainAttribute = _relatedAttribute;
+		}
 	}
 
 	@Override

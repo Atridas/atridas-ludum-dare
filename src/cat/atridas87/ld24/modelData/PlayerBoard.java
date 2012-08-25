@@ -30,6 +30,12 @@ public final class PlayerBoard {
 		return Collections.unmodifiableList(creatureSkills.get(creature));
 	}
 	
+	
+	public void addCreature(Creature creature) {
+		creatures.add(creature);
+		creatureSkills.put(creature, new ArrayList<SkillCard>());
+	}
+	
 	public void removeCardFromHand(SkillCard card) {
 		hand.remove(card);
 	}
