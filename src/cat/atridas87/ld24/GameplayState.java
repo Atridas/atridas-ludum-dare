@@ -17,7 +17,7 @@ import static cat.atridas87.ld24.Resources.State.*;
 
 public class GameplayState extends BasicGameState {
 
-	private Image background, background2;
+	private Image background;
 	
 	private GameBoard gameBoard;
 	
@@ -31,8 +31,7 @@ public class GameplayState extends BasicGameState {
 			throws SlickException {
 		ImageManager.getInstance().init();
 		
-		background  = new Image("resources/images/test.png");
-		background2 = new Image("resources/images/test2.png");
+		background  = new Image("resources/images/Vintage_Background_For_Portraits.png");
 		
 		
 		gameBoard = new GameBoard((new Random()).nextLong()); //TODO rnd
@@ -48,9 +47,7 @@ public class GameplayState extends BasicGameState {
 
 		background.draw(0, 0, container.getWidth(), container.getHeight());
 		
-		gameBoard.getCurrentEnvironment().draw(200, 225, 100, 150);
-
-		gameBoard.getSkillDeck(SkillColor.RED).get(0).draw(500, 225, 100, 150);
+		gameBoard.draw(0, 0, container.getWidth(), container.getHeight());
 	}
 
 	@Override

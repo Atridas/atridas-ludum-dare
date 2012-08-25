@@ -5,10 +5,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 
+import org.newdawn.slick.Image;
+
 import cat.atridas87.ld24.modelData.SkillCard.SkillColor;
+import cat.atridas87.ld24.render.ImageManager;
 
 public final class GameBoard {
 
@@ -285,6 +289,98 @@ public final class GameBoard {
 		for(ArrayList<SkillCard> deck : skillDecks.values()) {
 			for(SkillCard card : deck) {
 				card.initGraphics();
+			}
+		}
+	}
+	
+	public void draw(float x, float y, float w, float h) {
+		ImageManager im = ImageManager.getInstance();
+		
+		float hUnit = w / 16;
+		float vUnit = h / 12;
+
+		float mCardW = hUnit * 3 / 2;
+		float mCardH = hUnit * 2;
+		
+		// environment
+		
+		Image backSide = im.getEnvironmentBackSide();
+		{
+			float eDeckX = - hUnit;
+			float eDeckY = vUnit * 2;
+			for(@SuppressWarnings("unused") EnvironmentCard card : environmentDeck) {
+				backSide.draw(eDeckX, eDeckY, mCardW, mCardH);
+				eDeckX += hUnit / 20;
+				eDeckY -= hUnit / 20;
+			}
+		}
+		if(nextEnvironment != null) {
+			nextEnvironment.draw((int)hUnit * 5 / 4, (int)vUnit * 2, (int)mCardW, (int)mCardH);
+		}
+		if(currentEnvironment != null) {
+			currentEnvironment.draw((int)hUnit * 13 / 4, (int)vUnit * 2, (int)mCardW, (int)mCardH);
+		}
+		{
+			float eDeckX = hUnit * 21 / 4;
+			float eDeckY = vUnit * 2;
+			for(@SuppressWarnings("unused") EnvironmentCard card : environmentDiscardDeck) {
+				backSide.draw(eDeckX, eDeckY, mCardW, mCardH);
+				eDeckX += hUnit / 20;
+				eDeckY -= hUnit / 20;
+			}
+		}
+		
+		// combat
+
+		{
+			float eDeckX = - hUnit;
+			float eDeckY = vUnit * 5;
+			for(@SuppressWarnings("unused") EnvironmentCard card : combatDeck) {
+				backSide.draw(eDeckX, eDeckY, mCardW, mCardH);
+				eDeckX += hUnit / 20;
+				eDeckY -= hUnit / 20;
+			}
+		}
+		
+		if(combatCard != null) {
+			combatCard.draw((int)hUnit * 13 / 4, (int)vUnit * 5, (int)mCardW, (int)mCardH);
+		}
+		
+		{
+			float eDeckX = hUnit * 21 / 4;
+			float eDeckY = vUnit * 5;
+			for(@SuppressWarnings("unused") EnvironmentCard card : combatDiscardDeck) {
+				backSide.draw(eDeckX, eDeckY, mCardW, mCardH);
+				eDeckX += hUnit / 20;
+				eDeckY -= hUnit / 20;
+			}
+		}
+		
+		// skills
+		for(Entry<SkillColor, ArrayList<SkillCard>> deck : skillDecks.entrySet()) {
+			float sDeckX;
+			float sDeckY = vUnit * 2;
+			switch(deck.getKey()) {
+			case RED:
+				sDeckX = hUnit * 8;
+				break;
+			case GREEN:
+				sDeckX = hUnit * 10;
+				break;
+			case BLUE:
+				sDeckX = hUnit * 12;
+				break;
+			case YELLOW:
+				sDeckX = hUnit * 14;
+				break;
+			default:
+				throw new IllegalStateException();
+			}
+			backSide = im.getCardBackSide(deck.getKey());
+			for(@SuppressWarnings("unused") SkillCard card : deck.getValue()) {
+				backSide.draw(sDeckX, sDeckY, mCardW, mCardH);
+				sDeckX += hUnit / 100.f;
+				sDeckY -= hUnit / 100.f;
 			}
 		}
 	}

@@ -12,8 +12,9 @@ public final class ImageManager {
 	private Image strength, speed, intelligence, camouflage;
 	private Image star;
 	private Image red, green, blue, yellow;
+	private Image redBackSide, greenBackSide, blueBackSide, yellowBackSide;
 	
-	private Image period1Background, period2Background, periodChangeBackground;
+	private Image period1Background, period2Background, periodChangeBackground, environmentBackSide;
 	
 	public void init() throws SlickException {
 		strength = new Image("resources/images/skill icons/strength skill.png");
@@ -28,10 +29,16 @@ public final class ImageManager {
 		blue = new Image("resources/images/card backgrounds/blue card.png");
 		yellow = new Image("resources/images/card backgrounds/yellow card.png");
 		
+		redBackSide = new Image("resources/images/card backgrounds/red card back side.png");
+		greenBackSide = new Image("resources/images/card backgrounds/green card back side.png");
+		blueBackSide = new Image("resources/images/card backgrounds/blue card back side.png");
+		yellowBackSide = new Image("resources/images/card backgrounds/yellow card back side.png");
+		
 
 		period1Background = new Image("resources/images/card backgrounds/period1 card.png");
 		period2Background = new Image("resources/images/card backgrounds/period2 card.png");
 		periodChangeBackground = new Image("resources/images/card backgrounds/change to phase 2 card.png");
+		environmentBackSide = new Image("resources/images/card backgrounds/environment card back side.png");
 	}
 	
 	public Image getCardBackground(SkillColor color) {
@@ -44,6 +51,21 @@ public final class ImageManager {
 			return blue;
 		case YELLOW:
 			return yellow;
+		default:
+			return null;
+		}
+	}
+	
+	public Image getCardBackSide(SkillColor color) {
+		switch(color) {
+		case RED:
+			return redBackSide;
+		case GREEN:
+			return greenBackSide;
+		case BLUE:
+			return blueBackSide;
+		case YELLOW:
+			return yellowBackSide;
 		default:
 			return null;
 		}
@@ -75,6 +97,10 @@ public final class ImageManager {
 		default:
 			return null;
 		}
+	}
+	
+	public Image getEnvironmentBackSide() {
+		return environmentBackSide;
 	}
 	
 	public Image getStar() {
