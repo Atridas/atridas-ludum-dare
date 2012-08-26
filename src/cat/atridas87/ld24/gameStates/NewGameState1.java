@@ -136,6 +136,8 @@ public class NewGameState1 extends BasicGameState {
 			if (popupState == PopupState.FOURTH) {
 				// TODO
 			}
+		} else {
+			im.getInfo().draw(14.75f * hUnit, 0.25f * vUnit, hUnit, hUnit);
 		}
 	}
 
@@ -228,6 +230,9 @@ public class NewGameState1 extends BasicGameState {
 				default:
 					break;
 				}
+			} else if (popupState == PopupState.DISMISSED && x >= 14.75f * hUnit && y >= 0.25f * vUnit
+					&& x <= 15.75f * hUnit && y <= 1.25f * vUnit) {
+				popupState = PopupState.FIRST;
 			} else if (skillsToPlace.size() > 0) {
 
 				Creature creature = game.mainPlayer.creatureHitTest(8 * hUnit,

@@ -14,6 +14,7 @@ import cat.atridas87.ld24.ai.RandomAI;
 import cat.atridas87.ld24.gameStates.EnvironmentPhase;
 import cat.atridas87.ld24.gameStates.EmptyState;
 import cat.atridas87.ld24.gameStates.EvolutionPhase;
+import cat.atridas87.ld24.gameStates.FinalScreen;
 import cat.atridas87.ld24.gameStates.NewGameState1;
 import cat.atridas87.ld24.gameStates.RegenerationPhase;
 import cat.atridas87.ld24.modelData.GameBoard;
@@ -41,6 +42,7 @@ public class LD24 extends StateBasedGame {
 		addState(new EvolutionPhase());
 		addState(new EnvironmentPhase());
 		addState(new RegenerationPhase());
+		addState(new FinalScreen());
 		
 		this.enterState(EmptyState.ID);
 	}
@@ -54,6 +56,7 @@ public class LD24 extends StateBasedGame {
 		this.getState(EvolutionPhase.ID).init(container, this);
 		this.getState(EnvironmentPhase.ID).init(container, this);
 		this.getState(RegenerationPhase.ID).init(container, this);
+		this.getState(FinalScreen.ID).init(container, this);
 	}
 
 	public static void main(String[] args) throws SlickException {

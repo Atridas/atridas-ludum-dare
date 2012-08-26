@@ -77,28 +77,6 @@ public class RegenerationPhase extends BasicGameState {
 
 		game.mainPlayer.drawHand(0, 8 * vUnit, 8 * hUnit, 4 * vUnit);
 
-		// popup
-		if (popupState != PopupState.DISMISSED) {
-			String text;
-			if (popupState == PopupState.FIRST) {
-				text = "Here you will regenerate your creature.\n"
-						+ "First you will add 3 skill cards, then you will\n"
-						+ "draw cards based on your surviving creatures'\n"
-						+ "skills and finally you will add the last 2 cards."
-						+ "\n\n" + "Click here to show next.";
-			} else {
-				text = "You will choose 4 cards from the deck related to\n"
-						+ "your stronger creature (that with the most stars),\n"
-						+ "2 from the deck related to your 2nd creature and\n"
-						+ "2 from any deck." + "\n\n"
-						+ "Click here to dismiss.";
-			}
-
-			game.drawPopup(8 * hUnit, vUnit, 7 * hUnit, (7.f * 11.f / 20.f)
-					* hUnit, text);
-
-		}
-
 		int cardsAdded;
 		switch (actionState) {
 		case ADD_CARDS_1:
@@ -142,6 +120,30 @@ public class RegenerationPhase extends BasicGameState {
 
 				im.getStar().draw(sDeckX, sDeckY, hUnit * 0.5f, hUnit * 0.5f);
 			}
+		}
+
+		// popup
+		if (popupState != PopupState.DISMISSED) {
+			String text;
+			if (popupState == PopupState.FIRST) {
+				text = "Here you will regenerate your creature.\n"
+						+ "First you will add 3 skill cards, then you will\n"
+						+ "draw cards based on your surviving creatures'\n"
+						+ "skills and finally you will add the last 2 cards."
+						+ "\n\n" + "Click here to show next.";
+			} else {
+				text = "You will choose 4 cards from the deck related to\n"
+						+ "your stronger creature (that with the most stars),\n"
+						+ "2 from the deck related to your 2nd creature and\n"
+						+ "2 from any deck." + "\n\n"
+						+ "Click here to dismiss.";
+			}
+
+			game.drawPopup(8 * hUnit, vUnit, 7 * hUnit, (7.f * 11.f / 20.f)
+					* hUnit, text);
+
+		} else {
+			im.getInfo().draw(14.75f * hUnit, 0.25f * vUnit, hUnit, hUnit);
 		}
 	}
 
@@ -217,6 +219,9 @@ public class RegenerationPhase extends BasicGameState {
 				default:
 					break;
 				}
+			} else if (popupState == PopupState.DISMISSED && x >= 14.75f * hUnit && y >= 0.25f * vUnit
+					&& x <= 15.75f * hUnit && y <= 1.25f * vUnit) {
+				popupState = PopupState.FIRST;
 			} else if (actionState == ActionState.ADD_CARDS_1) {
 				SkillCard card = game.mainPlayer.useCardFromHand(0, 8 * vUnit,
 						hUnit, vUnit, x, y);
@@ -272,8 +277,6 @@ public class RegenerationPhase extends BasicGameState {
 							.addCardToCreature(regeneratedCreature, card);
 					if (game.mainPlayer.getCreatureSkills(regeneratedCreature)
 							.size() == 5) {
-
-						// TODO next state
 						doIA();
 						
 						game.board.doEnviromentalChangePhase();

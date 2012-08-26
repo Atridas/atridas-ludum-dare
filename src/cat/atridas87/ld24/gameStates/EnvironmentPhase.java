@@ -31,28 +31,26 @@ public final class EnvironmentPhase extends BasicGameState {
 	private final HashSet<Creature> lessAdaptedCreatures = new HashSet<>();
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void init(GameContainer container, StateBasedGame _game)
 			throws SlickException {
 		game = (LD24) _game;
+		try {
+			font = new UnicodeFont("resources/Font/accid___.ttf", 25,
+					false, false);// Create Instance
+			font.addAsciiGlyphs(); // Add Glyphs
+			font.addGlyphs(400, 600); // Add Glyphs
+			font.getEffects().add(new ColorEffect(java.awt.Color.WHITE)); // Add
+																			// Effects
+			font.loadGlyphs(); // Load Glyphs
+		} catch (SlickException e) {
+			throw new IllegalStateException(e);
+		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void render(GameContainer container, StateBasedGame _game, Graphics g)
 			throws SlickException {
-		if (font == null) {
-			try {
-				font = new UnicodeFont("resources/Font/accid___.ttf", 25,
-						false, false);// Create Instance
-				font.addAsciiGlyphs(); // Add Glyphs
-				font.addGlyphs(400, 600); // Add Glyphs
-				font.getEffects().add(new ColorEffect(java.awt.Color.WHITE)); // Add
-																				// Effects
-				font.loadGlyphs(); // Load Glyphs
-			} catch (SlickException e) {
-				throw new IllegalStateException(e);
-			}
-		}
 		ImageManager im = ImageManager.getInstance();
 
 		w = container.getWidth();
@@ -93,7 +91,7 @@ public final class EnvironmentPhase extends BasicGameState {
 			// next position
 			posX += interCardW + cardSizeW;
 		}
-
+		
 		// popup
 		if (popupState != PopupState.DISMISSED) {
 
@@ -104,6 +102,8 @@ public final class EnvironmentPhase extends BasicGameState {
 			game.drawPopup(8 * hUnit, vUnit, 7 * hUnit, (7.f * 11.f / 20.f)
 					* hUnit, text);
 
+		} else {
+			im.getInfo().draw(14.75f * hUnit, 0.25f * vUnit, hUnit, hUnit);
 		}
 	}
 
@@ -130,6 +130,9 @@ public final class EnvironmentPhase extends BasicGameState {
 				default:
 					break;
 				}
+			} else if (popupState == PopupState.DISMISSED && x >= 14.75f * hUnit && y >= 0.25f * vUnit
+					&& x <= 15.75f * hUnit && y <= 1.25f * vUnit) {
+				popupState = PopupState.FIRST;
 			} else {
 
 				// creatures
@@ -157,9 +160,14 @@ public final class EnvironmentPhase extends BasicGameState {
 							
 							doIA();
 							
-
-							((RegenerationPhase)game.getState(RegenerationPhase.ID)).enterPhase();
-							game.enterState(RegenerationPhase.ID);
+							if(game.board.getNextEnvironment() != null)
+							{
+								((RegenerationPhase)game.getState(RegenerationPhase.ID)).enterPhase();
+								game.enterState(RegenerationPhase.ID);
+							} else {
+								//((FinalScreen)game.getState(FinalScreen.ID)).enterPhase();
+								game.enterState(FinalScreen.ID);
+							}
 						}
 						// im.getCreatureImage(creature).draw(posX - cardSizeW *
 						// 0.125f,

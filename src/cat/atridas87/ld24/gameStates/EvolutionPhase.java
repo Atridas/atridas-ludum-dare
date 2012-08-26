@@ -98,6 +98,8 @@ public class EvolutionPhase extends BasicGameState {
 			game.drawPopup(8 * hUnit, vUnit, 7 * hUnit, (7.f * 11.f / 20.f)
 					* hUnit, text);
 
+		} else {
+			im.getInfo().draw(14.75f * hUnit, 0.25f * vUnit, hUnit, hUnit);
 		}
 	}
 
@@ -130,6 +132,9 @@ public class EvolutionPhase extends BasicGameState {
 				default:
 					break;
 				}
+			} else if (popupState == PopupState.DISMISSED && x >= 14.75f * hUnit && y >= 0.25f * vUnit
+					&& x <= 15.75f * hUnit && y <= 1.25f * vUnit) {
+				popupState = PopupState.FIRST;
 			} else if (actionState == ActionState.DISCARD_CARD) {
 				CreatureAndCard cac = game.mainPlayer.discardCardFromCreature(
 						8 * hUnit, 4 * vUnit, hUnit, vUnit, x, y);
