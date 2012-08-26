@@ -1,9 +1,6 @@
 package cat.atridas87.ld24.gameStates;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
-import java.util.Map.Entry;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -18,7 +15,7 @@ import cat.atridas87.ld24.Resources;
 import cat.atridas87.ld24.ai.EnemyAI;
 import cat.atridas87.ld24.modelData.Attribute;
 import cat.atridas87.ld24.modelData.Creature;
-import cat.atridas87.ld24.modelData.EnvironmentCard;
+import cat.atridas87.ld24.modelData.GameBoard;
 import cat.atridas87.ld24.modelData.PlayerBoard;
 import cat.atridas87.ld24.modelData.SkillCard;
 import cat.atridas87.ld24.modelData.SkillCard.SkillColor;
@@ -35,8 +32,8 @@ public class RegenerationPhase extends BasicGameState {
 	private ActionState actionState;
 
 	private Creature regeneratedCreature;
-	
-	private HashSet<SkillColor> possibleDecks; 
+
+	private HashSet<SkillColor> possibleDecks;
 
 	@Override
 	public void init(GameContainer container, StateBasedGame _game)
@@ -90,11 +87,11 @@ public class RegenerationPhase extends BasicGameState {
 						+ "skills and finally you will add the last 2 cards."
 						+ "\n\n" + "Click here to show next.";
 			} else {
-				text = "You will choose 4 cards from the deck related to\n" +
-						"your stronger creature (that with the most stars),\n" +
-						"2 from the deck related to your 2nd creature and\n" +
-						"2 from any deck."
-				+ "\n\n" + "Click here to dismiss.";
+				text = "You will choose 4 cards from the deck related to\n"
+						+ "your stronger creature (that with the most stars),\n"
+						+ "2 from the deck related to your 2nd creature and\n"
+						+ "2 from any deck." + "\n\n"
+						+ "Click here to dismiss.";
 			}
 
 			game.drawPopup(8 * hUnit, vUnit, 7 * hUnit, (7.f * 11.f / 20.f)
@@ -118,13 +115,12 @@ public class RegenerationPhase extends BasicGameState {
 			break;
 		case CHOOSE_CARDS:
 			cardsAdded = game.mainPlayer.getHandSize();
-			font.drawString(9 * hUnit, 0.75f * vUnit,
-					drawCardsText(cardsAdded));
-			
-			for(SkillColor color : possibleDecks) {
+			font.drawString(9 * hUnit, 0.75f * vUnit, drawCardsText(cardsAdded));
+
+			for (SkillColor color : possibleDecks) {
 				float sDeckX;
 				float sDeckY = vUnit * 2;
-				switch(color) {
+				switch (color) {
 				case RED:
 					sDeckX = hUnit * 8;
 					break;
@@ -140,10 +136,10 @@ public class RegenerationPhase extends BasicGameState {
 				default:
 					throw new IllegalStateException();
 				}
-				
+
 				sDeckX += hUnit * 0.25f;
 				sDeckY -= hUnit * 0.75f;
-				
+
 				im.getStar().draw(sDeckX, sDeckY, hUnit * 0.5f, hUnit * 0.5f);
 			}
 		}
@@ -158,9 +154,9 @@ public class RegenerationPhase extends BasicGameState {
 	}
 
 	private String drawCardsText(int cards) {
-		if(cards < 6) {
+		if (cards < 6) {
 			cards = 6 - cards;
-		} else if(cards < 8) {
+		} else if (cards < 8) {
 			cards = 8 - cards;
 		} else {
 			cards = 10 - cards;
@@ -173,9 +169,32 @@ public class RegenerationPhase extends BasicGameState {
 	}
 
 	@Override
-	public void update(GameContainer container, StateBasedGame game, int delta)
+	public void update(GameContainer container, StateBasedGame _game, int delta)
 			throws SlickException {
-		// TODO Auto-generated method stub
+		if (possibleDecks != null) {
+
+			checkDecks(possibleDecks, game.board);
+		}
+	}
+
+	private static void checkDecks(HashSet<SkillColor> possibleDecks,
+			GameBoard board) {
+		EXTERN_LOOP: do {
+			for (SkillColor color : possibleDecks) {
+				if (board.isSkillDeckEmpty(color)) {
+					possibleDecks.remove(color);
+					continue EXTERN_LOOP;
+				}
+			}
+		} while (false);
+
+		if (possibleDecks.size() == 0) {
+			for (SkillColor color : SkillColor.values()) {
+				if (!board.isSkillDeckEmpty(color)) {
+					possibleDecks.add(color);
+				}
+			}
+		}
 
 	}
 
@@ -207,15 +226,43 @@ public class RegenerationPhase extends BasicGameState {
 					if (game.mainPlayer.getCreatureSkills(regeneratedCreature)
 							.size() == 3) {
 						actionState = ActionState.CHOOSE_CARDS;
+						HashSet<Creature> creatures = strongestCreatures(
+								game.mainPlayer, regeneratedCreature);
+
+						possibleDecks = possibleDecks(game.mainPlayer,
+								creatures);
 					}
-					
-					HashSet<Creature> creatures = strongerCreatures(game.mainPlayer, regeneratedCreature);
-					
-					possibleDecks = possibleDecks(game.mainPlayer, creatures);
+
 				}
 			} else if (actionState == ActionState.CHOOSE_CARDS) {
 
-				// TODO
+				SkillCard card = game.board.drawSkill(0, 0, w, h, x, y,
+						possibleDecks);
+				if (card != null) {
+					game.mainPlayer.addCardToHand(card);
+
+					if (game.mainPlayer.getHandSize() == 6) {
+
+						HashSet<Creature> creatures = secondStrongestCreatures(
+								game.mainPlayer, regeneratedCreature);
+						if (creatures.size() == 0) {
+							for (SkillColor color : SkillColor.values()) {
+								possibleDecks.add(color);
+							}
+						} else {
+							possibleDecks = possibleDecks(game.mainPlayer,
+									creatures);
+						}
+
+					} else if (game.mainPlayer.getHandSize() == 8) {
+						for (SkillColor color : SkillColor.values()) {
+							possibleDecks.add(color);
+						}
+					}
+					if (game.mainPlayer.getHandSize() == 10) {
+						actionState = ActionState.ADD_CARDS_2;
+					}
+				}
 
 			} else if (actionState == ActionState.ADD_CARDS_2) {
 				SkillCard card = game.mainPlayer.useCardFromHand(0, 8 * vUnit,
@@ -227,56 +274,102 @@ public class RegenerationPhase extends BasicGameState {
 							.size() == 5) {
 
 						// TODO next state
+						doIA();
+						
+						game.board.doEnviromentalChangePhase();
+						
 
+						((EvolutionPhase)game.getState(EvolutionPhase.ID)).enterPhase();
+						game.enterState(EvolutionPhase.ID);
 					}
 				}
 			}
 		}
 	}
-	
-	private static HashSet<Creature> strongerCreatures(PlayerBoard player, Creature regeneratedCreature) {
+
+	private static HashSet<Creature> strongestCreatures(PlayerBoard player,
+			Creature regeneratedCreature) {
 		int maxStars = 0;
-		for(Creature creature : player.getCreatures()) {
-			if(creature != regeneratedCreature) {
+		for (Creature creature : player.getCreatures()) {
+			if (creature != regeneratedCreature) {
 				int creatureStars = player.getStarCount(creature);
-				if(creatureStars > maxStars) {
+				if (creatureStars > maxStars) {
 					maxStars = creatureStars;
 				}
 			}
 		}
-		
+
 		HashSet<Creature> creatures = new HashSet<>();
 
-		for(Creature creature : player.getCreatures()) {
-			if(creature != regeneratedCreature && player.getStarCount(creature) == maxStars) {
+		for (Creature creature : player.getCreatures()) {
+			if (creature != regeneratedCreature
+					&& player.getStarCount(creature) == maxStars) {
 				creatures.add(creature);
 			}
 		}
-		
+
 		return creatures;
 	}
-	
-	private static HashSet<SkillColor> possibleDecks(PlayerBoard player, HashSet<Creature> creatures) {
+
+	private static HashSet<Creature> secondStrongestCreatures(
+			PlayerBoard player, Creature regeneratedCreature) {
+		int maxStars = 0;
+		for (Creature creature : player.getCreatures()) {
+			if (creature != regeneratedCreature) {
+				int creatureStars = player.getStarCount(creature);
+				if (creatureStars > maxStars) {
+					maxStars = creatureStars;
+				}
+			}
+		}
+
+		int maxStars2 = 0;
+		for (Creature creature : player.getCreatures()) {
+			if (creature != regeneratedCreature) {
+				int creatureStars = player.getStarCount(creature);
+				if (creatureStars > maxStars2 && creatureStars < maxStars) { // worse
+																				// than
+																				// the
+																				// best
+					maxStars2 = creatureStars;
+				}
+			}
+		}
+
+		HashSet<Creature> creatures = new HashSet<>();
+
+		for (Creature creature : player.getCreatures()) {
+			if (creature != regeneratedCreature
+					&& player.getStarCount(creature) == maxStars2) {
+				creatures.add(creature);
+			}
+		}
+
+		return creatures;
+	}
+
+	private static HashSet<SkillColor> possibleDecks(PlayerBoard player,
+			HashSet<Creature> creatures) {
 		HashSet<SkillColor> decks = new HashSet<>();
-		
-		for(Creature creature : creatures) {
+
+		for (Creature creature : creatures) {
 			int maxStrength = 0;
-			
-			for(Attribute attr : Attribute.values()) {
+
+			for (Attribute attr : Attribute.values()) {
 				int str = player.getAttributeCount(creature, attr);
-				if(str > maxStrength) {
+				if (str > maxStrength) {
 					maxStrength = str;
 				}
 			}
 
-			for(Attribute attr : Attribute.values()) {
+			for (Attribute attr : Attribute.values()) {
 				int str = player.getAttributeCount(creature, attr);
-				if(str == maxStrength) {
+				if (str == maxStrength) {
 					decks.add(attr.mainColor());
 				}
 			}
 		}
-		
+
 		return decks;
 	}
 
@@ -285,7 +378,99 @@ public class RegenerationPhase extends BasicGameState {
 			EnemyAI ai = game.ai[i];
 			PlayerBoard playerBoard = game.board.getPlayers().get(i + 1);
 
+			Creature aiRegeneratedCreature = regeneratedCreature(playerBoard);
+
+			HashSet<Creature> creatures = strongestCreatures(playerBoard,
+					aiRegeneratedCreature);
+
+			HashSet<SkillColor> aiPossibleDecks1 = possibleDecks(playerBoard,
+					creatures);
+			creatures = secondStrongestCreatures(playerBoard,
+					aiRegeneratedCreature);
+			HashSet<SkillColor> aiPossibleDecks2;
+			if (creatures.size() == 0) {
+				aiPossibleDecks2 = new HashSet<>();
+				for (SkillColor color : SkillColor.values()) {
+					aiPossibleDecks2.add(color);
+				}
+			} else {
+				aiPossibleDecks2 = possibleDecks(playerBoard, creatures);
+			}
+
+			SkillCard[] cardsToAdd = new SkillCard[3];
+
+			ai.regenerationPhaseAddCards1(game.board, playerBoard,
+					aiRegeneratedCreature, cardsToAdd);
+
+			for (SkillCard card : cardsToAdd) {
+				playerBoard.addCardToCreature(aiRegeneratedCreature, card);
+				playerBoard.removeCardFromHand(card);
+			}
+
 			// --
+
+			SkillColor[] cardsToDraw = new SkillColor[4];
+
+			checkDecks(aiPossibleDecks1, game.board);
+			ai.regenerationPhaseDrawCards1(game.board, playerBoard,
+					aiRegeneratedCreature, aiPossibleDecks1, aiPossibleDecks2,
+					cardsToDraw);
+
+			for (SkillColor color : cardsToDraw) {
+				SkillCard card = game.board.drawSkill(color);
+				playerBoard.addCardToHand(card);
+			}
+
+			cardsToDraw = new SkillColor[2];
+
+			checkDecks(aiPossibleDecks1, game.board); // TODO això caldria fer-ho d'una altra manera
+			//pero pal extrem
+			ai.regenerationPhaseDrawCards2(game.board, playerBoard,
+					aiRegeneratedCreature, aiPossibleDecks2, cardsToDraw);
+
+			for (SkillColor color : cardsToDraw) {
+				SkillCard card = game.board.drawSkill(color);
+				playerBoard.addCardToHand(card);
+			}
+
+			cardsToDraw = new SkillColor[4];
+
+			checkDecks(aiPossibleDecks1, game.board);
+			ai.regenerationPhaseDrawCards3(game.board, playerBoard,
+					aiRegeneratedCreature, cardsToDraw);
+
+			for (SkillColor color : cardsToDraw) {
+				SkillCard card = game.board.drawSkill(color);
+				playerBoard.addCardToHand(card);
+			}
+
+			cardsToAdd = new SkillCard[2];
+
+			ai.regenerationPhaseAddCards2(game.board, playerBoard,
+					aiRegeneratedCreature, cardsToAdd);
+
+			for (SkillCard card : cardsToAdd) {
+				playerBoard.addCardToCreature(aiRegeneratedCreature, card);
+				playerBoard.removeCardFromHand(card);
+			}
+
+			// --
+			/*
+			 * 
+			 * public void regenerationPhaseAddCards1(GameBoard board,
+			 * PlayerBoard myBoard, Creature resurrectedCreature, SkillCard[]
+			 * out); public void regenerationPhaseDrawCards1(GameBoard board,
+			 * PlayerBoard myBoard, Creature resurrectedCreature,
+			 * Set<SkillColor> possibles1, Set<SkillColor> possibles2,
+			 * SkillColor[] out); public void
+			 * regenerationPhaseDrawCards2(GameBoard board, PlayerBoard myBoard,
+			 * Creature resurrectedCreature, Set<SkillColor> possibles2,
+			 * SkillColor[] out); public void
+			 * regenerationPhaseDrawCards3(GameBoard board, PlayerBoard myBoard,
+			 * Creature resurrectedCreature, SkillColor[] out); public void
+			 * regenerationPhaseAddCards2(GameBoard board, PlayerBoard myBoard,
+			 * Creature resurrectedCreature, SkillCard[] out);
+			 */
 		}
 	}
 
@@ -297,14 +482,18 @@ public class RegenerationPhase extends BasicGameState {
 	public void enterPhase() {
 		regeneratedCreature = null;
 
-		for (Creature creature : game.mainPlayer.getCreatures()) {
-			if (game.mainPlayer.getCreatureSkills(creature).size() == 0) {
-				regeneratedCreature = creature;
-				break;
-			}
-		}
+		regeneratedCreature = regeneratedCreature(game.mainPlayer);
 
 		actionState = ActionState.ADD_CARDS_1;
+	}
+
+	private static Creature regeneratedCreature(PlayerBoard playerBoard) {
+		for (Creature creature : playerBoard.getCreatures()) {
+			if (playerBoard.getCreatureSkills(creature).size() == 0) {
+				return creature;
+			}
+		}
+		return null;
 	}
 
 	@Override

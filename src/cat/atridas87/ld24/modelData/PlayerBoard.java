@@ -107,7 +107,11 @@ public final class PlayerBoard {
 	}
 
 	public void addCardToCreature(Creature creature, SkillCard card) {
-		creatureSkills.get(creature).add(card);
+		try {
+			creatureSkills.get(creature).add(card);
+		} catch(Exception e) {
+			throw e;
+		}
 	}
 
 	public void addPoints(int n) {

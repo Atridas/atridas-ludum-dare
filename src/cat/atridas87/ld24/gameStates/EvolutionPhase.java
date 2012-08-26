@@ -1,7 +1,5 @@
 package cat.atridas87.ld24.gameStates;
 
-
-
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -26,13 +24,12 @@ public class EvolutionPhase extends BasicGameState {
 	private LD24 game;
 
 	private UnicodeFont font;
-	
+
 	private PopupState popupState;
 	private ActionState actionState;
 
 	private SkillCard addedCards[] = new SkillCard[2];
 	private Creature creatureToAddCard;
-
 
 	@Override
 	public void init(GameContainer container, StateBasedGame _game)
@@ -44,19 +41,20 @@ public class EvolutionPhase extends BasicGameState {
 	@Override
 	public void render(GameContainer container, StateBasedGame _game, Graphics g)
 			throws SlickException {
-		if(font == null) {
+		if (font == null) {
 			try {
-				font = new UnicodeFont("resources/Font/accid___.ttf", 25, false, false);//Create Instance
-				font.addAsciiGlyphs();   //Add Glyphs
-				font.addGlyphs(400, 600); //Add Glyphs
-				font.getEffects().add(new ColorEffect(java.awt.Color.WHITE)); //Add Effects
-				font.loadGlyphs();  //Load Glyphs
+				font = new UnicodeFont("resources/Font/accid___.ttf", 25,
+						false, false);// Create Instance
+				font.addAsciiGlyphs(); // Add Glyphs
+				font.addGlyphs(400, 600); // Add Glyphs
+				font.getEffects().add(new ColorEffect(java.awt.Color.WHITE)); // Add
+																				// Effects
+				font.loadGlyphs(); // Load Glyphs
 			} catch (SlickException e) {
 				throw new IllegalStateException(e);
-			} 
+			}
 		}
-		
-		
+
 		ImageManager im = ImageManager.getInstance();
 
 		w = container.getWidth();
@@ -66,7 +64,7 @@ public class EvolutionPhase extends BasicGameState {
 		float vUnit = h / 12;
 
 		im.getBackground().draw(0, 0, w, h);
-		
+
 		font.drawString(hUnit * 6, vUnit * .5f, "Evolution Phase");
 
 		game.board.draw(0, 0, w, h);
@@ -133,44 +131,51 @@ public class EvolutionPhase extends BasicGameState {
 					break;
 				}
 			} else if (actionState == ActionState.DISCARD_CARD) {
-				CreatureAndCard cac = game.mainPlayer.discardCardFromCreature(8 * hUnit,
-						4 * vUnit, hUnit, vUnit, x, y);
-				if(cac.card == addedCards[0] || cac.card == addedCards[1]) {
-					game.mainPlayer.addCardToCreature(cac.creature, cac.card);
-					// TODO error message
-				} else if (cac != null) {
-					creatureToAddCard = cac.creature;
-					game.board.discardCard(cac.card);
-					actionState = ActionState.SELECT_NEW_CARD;
+				CreatureAndCard cac = game.mainPlayer.discardCardFromCreature(
+						8 * hUnit, 4 * vUnit, hUnit, vUnit, x, y);
+				if (cac != null) {
+					if (cac.card == addedCards[0] || cac.card == addedCards[1]) {
+						game.mainPlayer.addCardToCreature(cac.creature,
+								cac.card);
+						// TODO error message
+					} else {
+						creatureToAddCard = cac.creature;
+						game.board.discardCard(cac.card);
+						actionState = ActionState.SELECT_NEW_CARD;
+					}
 				}
 			} else if (actionState == ActionState.SELECT_NEW_CARD) {
-				SkillCard card = game.mainPlayer.useCardFromHand(0, 8 * vUnit, hUnit, vUnit, x, y);
-				if(card != null) {
+				SkillCard card = game.mainPlayer.useCardFromHand(0, 8 * vUnit,
+						hUnit, vUnit, x, y);
+				if (card != null) {
 					game.mainPlayer.addCardToCreature(creatureToAddCard, card);
 					actionState = ActionState.DISCARD_CARD;
-					if(addedCards[0] == null) {
+					if (addedCards[0] == null) {
 						addedCards[0] = card;
-					} else if(addedCards[1] == null) {
+					} else if (addedCards[1] == null) {
 						addedCards[1] = card;
 					} else {
 						doIA();
-						((EnvironmentPhase)game.getState(EnvironmentPhase.ID)).enterPhase();
+						((EnvironmentPhase) game.getState(EnvironmentPhase.ID))
+								.enterPhase();
 						game.enterState(EnvironmentPhase.ID);
 					}
 				}
 			}
 		}
 	}
-	
+
 	private void doIA() {
 		for (int i = 0; i < 3; i++) {
 			EnemyAI ai = game.ai[i];
 			PlayerBoard playerBoard = game.board.getPlayers().get(i + 1);
 
-			DiscardAndReplace[] actions = ai.evolutionPhase(game.board, playerBoard);
-			
-			for(DiscardAndReplace action : actions) {
-				playerBoard.removeCardFromCreature(action.creature, action.discard);
+			DiscardAndReplace[] actions = new DiscardAndReplace[3];
+			ai.evolutionPhase(game.board, playerBoard, actions);
+
+			for (DiscardAndReplace action : actions) {
+				playerBoard.removeCardFromCreature(action.creature,
+						action.discard);
 				playerBoard.removeCardFromHand(action.replace);
 				playerBoard.addCardToCreature(action.creature, action.replace);
 				game.board.discardCard(action.discard);

@@ -14,6 +14,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
 
+import cat.atridas87.ld24.modelData.EnvironmentCard.EnvironmentType;
 import cat.atridas87.ld24.modelData.SkillCard.SkillColor;
 import cat.atridas87.ld24.render.ImageManager;
 
@@ -131,8 +132,70 @@ public final class GameBoard {
 		return skillCard;
 	}
 	
+	public SkillCard drawSkill(float x, float y, float w, float h, float mouseX, float mouseY, Set<SkillColor> possibleColors) {
+
+		float hUnit = w / 16;
+		float vUnit = h / 12;
+
+		float mCardW = hUnit * 3 / 2;
+		float mCardH = hUnit * 2;
+		
+		// skills
+		for(SkillColor color : possibleColors) {
+			float sDeckX;
+			float sDeckY = vUnit * 2;
+			switch(color) {
+			case RED:
+				sDeckX = hUnit * 8;
+				break;
+			case GREEN:
+				sDeckX = hUnit * 10;
+				break;
+			case BLUE:
+				sDeckX = hUnit * 12;
+				break;
+			case YELLOW:
+				sDeckX = hUnit * 14;
+				break;
+			default:
+				throw new IllegalStateException();
+			}
+			
+			int cardsOnDeck = skillDecks.get(color).size();
+
+			float marginX = cardsOnDeck * hUnit / 20.f;
+			float marginY = cardsOnDeck * hUnit / 20.f;
+
+			if(mouseX >= sDeckX &&
+					mouseY >= sDeckY &&
+					mouseX <= sDeckX + mCardW + marginX &&
+					mouseY <= sDeckY + mCardH + marginY ) {
+				return drawSkill(color);
+			}
+			
+			//backSide.draw(sDeckX, sDeckY, mCardW, mCardH);
+		}
+		return null;
+	}
+	
 	public void discardCard(SkillCard card) {
-		skillDiscardDecks.get(card.getSkillColor()).add(card);
+		try {
+			skillDiscardDecks.get(card.getSkillColor()).add(card);
+		} catch(Exception e) {
+			throw e;
+		}
+	}
+	
+
+	public void doEnviromentalChangePhase() {
+		drawEnvironmentCard();
+		drawCombatCard();
+		
+		if(currentEnvironment.getType() == EnvironmentType.PERIOD_CHANGE) {
+			// TODO
+			drawEnvironmentCard();
+		}
+		
 	}
 	
 	public void initGame() {
