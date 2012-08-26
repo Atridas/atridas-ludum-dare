@@ -159,11 +159,33 @@ public final class EnvironmentCard {
 			return false;
 		return true;
 	}
-	
+
+	@Override
+	public String toString() {
+		StringBuilder aux = new StringBuilder();
+		aux.append(type.getShortString());
+		for(Attribute att : attributes) {
+			aux.append(' ');
+			aux.append(att.getShortString());
+		}
+		return aux.toString();
+	}
 
 	public static enum EnvironmentType {
 		PERIOD_1,
 		PERIOD_2,
-		PERIOD_CHANGE
+		PERIOD_CHANGE;
+		
+		public final String getShortString() {
+			switch(this) {
+			case PERIOD_1:
+				return "1";
+			case PERIOD_2:
+				return "2";
+			case PERIOD_CHANGE:
+				return "C";
+			}
+			return null;
+		}
 	}
 }

@@ -21,4 +21,18 @@ public enum Attribute {
 		}
 		return null;
 	}
+	
+	public final String getShortString() {
+		switch(this) {
+		case STRENGTH:
+			return "ST";
+		case SPEED:
+			return "IP";
+		case INTELLIGENCE:
+			return "IN";
+		case CAMOUFLAGE:
+			return "CA";
+		}
+		return null;
+	}
 }

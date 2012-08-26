@@ -3,6 +3,7 @@ package cat.atridas87.ld24.ai;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -53,45 +54,20 @@ public class RandomAI implements EnemyAI {
 	@Override
 	public void evolutionPhase(GameBoard board, PlayerBoard myBoard,
 			DiscardAndReplace[] out) {
-		for (int i = 0; i < out.length; i++) {
-			int c = rnd.nextInt(myBoard.getCreatures().size());
-			for (Creature creature : myBoard.getCreatures()) {
-				if (c == 0) {
-					int cardIndex;
-					SkillCard discard;
-					boolean repeated;
-					do {
-						repeated = false;
-						cardIndex = rnd.nextInt(myBoard.getCreatureSkills(
-								creature).size());
-						discard = myBoard.getCreatureSkills(creature).get(
-								cardIndex);
-						for (int j = 0; j < i; j++) {
-							if (out[j].creature == creature
-									&& out[j].discard == discard) {
-								repeated = true;
-							}
-						}
-					} while (repeated);
-
-					SkillCard replace;
-					do {
-						repeated = false;
-						cardIndex = rnd.nextInt(myBoard.getHandSize());
-						replace = myBoard.getHand().get(cardIndex);
-						for (int j = 0; j < i; j++) {
-							if (out[j].replace == replace) {
-								repeated = true;
-							}
-						}
-					} while (repeated);
-
-					out[i] = new DiscardAndReplace(creature, discard, replace);
-
-					break;
-				} else {
-					c--;
-				}
+		
+		ArrayList<SkillCard> hand = new ArrayList<>(myBoard.getHand());
+		Collections.shuffle(hand, rnd);
+		
+		ArrayList<Creature> creatures = new ArrayList<>(myBoard.getCreatures());
+		Collections.shuffle(creatures, rnd);
+		
+		for(int i = 0; i < out.length; i++) {
+			ArrayList<SkillCard> skills = new ArrayList<>(myBoard.getCreatureSkills(creatures.get(i)));
+			SkillCard discart = skills.get(rnd.nextInt(skills.size()));
+			
+			out[i] = new DiscardAndReplace(creatures.get(i), discart, hand.get(i));
+			if(discart == null) {
+				throw new IllegalStateException();
 			}
 		}
 	}
@@ -114,9 +90,9 @@ public class RandomAI implements EnemyAI {
 		for (int i = 0; i < out.length; i++) {
 			int index = rnd.nextInt(myBoard.getHandSize());
 
-			SkillCard card = myBoard.getHand().get(index);
+			out[i] = myBoard.getHand().get(index);
 			for (int j = 0; j < i; j++) {
-				if (card == out[j]) {
+				if (out[i] == out[j]) {
 					i--;
 					break;
 				}
@@ -129,9 +105,10 @@ public class RandomAI implements EnemyAI {
 			PlayerBoard myBoard, Creature resurrectedCreature, SkillCard[] out) {
 		for (int i = 0; i < out.length; i++) {
 			int index = rnd.nextInt( myBoard.getHandSize() );
-			SkillCard card = myBoard.getHand().get(index);
+			
+			out[i] = myBoard.getHand().get(index);
 			for (int j = 0; j < i; j++) {
-				if (card == out[j]) {
+				if (out[i] == out[j]) {
 					i--;
 					break;
 				}

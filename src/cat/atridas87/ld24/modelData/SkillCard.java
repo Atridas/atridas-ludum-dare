@@ -236,7 +236,17 @@ public final class SkillCard {
 	
 	public static enum SkillCardType {
 		STAR,
-		SKILL
+		SKILL;
+		
+		public final String getShortString() {
+			switch(this) {
+			case STAR:
+				return "ST";
+			case SKILL:
+				return "SK";
+			}
+			return null;
+		}
 	}
 	
 	public static enum SkillColor {
@@ -249,6 +259,20 @@ public final class SkillCard {
 		
 		private SkillColor(Attribute _relatedAttribute) {
 			mainAttribute = _relatedAttribute;
+		}
+
+		public final String getShortString() {
+			switch(this) {
+			case RED:
+				return "R";
+			case BLUE:
+				return "B";
+			case GREEN:
+				return "G";
+			case YELLOW:
+				return "Y";
+			}
+			return null;
 		}
 	}
 
@@ -282,5 +306,18 @@ public final class SkillCard {
 		if (skillColor != other.skillColor)
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder aux = new StringBuilder();
+		aux.append(type.getShortString());
+		aux.append(' ');
+		aux.append(skillColor.getShortString());
+		for(Attribute att : attributes) {
+			aux.append(' ');
+			aux.append(att.getShortString());
+		}
+		return aux.toString();
 	}
 }

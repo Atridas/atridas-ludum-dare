@@ -17,12 +17,12 @@ import cat.atridas87.ld24.render.ImageManager;
 public final class PlayerBoard {
 
 	private UnicodeFont font;
-	
+
 	private final TreeSet<Creature> creatures = new TreeSet<>();
 	private final HashMap<Creature, ArrayList<SkillCard>> creatureSkills = new HashMap<>();
 
 	private final ArrayList<SkillCard> hand = new ArrayList<>();
-	
+
 	private int points;
 
 	public Set<Creature> getCreatures() {
@@ -64,15 +64,15 @@ public final class PlayerBoard {
 		}
 		return count;
 	}
-	
+
 	public int getStrength(Creature creature, EnvironmentCard environment) {
 		int strength = 0;
-		for(Attribute att : environment.getAttributes()) {
+		for (Attribute att : environment.getAttributes()) {
 			strength += getAttributeCount(creature, att);
 		}
 		return strength;
 	}
-	
+
 	public int getPoints() {
 		return points;
 	}
@@ -96,11 +96,11 @@ public final class PlayerBoard {
 
 	public void discardAllCardsFromCreature(Creature creature, GameBoard board) {
 		try {
-			for(SkillCard card : creatureSkills.get(creature)) {
+			for (SkillCard card : creatureSkills.get(creature)) {
 				board.discardCard(card);
 			}
 			creatureSkills.get(creature).clear();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
@@ -109,7 +109,7 @@ public final class PlayerBoard {
 	public void addCardToCreature(Creature creature, SkillCard card) {
 		try {
 			creatureSkills.get(creature).add(card);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			throw e;
 		}
 	}
@@ -119,14 +119,14 @@ public final class PlayerBoard {
 	}
 
 	public void addSurvivingCreaturePoints() {
-		for(Creature creature : creatures) {
+		for (Creature creature : creatures) {
 			points += getStarCount(creature);
 		}
 	}
-	
-	
-	public CreatureAndCard discardCardFromCreature(float x, float y, float hUnit, float vUnit, float mouseX, float mouseY) {
-		
+
+	public CreatureAndCard discardCardFromCreature(float x, float y,
+			float hUnit, float vUnit, float mouseX, float mouseY) {
+
 		Creature selectedCreature = null;
 		SkillCard selectedSkillCard = null;
 
@@ -134,101 +134,96 @@ public final class PlayerBoard {
 		float cardSizeH = cardSizeW * 3 / 2;
 		float interCardW = cardSizeW / (creatures.size() + 1);
 		float posX = x + interCardW;
-		for(Creature creature : creatures) {
-			
+		for (Creature creature : creatures) {
+
 			float interCardH;
 			List<SkillCard> skills = creatureSkills.get(creature);
 			int numSkills = skills.size();
-			if(numSkills > 0) {
-				interCardH = 2.5f * vUnit / numSkills; 
+			if (numSkills > 0) {
+				interCardH = 2.5f * vUnit / numSkills;
 			} else {
 				interCardH = 0;
 			}
-			
+
 			// creature skill cards
 			float posY = y + 3.5f * vUnit;
-			for(SkillCard card : skills) {
-				
-				//card.draw(posX, posY, cardSizeW, cardSizeH);
-				if(
-						mouseX >= posX &&
-						mouseY >= posY &&
-						mouseX <= posX + cardSizeW &&
-						mouseY <= posY + cardSizeH) {
+			for (SkillCard card : skills) {
+
+				// card.draw(posX, posY, cardSizeW, cardSizeH);
+				if (mouseX >= posX && mouseY >= posY
+						&& mouseX <= posX + cardSizeW
+						&& mouseY <= posY + cardSizeH) {
 					selectedCreature = creature;
 					selectedSkillCard = card;
 				}
 				posY += interCardH;
 			}
-			if(selectedSkillCard != null) {
+			if (selectedSkillCard != null) {
 				break;
 			}
-			
+
 			// next position
 			posX += interCardW + cardSizeW;
 		}
-		
-		if(selectedSkillCard != null) {
+
+		if (selectedSkillCard != null) {
 			removeCardFromCreature(selectedCreature, selectedSkillCard);
 			return new CreatureAndCard(selectedCreature, selectedSkillCard);
 		} else {
 			return null;
 		}
 	}
-	
+
 	public static final class CreatureAndCard {
 		public final Creature creature;
 		public final SkillCard card;
+
 		CreatureAndCard(Creature creature, SkillCard card) {
 			this.creature = creature;
 			this.card = card;
 		}
 	}
-	
-	public SkillCard useCardFromHand(float x, float y, float hUnit, float vUnit, float mouseX, float mouseY) {
+
+	public SkillCard useCardFromHand(float x, float y, float hUnit,
+			float vUnit, float mouseX, float mouseY) {
 		float posX = x + 0.5f * hUnit;
 		float posY = y + vUnit;
 
 		float cardSizeW = 2 * hUnit;
 		float cardSizeH = 3 * hUnit;
-		
+
 		SkillCard selectedCard = null;
 
 		for (SkillCard card : hand) {
-			if(
-					mouseX >= posX &&
-					mouseY >= posY &&
-					mouseX <= posX + cardSizeW &&
-					mouseY <= posY + cardSizeH) {
+			if (mouseX >= posX && mouseY >= posY && mouseX <= posX + cardSizeW
+					&& mouseY <= posY + cardSizeH) {
 				selectedCard = card;
 			}
-			//card.draw(posX, posY, cardSizeW, cardSizeH);
+			// card.draw(posX, posY, cardSizeW, cardSizeH);
 			posX += 0.5f * hUnit;
 		}
-		
-		if(selectedCard != null) {
+
+		if (selectedCard != null) {
 			removeCardFromHand(selectedCard);
 		}
-		
+
 		return selectedCard;
 	}
-	
-	
-	
-	
-	
+
 	@SuppressWarnings("unchecked")
 	public void drawCreatures(float x, float y, float w, float h) {
-		if(font == null) {
+		if (font == null) {
 			try {
-				font = new UnicodeFont("resources/Font/accid___.ttf", 14, false, false);//Create Instance
-				font.addAsciiGlyphs();   //Add Glyphs
-				font.addGlyphs(400, 600); //Add Glyphs
-				font.getEffects().add(new ColorEffect(java.awt.Color.WHITE)); //Add Effects
-				font.loadGlyphs();  //Load Glyphs
+				font = new UnicodeFont("resources/Font/accid___.ttf", 14,
+						false, false);// Create Instance
+				font.addAsciiGlyphs(); // Add Glyphs
+				font.addGlyphs(400, 600); // Add Glyphs
+				font.getEffects().add(new ColorEffect(java.awt.Color.WHITE)); // Add
+																				// Effects
+				font.loadGlyphs(); // Load Glyphs
 			} catch (SlickException e) {
 				throw new IllegalStateException(e);
-			} 
+			}
 		}
 		ImageManager im = ImageManager.getInstance();
 
@@ -290,11 +285,12 @@ public final class PlayerBoard {
 			// next position
 			posX += interCardW + cardSizeW;
 		}
-		
+
 		float posY = y + 3 * vUnit - cardSizeW * 0.5f - hUnit * 0.125f;
-		
+
 		im.getStar().draw(x - hUnit * 0.5f, posY, hUnit * 0.25f, hUnit * 0.25f);
-		font.drawString(x - hUnit * 0.125f, posY + hUnit * 0.25f - font.getAscent(), "" + points);
+		font.drawString(x - hUnit * 0.125f,
+				posY + hUnit * 0.25f - font.getAscent(), "" + points);
 	}
 
 	public void drawHand(float x, float y, float w, float h) {
@@ -337,4 +333,33 @@ public final class PlayerBoard {
 		return null;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder aux = new StringBuilder();
+		aux.append("HAND: [");
+
+		for (SkillCard card : hand) {
+			aux.append("\n  (");
+			aux.append(card.toString());
+			aux.append(')');
+		}
+
+		aux.append("]\nCREATURES: [");
+
+		for (Creature creature : creatures) {
+			aux.append("\n  ");
+			aux.append(creature.toString());
+			aux.append(" {");
+
+			for (SkillCard card : creatureSkills.get(creature)) {
+				aux.append("\n    (");
+				aux.append(card.toString());
+				aux.append(')');
+			}
+
+			aux.append("}");
+		}
+		
+		return aux.toString();
+	}
 }
