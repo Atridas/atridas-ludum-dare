@@ -1,0 +1,24 @@
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+    
+
+ * Main Background:
+      http://andrearusky.deviantart.com/art/Vintage-Background-4-portaits-29219790
+
+ * Background for the menus:
+      http://www.squidfingers.com/patterns/3/
+
+ * Music was downloaded from:
+      http://freemusicarchive.org/music/ToucanMusic/Best_Bytes_Volume_1/
+    and is attributed to:
+      http://www.toucanmusic.co.uk
