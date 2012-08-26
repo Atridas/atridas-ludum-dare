@@ -71,8 +71,7 @@ public class FinalScreen extends BasicGameState {
 	public void mouseClicked(int button, int x, int y, int clickCount) {
 		if(button == 0 && clickCount == 1) {
 			if(x >= 650 && y >= 50 && x <= 750 && y <= 150) {
-				// TODO
-				game.startNewGame();
+				game.enterState(EmptyState.ID);
 			}
 		}
 	}
