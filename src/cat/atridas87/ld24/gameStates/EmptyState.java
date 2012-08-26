@@ -1,10 +1,14 @@
-package cat.atridas87.ld24;
+package cat.atridas87.ld24.gameStates;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+
+import cat.atridas87.ld24.LD24;
+import cat.atridas87.ld24.Resources;
+import cat.atridas87.ld24.Resources.State;
 
 public class EmptyState extends BasicGameState {
 
@@ -28,7 +32,9 @@ public class EmptyState extends BasicGameState {
 
 	@Override
 	public int getID() {
-		return Resources.State.EMPTY_STATE.ordinal();
+		return ID;
 	}
+
+	public static final int ID = Resources.State.EMPTY_STATE.ordinal();
 
 }

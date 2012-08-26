@@ -9,6 +9,11 @@ import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
 import org.newdawn.slick.state.StateBasedGame;
 
+import cat.atridas87.ld24.ai.EnemyAI;
+import cat.atridas87.ld24.ai.RandomAI;
+import cat.atridas87.ld24.gameStates.EmptyState;
+import cat.atridas87.ld24.gameStates.EvolvingPhase;
+import cat.atridas87.ld24.gameStates.NewGameState1;
 import cat.atridas87.ld24.modelData.GameBoard;
 import cat.atridas87.ld24.modelData.PlayerBoard;
 import cat.atridas87.ld24.render.ImageManager;
@@ -31,18 +36,18 @@ public class LD24 extends StateBasedGame {
 
 		addState(new EmptyState());
 		addState(new NewGameState1());
-		addState(new GamePhase1());
+		addState(new EvolvingPhase());
 		
-		this.enterState(Resources.State.EMPTY_STATE.ordinal());
+		this.enterState(EmptyState.ID);
 	}
 
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {
 		ImageManager.getInstance().init();
 
-		this.getState(Resources.State.EMPTY_STATE.ordinal()).init(container, this);
-		this.getState(Resources.State.NEW_GAME_STATE_1.ordinal()).init(container, this);
-		this.getState(Resources.State.GAME_PHASE_1.ordinal()).init(container, this);
+		this.getState(EmptyState.ID).init(container, this);
+		this.getState(NewGameState1.ID).init(container, this);
+		this.getState(EvolvingPhase.ID).init(container, this);
 	}
 
 	public static void main(String[] args) throws SlickException {
@@ -65,7 +70,7 @@ public class LD24 extends StateBasedGame {
 		ai[1] = new RandomAI(globalRnd.nextLong());
 		ai[2] = new RandomAI(globalRnd.nextLong());
 		
-		((NewGameState1)this.getState(Resources.State.NEW_GAME_STATE_1.ordinal())).reset(this);
+		((NewGameState1)this.getState(NewGameState1.ID)).reset(this);
 
 		this.enterState(Resources.State.NEW_GAME_STATE_1.ordinal());
 	}

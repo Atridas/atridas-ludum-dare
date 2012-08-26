@@ -1,4 +1,4 @@
-package cat.atridas87.ld24;
+package cat.atridas87.ld24.ai;
 
 import java.util.ArrayList;
 import java.util.Map;

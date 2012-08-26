@@ -1,4 +1,4 @@
-package cat.atridas87.ld24;
+package cat.atridas87.ld24.gameStates;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +11,9 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import cat.atridas87.ld24.LD24;
+import cat.atridas87.ld24.Resources;
+import cat.atridas87.ld24.ai.EnemyAI;
 import cat.atridas87.ld24.modelData.Creature;
 import cat.atridas87.ld24.modelData.PlayerBoard;
 import cat.atridas87.ld24.modelData.SkillCard;
@@ -178,7 +181,8 @@ public class NewGameState1 extends BasicGameState {
 				}
 			}
 			
-			game.enterState(Resources.State.GAME_PHASE_1.ordinal());
+			((EvolvingPhase)game.getState(EvolvingPhase.ID)).setFirstTime();
+			game.enterState(EvolvingPhase.ID);
 		}
 
 	}
@@ -226,8 +230,11 @@ public class NewGameState1 extends BasicGameState {
 
 	@Override
 	public int getID() {
-		return Resources.State.NEW_GAME_STATE_1.ordinal();
+		return ID;
 	}
+	
+	public static final int ID = Resources.State.NEW_GAME_STATE_1.ordinal();
+	
 
 	public void reset(LD24 game) {
 		skillsToPlace = new ArrayList<>(4 * 5);
