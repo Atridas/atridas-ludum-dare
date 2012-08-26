@@ -19,6 +19,5 @@
 	<classpathentry kind="lib" path="lib/slick-util.jar"/>
 	<classpathentry kind="lib" path="lib/slick.jar" sourcepath="C:/Gamedev/Slick/src"/>
 	<classpathentry kind="lib" path="lib/tinylinepp.jar"/>
-	<classpathentry kind="lib" path="lib/resources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
