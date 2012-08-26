@@ -34,8 +34,10 @@ public class GamePhase1 extends BasicGameState {
 
 		game.board.draw(0, 0, w, h);
 
-		game.mainPlayer.drawCreatures(8 * hUnit, 5 * vUnit, 8 * hUnit,
-				7 * vUnit);
+		game.mainPlayer.drawCreatures(8 * hUnit, 4 * vUnit, 8 * hUnit,
+				8 * vUnit);
+		
+		game.mainPlayer.drawHand(0, 8 * vUnit, 8 * hUnit, 4 * vUnit);
 	}
 
 	@Override

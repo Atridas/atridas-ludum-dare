@@ -75,11 +75,11 @@ public final class EnvironmentCard {
 		return attributes.contains(attribute);
 	}
 	
-	public void draw(int x, int y, int w, int h) {
+	public void draw(float x, float y, float w, float h) {
 		backgroundImage.draw(x, y, w, h);
 		
-		int hUnit = w / 4;
-		int vUnit = h / 6;
+		float hUnit = w / 4;
+		float vUnit = h / 6;
 		
 		switch(iconImages.length) {
 		case 0:

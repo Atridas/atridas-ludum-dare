@@ -17,7 +17,7 @@ public final class ImageManager {
 	
 	private Image period1Background, period2Background, periodChangeBackground, environmentBackSide;
 	
-	private Image background;
+	private Image background, popup;
 	
 	private Image[] creatures;
 	
@@ -46,6 +46,8 @@ public final class ImageManager {
 		environmentBackSide = new Image("resources/images/card backgrounds/environment card back side.png");
 	
 		background = new Image("resources/images/Vintage_Background_For_Portraits.png");
+		
+		popup = new Image("resources/images/popup background.png");
 		
 		creatures = new Image[Creature.values().length];
 		for(int i = 0; i < Creature.values().length; i++) {
@@ -125,6 +127,10 @@ public final class ImageManager {
 	
 	public Image getBackground() {
 		return background;
+	}
+	
+	public Image getPopupBackground() {
+		return popup;
 	}
 	
 	private static ImageManager im = new ImageManager();

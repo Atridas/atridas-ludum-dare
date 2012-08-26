@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import cat.atridas87.ld24.modelData.SkillCard.SkillCardType;
 import cat.atridas87.ld24.render.ImageManager;
 
 public final class PlayerBoard {
@@ -32,6 +33,30 @@ public final class PlayerBoard {
 		return Collections.unmodifiableList(creatureSkills.get(creature));
 	}
 	
+	public int getAttributeCount(Creature creature, Attribute attribute) {
+		ArrayList<SkillCard> cards = creatureSkills.get(creature);
+		
+		int count = 0;
+		
+		for(SkillCard card : cards) {
+			count += card.getAttributeCount(attribute);
+		}
+		return count;
+	}
+	
+	public int getStarCount(Creature creature) {
+ArrayList<SkillCard> cards = creatureSkills.get(creature);
+		
+		int count = 0;
+		
+		for(SkillCard card : cards) {
+			if(card.getType() == SkillCardType.STAR) {
+				count++;
+			}
+		}
+		return count;
+	}
+	
 	
 	public void addCreature(Creature creature) {
 		creatures.add(creature);
@@ -42,7 +67,7 @@ public final class PlayerBoard {
 		hand.remove(card);
 	}
 	
-	public void addCardFromHand(SkillCard card) {
+	public void addCardToHand(SkillCard card) {
 		hand.add(card);
 	}
 	
@@ -58,7 +83,7 @@ public final class PlayerBoard {
 		ImageManager im = ImageManager.getInstance();
 		
 		//float hUnit = w / 8;
-		float vUnit = h / 7;
+		float vUnit = h / 8;
 		
 		float cardSizeW = w / (creatures.size() + 1);
 		float cardSizeH = cardSizeW * 3 / 2;
@@ -67,7 +92,9 @@ public final class PlayerBoard {
 		
 		float posX = x + interCardW;
 		for(Creature creature : creatures) {
-			float posY = y + 2 * vUnit - cardSizeW;
+
+			//creature icon
+			float posY = y + 3 * vUnit - cardSizeW;
 			
 			im.getCreatureImage(creature).draw(posX, posY, cardSizeW, cardSizeW);
 			
@@ -80,16 +107,54 @@ public final class PlayerBoard {
 				interCardH = 0;
 			}
 			
-			posY = y + 2.5f * vUnit;
+			// creature skill cards
+			posY = y + 3.5f * vUnit;
 			
 			for(SkillCard card : skills) {
 				card.draw(posX, posY, cardSizeW, cardSizeH);
 				posY += interCardH;
 			}
 			
+			// creature skills
+			float size = (3 * vUnit - cardSizeW) / (Attribute.values().length + 2);
+			float whiteSpace = size / (Attribute.values().length + 2);
+			posY = y + whiteSpace;
+			for(Attribute att : Attribute.values()) {
+				int value = getAttributeCount(creature, att);
+				float iconX = posX;
+				for(int i = 0; i < value; i++) {
+					im.getAttributeIcon(att).draw(iconX, posY, size, size);
+					iconX += cardSizeW / 13.f;
+				}
+				posY += size + whiteSpace;
+			}
+			int value = getStarCount(creature);
+			float iconX = posX;
+			for(int i = 0; i < value; i++) {
+				im.getStar().draw(iconX, posY, size, size);
+				iconX += cardSizeW / 13.f;
+			}
+			
+			//next position
 			posX += interCardW + cardSizeW;
 		}
+	}
+	
+
+	public void drawHand(float x, float y, float w, float h) {		
+		float hUnit = w / 8;
+		float vUnit = h / 4;
+
+		float posX = x + 0.5f * hUnit;
+		float posY = y + vUnit;
+
+		float cardSizeW = 2 * hUnit;
+		float cardSizeH = 3 * hUnit;
 		
+		for(SkillCard card : hand) {
+			card.draw(posX, posY, cardSizeW, cardSizeH);
+			posX += 0.5f * hUnit;
+		}
 	}
 	
 	public Creature creatureHitTest(float x, float y, float w, float h, float mouseX, float mouseY) {

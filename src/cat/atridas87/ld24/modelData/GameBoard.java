@@ -10,6 +10,9 @@ import java.util.Random;
 import java.util.Set;
 
 import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.UnicodeFont;
+import org.newdawn.slick.font.effects.ColorEffect;
 
 import cat.atridas87.ld24.modelData.SkillCard.SkillColor;
 import cat.atridas87.ld24.render.ImageManager;
@@ -34,6 +37,8 @@ public final class GameBoard {
 	
 	
 	private final Random rnd;
+	
+	private UnicodeFont font;
 	
 	private EnvironmentCard currentEnvironment, nextEnvironment;
 	private EnvironmentCard combatCard;
@@ -93,7 +98,7 @@ public final class GameBoard {
 	}
 	
 	
-	public void drawEnvironment() {
+	public void drawEnvironmentCard() {
 		environmentDiscardDeck.add(currentEnvironment);
 		currentEnvironment = nextEnvironment;
 		if(environmentDeck.size() > 0) {
@@ -103,7 +108,7 @@ public final class GameBoard {
 		}
 	}
 	
-	public void drawCombat() {
+	public void drawCombatCard() {
 		combatDiscardDeck.add(combatCard);
 		if(combatDeck.size() > 0) {
 			combatCard = combatDeck.remove(0);
@@ -297,7 +302,20 @@ public final class GameBoard {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void draw(float x, float y, float w, float h) {
+		if(font == null) {
+			try {
+				font = new UnicodeFont("resources/Font/accid___.ttf", 16, false, false);//Create Instance
+				font.addAsciiGlyphs();   //Add Glyphs
+				font.addGlyphs(400, 600); //Add Glyphs
+				font.getEffects().add(new ColorEffect(java.awt.Color.WHITE)); //Add Effects
+				font.loadGlyphs();  //Load Glyphs
+			} catch (SlickException e) {
+				throw new IllegalStateException(e);
+			} 
+		}
+		
 		ImageManager im = ImageManager.getInstance();
 		
 		float hUnit = w / 16;
@@ -319,11 +337,13 @@ public final class GameBoard {
 			}
 		}
 		if(nextEnvironment != null) {
-			nextEnvironment.draw((int)hUnit * 5 / 4, (int)vUnit * 2, (int)mCardW, (int)mCardH);
+			nextEnvironment.draw(hUnit * 1.25f, vUnit * 2, mCardW, mCardH);
 		}
+		font.drawString(hUnit, vUnit * 2.25f + mCardH, "Next Environment");
 		if(currentEnvironment != null) {
-			currentEnvironment.draw((int)hUnit * 13 / 4, (int)vUnit * 2, (int)mCardW, (int)mCardH);
+			currentEnvironment.draw(hUnit * 3.25f, vUnit * 2, mCardW, mCardH);
 		}
+		font.drawString(hUnit * 3.33f, vUnit * 2.25f + mCardH, "Environment");
 		{
 			float eDeckX = hUnit * 21 / 4;
 			float eDeckY = vUnit * 2;
@@ -347,8 +367,9 @@ public final class GameBoard {
 		}
 		
 		if(combatCard != null) {
-			combatCard.draw((int)hUnit * 13 / 4, (int)vUnit * 5, (int)mCardW, (int)mCardH);
+			combatCard.draw(hUnit * 3.25f, vUnit * 5, mCardW, mCardH);
 		}
+		font.drawString(hUnit * 3.66f, vUnit * 5.25f + mCardH, "Combat");
 		
 		{
 			float eDeckX = hUnit * 21 / 4;

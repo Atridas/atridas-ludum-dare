@@ -22,6 +22,7 @@ public class NewGameState1 extends BasicGameState {
 
 	private float w, h;
 	private LD24 game;
+	private PopupState popupState;
 
 	@Override
 	public void init(GameContainer container, StateBasedGame _game)
@@ -44,8 +45,8 @@ public class NewGameState1 extends BasicGameState {
 
 		game.board.draw(0, 0, w, h);
 
-		game.mainPlayer.drawCreatures(8 * hUnit, 5 * vUnit, 8 * hUnit,
-				7 * vUnit);
+		game.mainPlayer.drawCreatures(8 * hUnit, 4 * vUnit, 8 * hUnit,
+				8 * vUnit);
 
 		// skills to be placed
 		float posY = 9 * hUnit;
@@ -79,6 +80,45 @@ public class NewGameState1 extends BasicGameState {
 			
 			posX += interCardW + cardSizeW;
 		}
+		
+		// popup
+		if(popupState != PopupState.DISMISSED) {
+			
+			String text;
+			if(popupState == PopupState.FIRST) {
+				text =  "You now have 5 cards of each color, and you must\n" +
+						"assign them to your creatures. Each card will\n" +
+						"improve your creatures' skills, and each color\n" +
+						"has a diferent skill distribution." +
+						"\n\n" +
+						"Click here to show next.";
+			} else if(popupState == PopupState.SECOND) {
+				text =  "You can click on any creature icon (right bellow\n" +
+						"this popup) and you will assign a card to that\n" +
+						"creature." +
+						"\n\n" +
+						"Click here to show next.";
+			} else if(popupState == PopupState.THIRD) {
+				text =  "Remember that the weakest creature in the\n" +
+						"current ambient will perish and that there will\n" +
+						"be a combat." +
+						"\n\n" +
+						//"Click here to show next.";
+						"Click here to dismiss.";
+			} else {
+				text =  "\n" +
+						"\n" +
+						"\n" +
+						"\n\n" +
+						"Click here to dismiss.";
+			}
+			
+			game.drawPopup(8 * hUnit, vUnit, 7 * hUnit, (7.f * 11.f / 20.f) * hUnit, text);
+			
+			if(popupState == PopupState.FOURTH) {
+				// TODO
+			}
+		}
 	}
 
 	@Override
@@ -94,27 +134,55 @@ public class NewGameState1 extends BasicGameState {
 				}
 			}
 			
+			//we give the cards
+			for(SkillColor color : SkillColor.values()) {
+				game.mainPlayer.addCardToHand(game.board.drawSkill(color));
+				game.mainPlayer.addCardToHand(game.board.drawSkill(color));
+			}
+			
 			game.enterState(Resources.State.GAME_PHASE_1.ordinal());
 		}
 
 	}
 
 	public void mouseClicked(int button, int x, int y, int clickCount) {
-		if (button == 0 && clickCount == 1 && skillsToPlace.size() > 0) {
+		if (button == 0 && clickCount == 1) {
 
 			float hUnit = w / 16;
 			float vUnit = h / 12;
-
-			Creature creature = game.mainPlayer.creatureHitTest(8 * hUnit,
-					5 * vUnit, 8 * hUnit, 7 * vUnit, (float) x, (float) y);
 			
-			if(creature != null) {
-				ArrayList<SkillCard> skills = skillsPlaced.get(creature);
-				if(skills.size() < 5) {
-					skills.add(skillsToPlace.remove(0));
+			if(popupState != PopupState.DISMISSED && 
+					x >= 8 * hUnit && y >= vUnit &&
+					x <= 15 * hUnit && y <= (1 + 7.f * 11.f / 20.f) * hUnit) {
+				switch(popupState) {
+				case FIRST:
+					popupState = PopupState.SECOND;
+					break;
+				case SECOND:
+					popupState = PopupState.THIRD;
+					break;
+				case THIRD:
+					//popupState = PopupState.FOURTH;
+					popupState = PopupState.DISMISSED;
+					break;
+				case FOURTH:
+					popupState = PopupState.DISMISSED;
+					break;
+				default:
+					break;
+				}
+			} else if(skillsToPlace.size() > 0) {
+	
+				Creature creature = game.mainPlayer.creatureHitTest(8 * hUnit,
+						5 * vUnit, 8 * hUnit, 7 * vUnit, (float) x, (float) y);
+				
+				if(creature != null) {
+					ArrayList<SkillCard> skills = skillsPlaced.get(creature);
+					if(skills.size() < 5) {
+						skills.add(skillsToPlace.remove(0));
+					}
 				}
 			}
-			
 		}
 	}
 
@@ -139,5 +207,11 @@ public class NewGameState1 extends BasicGameState {
 			skillsToPlace.add(game.board.drawSkill(color));
 
 		}
+		
+		popupState = PopupState.FIRST;
+	}
+	
+	private static enum PopupState {
+		FIRST, SECOND, THIRD, FOURTH, DISMISSED;
 	}
 }

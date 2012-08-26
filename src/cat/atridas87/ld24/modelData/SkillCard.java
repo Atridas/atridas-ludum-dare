@@ -11,6 +11,8 @@ import cat.atridas87.ld24.render.ImageManager;
 
 public final class SkillCard {
 	
+	public static final float CARD_INFO_SIZE = 1;
+	
 	private final SkillCardType type;
 	private final SkillColor skillColor;
 	private final List<Attribute> attributes;
@@ -94,6 +96,15 @@ public final class SkillCard {
 		return attributes;
 	}
 	
+	public int getAttributeCount(Attribute attribute) {
+		int count = 0;
+		for(Attribute att : attributes) {
+			if(att == attribute) {
+				count++;
+			}
+		}
+		return count;
+	}
 
 	
 	public void draw(float x, float y, float w, float h) {
@@ -111,18 +122,35 @@ public final class SkillCard {
 					y + vUnit * 3 /2,
 					hUnit * 3,
 					hUnit * 3);
+			
+			iconImages[0].draw(
+					x + hUnit * CARD_INFO_SIZE * 0.25f,
+					y + vUnit * CARD_INFO_SIZE * 0.25f,
+					hUnit * CARD_INFO_SIZE * 0.75f,
+					hUnit * CARD_INFO_SIZE * 0.75f);
 			break;
 		case 2:
 			iconImages[0].draw(
-					x + hUnit,
-					y + vUnit * 2 / 3,
-					hUnit * 2,
-					hUnit * 2);
+					x + hUnit * 1.25f,
+					y + vUnit,
+					hUnit * 1.5f,
+					hUnit * 1.5f);
 			iconImages[1].draw(
-					x + hUnit,
-					y + vUnit * 10 / 3,
-					hUnit * 2,
-					hUnit * 2);
+					x + hUnit * 1.25f,
+					y + vUnit * 3.5f,
+					hUnit * 1.5f,
+					hUnit * 1.5f);
+			
+			iconImages[0].draw(
+					x + hUnit * CARD_INFO_SIZE * 0.125f,
+					y + vUnit * CARD_INFO_SIZE * 0.125f,
+					hUnit * CARD_INFO_SIZE * 0.375f,
+					hUnit * CARD_INFO_SIZE * 0.375f);
+			iconImages[1].draw(
+					x + hUnit * CARD_INFO_SIZE * 0.5f,
+					y + vUnit * CARD_INFO_SIZE * 0.5f,
+					hUnit * CARD_INFO_SIZE * 0.375f,
+					hUnit * CARD_INFO_SIZE * 0.375f);
 			break;
 		case 3:
 			iconImages[0].draw(
@@ -140,6 +168,22 @@ public final class SkillCard {
 					y + vUnit * 33 / 8,
 					hUnit * 3 / 2,
 					hUnit * 3 / 2);
+
+			iconImages[0].draw(
+					x + hUnit * CARD_INFO_SIZE * 0.125f,
+					y + vUnit * CARD_INFO_SIZE * 0.125f,
+					hUnit * CARD_INFO_SIZE * 0.375f,
+					hUnit * CARD_INFO_SIZE * 0.375f);
+			iconImages[1].draw(
+					x + hUnit * CARD_INFO_SIZE * 0.125f,
+					y + vUnit * CARD_INFO_SIZE * 0.5f,
+					hUnit * CARD_INFO_SIZE * 0.375f,
+					hUnit * CARD_INFO_SIZE * 0.375f);
+			iconImages[2].draw(
+					x + hUnit * CARD_INFO_SIZE * 0.5f,
+					y + vUnit * CARD_INFO_SIZE * 0.5f,
+					hUnit * CARD_INFO_SIZE * 0.375f,
+					hUnit * CARD_INFO_SIZE * 0.375f);
 			break;
 		case 4:
 			iconImages[0].draw(
@@ -162,6 +206,27 @@ public final class SkillCard {
 					y + vUnit * 13 / 4,
 					hUnit * 5 / 4,
 					hUnit * 5 / 4);
+
+			iconImages[0].draw(
+					x + hUnit * CARD_INFO_SIZE * 0.125f,
+					y + vUnit * CARD_INFO_SIZE * 0.125f,
+					hUnit * CARD_INFO_SIZE * 0.375f,
+					hUnit * CARD_INFO_SIZE * 0.375f);
+			iconImages[1].draw(
+					x + hUnit * CARD_INFO_SIZE * 0.125f,
+					y + vUnit * CARD_INFO_SIZE * 0.5f,
+					hUnit * CARD_INFO_SIZE * 0.375f,
+					hUnit * CARD_INFO_SIZE * 0.375f);
+			iconImages[2].draw(
+					x + hUnit * CARD_INFO_SIZE * 0.5f,
+					y + vUnit * CARD_INFO_SIZE * 0.125f,
+					hUnit * CARD_INFO_SIZE * 0.375f,
+					hUnit * CARD_INFO_SIZE * 0.375f);
+			iconImages[3].draw(
+					x + hUnit * CARD_INFO_SIZE * 0.5f,
+					y + vUnit * CARD_INFO_SIZE * 0.5f,
+					hUnit * CARD_INFO_SIZE * 0.375f,
+					hUnit * CARD_INFO_SIZE * 0.375f);
 			break;
 		default:
 			throw new IllegalStateException();
