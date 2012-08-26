@@ -19,10 +19,15 @@ public class LD24 extends StateBasedGame {
 	
 	public GameBoard board;
 	public PlayerBoard mainPlayer;
+	public EnemyAI ai[];
 	public UnicodeFont popupFont;
+	
+	public Random globalRnd;
 
 	public LD24() {
 		super(Resources.APP_NAME);
+		
+		globalRnd = new Random();
 
 		addState(new EmptyState());
 		addState(new NewGameState1());
@@ -48,11 +53,17 @@ public class LD24 extends StateBasedGame {
 	}
 	
 	public void startNewGame() {
-		board = new GameBoard((new Random()).nextLong());
+		board = new GameBoard(globalRnd.nextLong());
 		board.initGame();
 		board.initGraphics();
 		
 		mainPlayer = board.getPlayers().get(0);
+
+		ai = new RandomAI[3];
+		
+		ai[0] = new RandomAI(globalRnd.nextLong());
+		ai[1] = new RandomAI(globalRnd.nextLong());
+		ai[2] = new RandomAI(globalRnd.nextLong());
 		
 		((NewGameState1)this.getState(Resources.State.NEW_GAME_STATE_1.ordinal())).reset(this);
 

@@ -2,6 +2,7 @@ package cat.atridas87.ld24;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.newdawn.slick.GameContainer;
@@ -11,6 +12,7 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import cat.atridas87.ld24.modelData.Creature;
+import cat.atridas87.ld24.modelData.PlayerBoard;
 import cat.atridas87.ld24.modelData.SkillCard;
 import cat.atridas87.ld24.modelData.SkillCard.SkillColor;
 import cat.atridas87.ld24.render.ImageManager;
@@ -126,18 +128,54 @@ public class NewGameState1 extends BasicGameState {
 			throws SlickException {
 
 		if(skillsToPlace.size() == 0) {
-			// we have added all skills
-			for(Entry<Creature, ArrayList<SkillCard>> entry : skillsPlaced.entrySet()) {
-				Creature creature = entry.getKey();
-				for(SkillCard card : entry.getValue()) {
-					game.mainPlayer.addCardToCreature(creature, card);
+			{ // player
+				// we have added all skills
+				for(Entry<Creature, ArrayList<SkillCard>> entry : skillsPlaced.entrySet()) {
+					Creature creature = entry.getKey();
+					for(SkillCard card : entry.getValue()) {
+						game.mainPlayer.addCardToCreature(creature, card);
+					}
+				}
+				
+				//we give the cards
+				for(SkillColor color : SkillColor.values()) {
+					game.mainPlayer.addCardToHand(game.board.drawSkill(color));
+					game.mainPlayer.addCardToHand(game.board.drawSkill(color));
 				}
 			}
 			
-			//we give the cards
-			for(SkillColor color : SkillColor.values()) {
-				game.mainPlayer.addCardToHand(game.board.drawSkill(color));
-				game.mainPlayer.addCardToHand(game.board.drawSkill(color));
+			for(int i = 0; i < 3; i++) {
+				EnemyAI ai = game.ai[i];
+				PlayerBoard playerBoard = game.board.getPlayers().get(i + 1);
+				
+				Map<Creature, ArrayList<SkillColor>> cardColors = ai.distributeInitialCards(
+						playerBoard.getCreatures(),
+						game.board.getCurrentEnvironment(), game.board.getNextEnvironment(),
+						game.board.getCombatCard());
+				
+				
+				HashMap<Creature, ArrayList<SkillCard>> cards = new HashMap<>();
+				for(Entry<Creature, ArrayList<SkillColor>> entry : cardColors.entrySet()) {
+					ArrayList<SkillCard> deck = new ArrayList<>();
+					for(SkillColor color : entry.getValue()) {
+						deck.add(game.board.drawSkill(color));
+					}
+					cards.put(entry.getKey(), deck);
+				}
+				
+				// we have added all skills
+				for(Entry<Creature, ArrayList<SkillCard>> entry : cards.entrySet()) {
+					Creature creature = entry.getKey();
+					for(SkillCard card : entry.getValue()) {
+						playerBoard.addCardToCreature(creature, card);
+					}
+				}
+				
+				//we give the cards
+				for(SkillColor color : SkillColor.values()) {
+					playerBoard.addCardToHand(game.board.drawSkill(color));
+					playerBoard.addCardToHand(game.board.drawSkill(color));
+				}
 			}
 			
 			game.enterState(Resources.State.GAME_PHASE_1.ordinal());
