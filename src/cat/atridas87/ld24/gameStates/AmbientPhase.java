@@ -14,7 +14,6 @@ import org.newdawn.slick.state.StateBasedGame;
 import cat.atridas87.ld24.LD24;
 import cat.atridas87.ld24.Resources;
 import cat.atridas87.ld24.ai.EnemyAI;
-import cat.atridas87.ld24.ai.EnemyAI.DiscardAndReplace;
 import cat.atridas87.ld24.modelData.Creature;
 import cat.atridas87.ld24.modelData.EnvironmentCard;
 import cat.atridas87.ld24.modelData.PlayerBoard;
@@ -154,6 +153,9 @@ public final class AmbientPhase extends BasicGameState {
 
 							game.mainPlayer.discardAllCardsFromCreature(creature, game.board);
 							
+							game.mainPlayer.addSurvivingCreaturePoints();
+							
+							
 							// TODO finish
 							doIA();
 						}
@@ -181,7 +183,8 @@ public final class AmbientPhase extends BasicGameState {
 			Creature creature = ai.environmentPhase(game.board, playerBoard, iaLessAdaptedCreatures);
 			
 			playerBoard.discardAllCardsFromCreature(creature, game.board);
-			
+
+			playerBoard.addSurvivingCreaturePoints();
 		}
 	}
 

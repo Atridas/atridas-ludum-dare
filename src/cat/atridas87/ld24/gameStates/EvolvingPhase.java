@@ -1,10 +1,6 @@
 package cat.atridas87.ld24.gameStates;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -21,7 +17,6 @@ import cat.atridas87.ld24.ai.EnemyAI.DiscardAndReplace;
 import cat.atridas87.ld24.modelData.Creature;
 import cat.atridas87.ld24.modelData.PlayerBoard;
 import cat.atridas87.ld24.modelData.PlayerBoard.CreatureAndCard;
-import cat.atridas87.ld24.modelData.SkillCard.SkillColor;
 import cat.atridas87.ld24.modelData.SkillCard;
 import cat.atridas87.ld24.render.ImageManager;
 

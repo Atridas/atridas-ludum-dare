@@ -8,7 +8,6 @@ import java.util.Random;
 import java.util.Set;
 
 import cat.atridas87.ld24.modelData.Creature;
-import cat.atridas87.ld24.modelData.EnvironmentCard;
 import cat.atridas87.ld24.modelData.GameBoard;
 import cat.atridas87.ld24.modelData.PlayerBoard;
 import cat.atridas87.ld24.modelData.SkillCard;
@@ -107,7 +106,7 @@ public class RandomAI implements EnemyAI {
 			if(index == 0)
 				return creature;
 			else
-				index++;
+				index--;
 		}
 		return null;
 	}

@@ -3,16 +3,21 @@ package cat.atridas87.ld24.modelData;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.UnicodeFont;
+import org.newdawn.slick.font.effects.ColorEffect;
 
 import cat.atridas87.ld24.modelData.SkillCard.SkillCardType;
 import cat.atridas87.ld24.render.ImageManager;
 
 public final class PlayerBoard {
 
+	private UnicodeFont font;
+	
 	private final TreeSet<Creature> creatures = new TreeSet<>();
 	private final HashMap<Creature, ArrayList<SkillCard>> creatureSkills = new HashMap<>();
 
@@ -90,10 +95,15 @@ public final class PlayerBoard {
 	}
 
 	public void discardAllCardsFromCreature(Creature creature, GameBoard board) {
-		for(SkillCard card : creatureSkills.get(creature)) {
-			board.discardCard(card);
+		try {
+			for(SkillCard card : creatureSkills.get(creature)) {
+				board.discardCard(card);
+			}
+			creatureSkills.get(creature).clear();
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
 		}
-		creatureSkills.get(creature).clear();
 	}
 
 	public void addCardToCreature(Creature creature, SkillCard card) {
@@ -104,6 +114,12 @@ public final class PlayerBoard {
 		points += n;
 	}
 
+	public void addSurvivingCreaturePoints() {
+		for(Creature creature : creatures) {
+			points += getStarCount(creature);
+		}
+	}
+	
 	
 	public CreatureAndCard discardCardFromCreature(float x, float y, float hUnit, float vUnit, float mouseX, float mouseY, SkillCard forbiddenCard1, SkillCard forbiddenCard2) {
 		
@@ -199,10 +215,22 @@ public final class PlayerBoard {
 	
 	
 	
+	@SuppressWarnings("unchecked")
 	public void drawCreatures(float x, float y, float w, float h) {
+		if(font == null) {
+			try {
+				font = new UnicodeFont("resources/Font/accid___.ttf", 14, false, false);//Create Instance
+				font.addAsciiGlyphs();   //Add Glyphs
+				font.addGlyphs(400, 600); //Add Glyphs
+				font.getEffects().add(new ColorEffect(java.awt.Color.WHITE)); //Add Effects
+				font.loadGlyphs();  //Load Glyphs
+			} catch (SlickException e) {
+				throw new IllegalStateException(e);
+			} 
+		}
 		ImageManager im = ImageManager.getInstance();
 
-		// float hUnit = w / 8;
+		float hUnit = w / 8;
 		float vUnit = h / 8;
 
 		float cardSizeW = w / (creatures.size() + 1);
@@ -260,6 +288,11 @@ public final class PlayerBoard {
 			// next position
 			posX += interCardW + cardSizeW;
 		}
+		
+		float posY = y + 3 * vUnit - cardSizeW * 0.5f - hUnit * 0.125f;
+		
+		im.getStar().draw(x - hUnit * 0.5f, posY, hUnit * 0.25f, hUnit * 0.25f);
+		font.drawString(x - hUnit * 0.125f, posY + hUnit * 0.25f - font.getAscent(), "" + points);
 	}
 
 	public void drawHand(float x, float y, float w, float h) {
