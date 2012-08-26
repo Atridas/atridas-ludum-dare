@@ -121,7 +121,7 @@ public final class PlayerBoard {
 	}
 	
 	
-	public CreatureAndCard discardCardFromCreature(float x, float y, float hUnit, float vUnit, float mouseX, float mouseY, SkillCard forbiddenCard1, SkillCard forbiddenCard2) {
+	public CreatureAndCard discardCardFromCreature(float x, float y, float hUnit, float vUnit, float mouseX, float mouseY) {
 		
 		Creature selectedCreature = null;
 		SkillCard selectedSkillCard = null;
@@ -147,8 +147,6 @@ public final class PlayerBoard {
 				
 				//card.draw(posX, posY, cardSizeW, cardSizeH);
 				if(
-						card != forbiddenCard1 && // can not discard the now-placed
-						card != forbiddenCard2 && // cards
 						mouseX >= posX &&
 						mouseY >= posY &&
 						mouseX <= posX + cardSizeW &&

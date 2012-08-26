@@ -19,7 +19,7 @@ import cat.atridas87.ld24.modelData.EnvironmentCard;
 import cat.atridas87.ld24.modelData.PlayerBoard;
 import cat.atridas87.ld24.render.ImageManager;
 
-public final class AmbientPhase extends BasicGameState {
+public final class EnvironmentPhase extends BasicGameState {
 
 	private float w, h;
 	private LD24 game;
@@ -155,9 +155,11 @@ public final class AmbientPhase extends BasicGameState {
 							
 							game.mainPlayer.addSurvivingCreaturePoints();
 							
-							
-							// TODO finish
 							doIA();
+							
+
+							((RegenerationPhase)game.getState(RegenerationPhase.ID)).enterPhase();
+							game.enterState(RegenerationPhase.ID);
 						}
 						// im.getCreatureImage(creature).draw(posX - cardSizeW *
 						// 0.125f,
@@ -224,7 +226,7 @@ public final class AmbientPhase extends BasicGameState {
 		return ID;
 	}
 
-	public static final int ID = Resources.State.AMBIENT_PHASE.ordinal();
+	public static final int ID = Resources.State.ENVIRONMENT_PHASE.ordinal();
 
 	private static enum PopupState {
 		FIRST, DISMISSED;

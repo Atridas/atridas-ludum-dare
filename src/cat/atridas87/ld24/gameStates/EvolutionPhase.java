@@ -20,7 +20,7 @@ import cat.atridas87.ld24.modelData.PlayerBoard.CreatureAndCard;
 import cat.atridas87.ld24.modelData.SkillCard;
 import cat.atridas87.ld24.render.ImageManager;
 
-public class EvolvingPhase extends BasicGameState {
+public class EvolutionPhase extends BasicGameState {
 
 	private float w, h;
 	private LD24 game;
@@ -134,9 +134,11 @@ public class EvolvingPhase extends BasicGameState {
 				}
 			} else if (actionState == ActionState.DISCARD_CARD) {
 				CreatureAndCard cac = game.mainPlayer.discardCardFromCreature(8 * hUnit,
-						4 * vUnit, hUnit, vUnit, x, y, addedCards[0],
-						addedCards[1]);
-				if (cac != null) {
+						4 * vUnit, hUnit, vUnit, x, y);
+				if(cac.card == addedCards[0] || cac.card == addedCards[1]) {
+					game.mainPlayer.addCardToCreature(cac.creature, cac.card);
+					// TODO error message
+				} else if (cac != null) {
 					creatureToAddCard = cac.creature;
 					game.board.discardCard(cac.card);
 					actionState = ActionState.SELECT_NEW_CARD;
@@ -152,8 +154,8 @@ public class EvolvingPhase extends BasicGameState {
 						addedCards[1] = card;
 					} else {
 						doIA();
-						((AmbientPhase)game.getState(AmbientPhase.ID)).enterPhase();
-						game.enterState(AmbientPhase.ID);
+						((EnvironmentPhase)game.getState(EnvironmentPhase.ID)).enterPhase();
+						game.enterState(EnvironmentPhase.ID);
 					}
 				}
 			}
@@ -192,7 +194,7 @@ public class EvolvingPhase extends BasicGameState {
 		return ID;
 	}
 
-	public static final int ID = Resources.State.EVOLVING_PHASE.ordinal();
+	public static final int ID = Resources.State.EVOLUTION_PHASE.ordinal();
 
 	private static enum PopupState {
 		FIRST, SECOND, THIRD, DISMISSED;

@@ -194,9 +194,10 @@ public class NewGameState1 extends BasicGameState {
 				}
 			}
 
-			((EvolvingPhase) game.getState(EvolvingPhase.ID)).setFirstTime();
-			((AmbientPhase) game.getState(AmbientPhase.ID)).setFirstTime();
-			game.enterState(EvolvingPhase.ID);
+			((EvolutionPhase) game.getState(EvolutionPhase.ID)).setFirstTime();
+			((EnvironmentPhase) game.getState(EnvironmentPhase.ID)).setFirstTime();
+			((RegenerationPhase) game.getState(RegenerationPhase.ID)).setFirstTime();
+			game.enterState(EvolutionPhase.ID);
 		}
 
 	}

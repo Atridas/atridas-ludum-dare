@@ -11,10 +11,11 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import cat.atridas87.ld24.ai.EnemyAI;
 import cat.atridas87.ld24.ai.RandomAI;
-import cat.atridas87.ld24.gameStates.AmbientPhase;
+import cat.atridas87.ld24.gameStates.EnvironmentPhase;
 import cat.atridas87.ld24.gameStates.EmptyState;
-import cat.atridas87.ld24.gameStates.EvolvingPhase;
+import cat.atridas87.ld24.gameStates.EvolutionPhase;
 import cat.atridas87.ld24.gameStates.NewGameState1;
+import cat.atridas87.ld24.gameStates.RegenerationPhase;
 import cat.atridas87.ld24.modelData.GameBoard;
 import cat.atridas87.ld24.modelData.PlayerBoard;
 import cat.atridas87.ld24.render.ImageManager;
@@ -37,8 +38,9 @@ public class LD24 extends StateBasedGame {
 
 		addState(new EmptyState());
 		addState(new NewGameState1());
-		addState(new EvolvingPhase());
-		addState(new AmbientPhase());
+		addState(new EvolutionPhase());
+		addState(new EnvironmentPhase());
+		addState(new RegenerationPhase());
 		
 		this.enterState(EmptyState.ID);
 	}
@@ -49,8 +51,9 @@ public class LD24 extends StateBasedGame {
 
 		this.getState(EmptyState.ID).init(container, this);
 		this.getState(NewGameState1.ID).init(container, this);
-		this.getState(EvolvingPhase.ID).init(container, this);
-		this.getState(AmbientPhase.ID).init(container, this);
+		this.getState(EvolutionPhase.ID).init(container, this);
+		this.getState(EnvironmentPhase.ID).init(container, this);
+		this.getState(RegenerationPhase.ID).init(container, this);
 	}
 
 	public static void main(String[] args) throws SlickException {
