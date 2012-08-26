@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
@@ -32,6 +33,8 @@ public class NewGameState1 extends BasicGameState {
 	private float w, h;
 	private LD24 game;
 	private PopupState popupState;
+	
+	private PlayerBoard showBoard;
 
 	@Override
 	public void init(GameContainer container, StateBasedGame _game)
@@ -139,6 +142,12 @@ public class NewGameState1 extends BasicGameState {
 		} else {
 			im.getInfo().draw(14.75f * hUnit, 0.25f * vUnit, hUnit, hUnit);
 		}
+		
+		if(showBoard != null) {
+			Image popupImage = im.getPopupBackground();
+			popupImage.draw(4 * hUnit, 1 * vUnit, 8 * hUnit, 10 * hUnit);
+			showBoard.drawCreatures(4 * hUnit, 1 * vUnit, 8 * hUnit, 8 * hUnit);
+		}
 	}
 
 	@Override
@@ -206,9 +215,21 @@ public class NewGameState1 extends BasicGameState {
 
 	public void mouseClicked(int button, int x, int y, int clickCount) {
 		if (button == 0 && clickCount == 1) {
+			
+			if(showBoard != null) {
+				showBoard = null;
+				return;
+			}
 
 			float hUnit = w / 16;
 			float vUnit = h / 12;
+			
+			{
+				showBoard = game.board.clickBoard(hUnit, vUnit, x, y);
+				if(showBoard != null) {
+					return;
+				}
+			}
 
 			if (popupState != PopupState.DISMISSED && x >= 8 * hUnit
 					&& y >= vUnit && x <= 15 * hUnit
@@ -275,6 +296,7 @@ public class NewGameState1 extends BasicGameState {
 		}
 
 		popupState = PopupState.FIRST;
+		showBoard = null;
 	}
 
 	private static enum PopupState {

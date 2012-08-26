@@ -227,7 +227,7 @@ public final class PlayerBoard {
 		}
 		ImageManager im = ImageManager.getInstance();
 
-		float hUnit = w / 8;
+		//float hUnit = w / 8;
 		float vUnit = h / 8;
 
 		float cardSizeW = w / (creatures.size() + 1);
@@ -285,12 +285,13 @@ public final class PlayerBoard {
 			// next position
 			posX += interCardW + cardSizeW;
 		}
-
+		/*
 		float posY = y + 3 * vUnit - cardSizeW * 0.5f - hUnit * 0.125f;
 
 		im.getStar().draw(x - hUnit * 0.5f, posY, hUnit * 0.25f, hUnit * 0.25f);
 		font.drawString(x - hUnit * 0.125f,
 				posY + hUnit * 0.25f - font.getAscent(), "" + points);
+		*/
 	}
 
 	public void drawHand(float x, float y, float w, float h) {
@@ -306,6 +307,25 @@ public final class PlayerBoard {
 		for (SkillCard card : hand) {
 			card.draw(posX, posY, cardSizeW, cardSizeH);
 			posX += 0.5f * hUnit;
+		}
+	}
+
+	public void drawBackHand(float x, float y, float w, float h) {
+		ImageManager im = ImageManager.getInstance();
+		float hUnit = w / 8;
+		//float vUnit = h / 2;
+
+		float posX = x;
+		float posY = y;
+		
+		float dX = hUnit * 6.f / 10.f;
+
+		float cardSizeW = 1.33f * hUnit;
+		float cardSizeH = 2 * hUnit;
+
+		for (SkillCard card : hand) {
+			im.getCardBackSide(card.getSkillColor()).draw(posX, posY, cardSizeW, cardSizeH);
+			posX += dX;
 		}
 	}
 
