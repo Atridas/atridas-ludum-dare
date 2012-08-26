@@ -8,7 +8,6 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import cat.atridas87.ld24.LD24;
 import cat.atridas87.ld24.Resources;
-import cat.atridas87.ld24.Resources.State;
 
 public class EmptyState extends BasicGameState {
 

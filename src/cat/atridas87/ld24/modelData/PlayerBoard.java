@@ -17,6 +17,8 @@ public final class PlayerBoard {
 	private final HashMap<Creature, ArrayList<SkillCard>> creatureSkills = new HashMap<>();
 
 	private final ArrayList<SkillCard> hand = new ArrayList<>();
+	
+	private int points;
 
 	public Set<Creature> getCreatures() {
 		return Collections.unmodifiableSet(creatures);
@@ -57,6 +59,18 @@ public final class PlayerBoard {
 		}
 		return count;
 	}
+	
+	public int getStrength(Creature creature, EnvironmentCard environment) {
+		int strength = 0;
+		for(Attribute att : environment.getAttributes()) {
+			strength += getAttributeCount(creature, att);
+		}
+		return strength;
+	}
+	
+	public int getPoints() {
+		return points;
+	}
 
 	public void addCreature(Creature creature) {
 		creatures.add(creature);
@@ -75,13 +89,23 @@ public final class PlayerBoard {
 		creatureSkills.get(creature).remove(card);
 	}
 
+	public void discardAllCardsFromCreature(Creature creature, GameBoard board) {
+		for(SkillCard card : creatureSkills.get(creature)) {
+			board.discardCard(card);
+		}
+		creatureSkills.get(creature).clear();
+	}
+
 	public void addCardToCreature(Creature creature, SkillCard card) {
 		creatureSkills.get(creature).add(card);
 	}
 
+	public void addPoints(int n) {
+		points += n;
+	}
 
 	
-	public Creature discardCardFromCreature(float x, float y, float hUnit, float vUnit, float mouseX, float mouseY, SkillCard forbiddenCard1, SkillCard forbiddenCard2) {
+	public CreatureAndCard discardCardFromCreature(float x, float y, float hUnit, float vUnit, float mouseX, float mouseY, SkillCard forbiddenCard1, SkillCard forbiddenCard2) {
 		
 		Creature selectedCreature = null;
 		SkillCard selectedSkillCard = null;
@@ -128,9 +152,18 @@ public final class PlayerBoard {
 		
 		if(selectedSkillCard != null) {
 			removeCardFromCreature(selectedCreature, selectedSkillCard);
-			return selectedCreature;
+			return new CreatureAndCard(selectedCreature, selectedSkillCard);
 		} else {
 			return null;
+		}
+	}
+	
+	public static final class CreatureAndCard {
+		public final Creature creature;
+		public final SkillCard card;
+		CreatureAndCard(Creature creature, SkillCard card) {
+			this.creature = creature;
+			this.card = card;
 		}
 	}
 	

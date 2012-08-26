@@ -8,6 +8,8 @@ import java.util.Map.Entry;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.UnicodeFont;
+import org.newdawn.slick.font.effects.ColorEffect;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -25,6 +27,8 @@ public class NewGameState1 extends BasicGameState {
 	private ArrayList<SkillCard> skillsToPlace;
 	private HashMap<Creature, ArrayList<SkillCard>> skillsPlaced;
 
+	private UnicodeFont font;
+
 	private float w, h;
 	private LD24 game;
 	private PopupState popupState;
@@ -35,9 +39,23 @@ public class NewGameState1 extends BasicGameState {
 		game = (LD24) _game;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void render(GameContainer container, StateBasedGame _game, Graphics g)
 			throws SlickException {
+		if (font == null) {
+			try {
+				font = new UnicodeFont("resources/Font/accid___.ttf", 25,
+						false, false);// Create Instance
+				font.addAsciiGlyphs(); // Add Glyphs
+				font.addGlyphs(400, 600); // Add Glyphs
+				font.getEffects().add(new ColorEffect(java.awt.Color.WHITE)); // Add
+																				// Effects
+				font.loadGlyphs(); // Load Glyphs
+			} catch (SlickException e) {
+				throw new IllegalStateException(e);
+			}
+		}
 		ImageManager im = ImageManager.getInstance();
 
 		w = container.getWidth();
@@ -47,6 +65,8 @@ public class NewGameState1 extends BasicGameState {
 		float vUnit = h / 12;
 
 		im.getBackground().draw(0, 0, w, h);
+
+		font.drawString(hUnit * 6, vUnit * 0.5f, "Game Preparation");
 
 		game.board.draw(0, 0, w, h);
 
@@ -67,60 +87,53 @@ public class NewGameState1 extends BasicGameState {
 		// skills placed
 		float cardSizeW = 8 * hUnit / (4 + 1);
 		float cardSizeH = cardSizeW * 3 / 2;
-		
+
 		float interCardW = cardSizeW / (4 + 1);
-		
+
 		float posX = 8 * hUnit + interCardW;
-		for(Creature creature : game.mainPlayer.getCreatures()) {
-			float interCardH = 2.5f * vUnit / 5; 
-			
-			
+		for (Creature creature : game.mainPlayer.getCreatures()) {
+			float interCardH = 2.5f * vUnit / 5;
+
 			posY = 5 * vUnit + 2.5f * vUnit;
-			
-			for(SkillCard card : skillsPlaced.get(creature)) {
-				//card.draw(posX, posY, cardSizeW, cardSizeH);
-				im.getCardBackSide(card.getSkillColor()).draw(posX, posY, cardSizeW, cardSizeH);
+
+			for (SkillCard card : skillsPlaced.get(creature)) {
+				// card.draw(posX, posY, cardSizeW, cardSizeH);
+				im.getCardBackSide(card.getSkillColor()).draw(posX, posY,
+						cardSizeW, cardSizeH);
 				posY += interCardH;
 			}
-			
+
 			posX += interCardW + cardSizeW;
 		}
-		
+
 		// popup
-		if(popupState != PopupState.DISMISSED) {
-			
+		if (popupState != PopupState.DISMISSED) {
+
 			String text;
-			if(popupState == PopupState.FIRST) {
-				text =  "You now have 5 cards of each color, and you must\n" +
-						"assign them to your creatures. Each card will\n" +
-						"improve your creatures' skills, and each color\n" +
-						"has a diferent skill distribution." +
-						"\n\n" +
-						"Click here to show next.";
-			} else if(popupState == PopupState.SECOND) {
-				text =  "You can click on any creature icon (right bellow\n" +
-						"this popup) and you will assign a card to that\n" +
-						"creature." +
-						"\n\n" +
-						"Click here to show next.";
-			} else if(popupState == PopupState.THIRD) {
-				text =  "Remember that the weakest creature in the\n" +
-						"current ambient will perish and that there will\n" +
-						"be a combat." +
-						"\n\n" +
-						//"Click here to show next.";
+			if (popupState == PopupState.FIRST) {
+				text = "You now have 5 cards of each color, and you must\n"
+						+ "assign them to your creatures. Each card will\n"
+						+ "improve your creatures' skills, and each color\n"
+						+ "has a diferent skill distribution." + "\n\n"
+						+ "Click here to show next.";
+			} else if (popupState == PopupState.SECOND) {
+				text = "You can click on any creature icon (right bellow\n"
+						+ "this popup) and you will assign a card to that\n"
+						+ "creature." + "\n\n" + "Click here to show next.";
+			} else if (popupState == PopupState.THIRD) {
+				text = "Remember that the weakest creature in the\n"
+						+ "current ambient will perish and that there will\n"
+						+ "be a combat." + "\n\n" +
+						// "Click here to show next.";
 						"Click here to dismiss.";
 			} else {
-				text =  "\n" +
-						"\n" +
-						"\n" +
-						"\n\n" +
-						"Click here to dismiss.";
+				text = "\n" + "\n" + "\n" + "\n\n" + "Click here to dismiss.";
 			}
-			
-			game.drawPopup(8 * hUnit, vUnit, 7 * hUnit, (7.f * 11.f / 20.f) * hUnit, text);
-			
-			if(popupState == PopupState.FOURTH) {
+
+			game.drawPopup(8 * hUnit, vUnit, 7 * hUnit, (7.f * 11.f / 20.f)
+					* hUnit, text);
+
+			if (popupState == PopupState.FOURTH) {
 				// TODO
 			}
 		}
@@ -130,58 +143,59 @@ public class NewGameState1 extends BasicGameState {
 	public void update(GameContainer container, StateBasedGame _game, int delta)
 			throws SlickException {
 
-		if(skillsToPlace.size() == 0) {
+		if (skillsToPlace.size() == 0) {
 			{ // player
 				// we have added all skills
-				for(Entry<Creature, ArrayList<SkillCard>> entry : skillsPlaced.entrySet()) {
+				for (Entry<Creature, ArrayList<SkillCard>> entry : skillsPlaced
+						.entrySet()) {
 					Creature creature = entry.getKey();
-					for(SkillCard card : entry.getValue()) {
+					for (SkillCard card : entry.getValue()) {
 						game.mainPlayer.addCardToCreature(creature, card);
 					}
 				}
-				
-				//we give the cards
-				for(SkillColor color : SkillColor.values()) {
+
+				// we give the cards
+				for (SkillColor color : SkillColor.values()) {
 					game.mainPlayer.addCardToHand(game.board.drawSkill(color));
 					game.mainPlayer.addCardToHand(game.board.drawSkill(color));
 				}
 			}
-			
-			for(int i = 0; i < 3; i++) {
+
+			for (int i = 0; i < 3; i++) {
 				EnemyAI ai = game.ai[i];
 				PlayerBoard playerBoard = game.board.getPlayers().get(i + 1);
-				
-				Map<Creature, ArrayList<SkillColor>> cardColors = ai.distributeInitialCards(
-						playerBoard.getCreatures(),
-						game.board.getCurrentEnvironment(), game.board.getNextEnvironment(),
-						game.board.getCombatCard());
-				
-				
+
+				Map<Creature, ArrayList<SkillColor>> cardColors = ai
+						.distributeInitialCards(game.board, playerBoard);
+
 				HashMap<Creature, ArrayList<SkillCard>> cards = new HashMap<>();
-				for(Entry<Creature, ArrayList<SkillColor>> entry : cardColors.entrySet()) {
+				for (Entry<Creature, ArrayList<SkillColor>> entry : cardColors
+						.entrySet()) {
 					ArrayList<SkillCard> deck = new ArrayList<>();
-					for(SkillColor color : entry.getValue()) {
+					for (SkillColor color : entry.getValue()) {
 						deck.add(game.board.drawSkill(color));
 					}
 					cards.put(entry.getKey(), deck);
 				}
-				
+
 				// we have added all skills
-				for(Entry<Creature, ArrayList<SkillCard>> entry : cards.entrySet()) {
+				for (Entry<Creature, ArrayList<SkillCard>> entry : cards
+						.entrySet()) {
 					Creature creature = entry.getKey();
-					for(SkillCard card : entry.getValue()) {
+					for (SkillCard card : entry.getValue()) {
 						playerBoard.addCardToCreature(creature, card);
 					}
 				}
-				
-				//we give the cards
-				for(SkillColor color : SkillColor.values()) {
+
+				// we give the cards
+				for (SkillColor color : SkillColor.values()) {
 					playerBoard.addCardToHand(game.board.drawSkill(color));
 					playerBoard.addCardToHand(game.board.drawSkill(color));
 				}
 			}
-			
-			((EvolvingPhase)game.getState(EvolvingPhase.ID)).setFirstTime();
+
+			((EvolvingPhase) game.getState(EvolvingPhase.ID)).setFirstTime();
+			((AmbientPhase) game.getState(AmbientPhase.ID)).setFirstTime();
 			game.enterState(EvolvingPhase.ID);
 		}
 
@@ -192,11 +206,11 @@ public class NewGameState1 extends BasicGameState {
 
 			float hUnit = w / 16;
 			float vUnit = h / 12;
-			
-			if(popupState != PopupState.DISMISSED && 
-					x >= 8 * hUnit && y >= vUnit &&
-					x <= 15 * hUnit && y <= (1 + 7.f * 11.f / 20.f) * hUnit) {
-				switch(popupState) {
+
+			if (popupState != PopupState.DISMISSED && x >= 8 * hUnit
+					&& y >= vUnit && x <= 15 * hUnit
+					&& y <= (1 + 7.f * 11.f / 20.f) * hUnit) {
+				switch (popupState) {
 				case FIRST:
 					popupState = PopupState.SECOND;
 					break;
@@ -204,7 +218,7 @@ public class NewGameState1 extends BasicGameState {
 					popupState = PopupState.THIRD;
 					break;
 				case THIRD:
-					//popupState = PopupState.FOURTH;
+					// popupState = PopupState.FOURTH;
 					popupState = PopupState.DISMISSED;
 					break;
 				case FOURTH:
@@ -213,14 +227,14 @@ public class NewGameState1 extends BasicGameState {
 				default:
 					break;
 				}
-			} else if(skillsToPlace.size() > 0) {
-	
+			} else if (skillsToPlace.size() > 0) {
+
 				Creature creature = game.mainPlayer.creatureHitTest(8 * hUnit,
 						5 * vUnit, 8 * hUnit, 7 * vUnit, (float) x, (float) y);
-				
-				if(creature != null) {
+
+				if (creature != null) {
 					ArrayList<SkillCard> skills = skillsPlaced.get(creature);
-					if(skills.size() < 5) {
+					if (skills.size() < 5) {
 						skills.add(skillsToPlace.remove(0));
 					}
 				}
@@ -232,9 +246,8 @@ public class NewGameState1 extends BasicGameState {
 	public int getID() {
 		return ID;
 	}
-	
+
 	public static final int ID = Resources.State.NEW_GAME_STATE_1.ordinal();
-	
 
 	public void reset(LD24 game) {
 		skillsToPlace = new ArrayList<>(4 * 5);
@@ -252,10 +265,10 @@ public class NewGameState1 extends BasicGameState {
 			skillsToPlace.add(game.board.drawSkill(color));
 
 		}
-		
+
 		popupState = PopupState.FIRST;
 	}
-	
+
 	private static enum PopupState {
 		FIRST, SECOND, THIRD, FOURTH, DISMISSED;
 	}

@@ -131,6 +131,10 @@ public final class GameBoard {
 		return skillCard;
 	}
 	
+	public void discardCard(SkillCard card) {
+		skillDiscardDecks.get(card.getSkillColor()).add(card);
+	}
+	
 	public void initGame() {
 		HashSet<Creature> chosenCreatures = new HashSet<>();
 		for(int i = 0; i < NUMBER_OF_PLAYERS; i++) {

@@ -1,15 +1,27 @@
 package cat.atridas87.ld24.gameStates;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.UnicodeFont;
+import org.newdawn.slick.font.effects.ColorEffect;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import cat.atridas87.ld24.LD24;
 import cat.atridas87.ld24.Resources;
+import cat.atridas87.ld24.ai.EnemyAI;
+import cat.atridas87.ld24.ai.EnemyAI.DiscardAndReplace;
 import cat.atridas87.ld24.modelData.Creature;
+import cat.atridas87.ld24.modelData.PlayerBoard;
+import cat.atridas87.ld24.modelData.PlayerBoard.CreatureAndCard;
+import cat.atridas87.ld24.modelData.SkillCard.SkillColor;
 import cat.atridas87.ld24.modelData.SkillCard;
 import cat.atridas87.ld24.render.ImageManager;
 
@@ -18,11 +30,14 @@ public class EvolvingPhase extends BasicGameState {
 	private float w, h;
 	private LD24 game;
 
+	private UnicodeFont font;
+	
 	private PopupState popupState;
 	private ActionState actionState;
 
 	private SkillCard addedCards[] = new SkillCard[2];
 	private Creature creatureToAddCard;
+
 
 	@Override
 	public void init(GameContainer container, StateBasedGame _game)
@@ -30,9 +45,23 @@ public class EvolvingPhase extends BasicGameState {
 		game = (LD24) _game;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void render(GameContainer container, StateBasedGame _game, Graphics g)
 			throws SlickException {
+		if(font == null) {
+			try {
+				font = new UnicodeFont("resources/Font/accid___.ttf", 25, false, false);//Create Instance
+				font.addAsciiGlyphs();   //Add Glyphs
+				font.addGlyphs(400, 600); //Add Glyphs
+				font.getEffects().add(new ColorEffect(java.awt.Color.WHITE)); //Add Effects
+				font.loadGlyphs();  //Load Glyphs
+			} catch (SlickException e) {
+				throw new IllegalStateException(e);
+			} 
+		}
+		
+		
 		ImageManager im = ImageManager.getInstance();
 
 		w = container.getWidth();
@@ -42,6 +71,8 @@ public class EvolvingPhase extends BasicGameState {
 		float vUnit = h / 12;
 
 		im.getBackground().draw(0, 0, w, h);
+		
+		font.drawString(hUnit * 6, vUnit * .5f, "Evolution Phase");
 
 		game.board.draw(0, 0, w, h);
 
@@ -107,10 +138,12 @@ public class EvolvingPhase extends BasicGameState {
 					break;
 				}
 			} else if (actionState == ActionState.DISCARD_CARD) {
-				creatureToAddCard = game.mainPlayer.discardCardFromCreature(8 * hUnit,
+				CreatureAndCard cac = game.mainPlayer.discardCardFromCreature(8 * hUnit,
 						4 * vUnit, hUnit, vUnit, x, y, addedCards[0],
 						addedCards[1]);
-				if (creatureToAddCard != null) {
+				if (cac != null) {
+					creatureToAddCard = cac.creature;
+					game.board.discardCard(cac.card);
 					actionState = ActionState.SELECT_NEW_CARD;
 				}
 			} else if (actionState == ActionState.SELECT_NEW_CARD) {
@@ -123,9 +156,27 @@ public class EvolvingPhase extends BasicGameState {
 					} else if(addedCards[1] == null) {
 						addedCards[1] = card;
 					} else {
-						// TODO fin
+						doIA();
+						((AmbientPhase)game.getState(AmbientPhase.ID)).enterPhase();
+						game.enterState(AmbientPhase.ID);
 					}
 				}
+			}
+		}
+	}
+	
+	private void doIA() {
+		for (int i = 0; i < 3; i++) {
+			EnemyAI ai = game.ai[i];
+			PlayerBoard playerBoard = game.board.getPlayers().get(i + 1);
+
+			DiscardAndReplace[] actions = ai.evolutionPhase(game.board, playerBoard);
+			
+			for(DiscardAndReplace action : actions) {
+				playerBoard.removeCardFromCreature(action.creature, action.discard);
+				playerBoard.removeCardFromHand(action.replace);
+				playerBoard.addCardToCreature(action.creature, action.replace);
+				game.board.discardCard(action.discard);
 			}
 		}
 	}

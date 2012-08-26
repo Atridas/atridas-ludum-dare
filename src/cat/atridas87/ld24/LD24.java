@@ -11,6 +11,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import cat.atridas87.ld24.ai.EnemyAI;
 import cat.atridas87.ld24.ai.RandomAI;
+import cat.atridas87.ld24.gameStates.AmbientPhase;
 import cat.atridas87.ld24.gameStates.EmptyState;
 import cat.atridas87.ld24.gameStates.EvolvingPhase;
 import cat.atridas87.ld24.gameStates.NewGameState1;
@@ -37,6 +38,7 @@ public class LD24 extends StateBasedGame {
 		addState(new EmptyState());
 		addState(new NewGameState1());
 		addState(new EvolvingPhase());
+		addState(new AmbientPhase());
 		
 		this.enterState(EmptyState.ID);
 	}
@@ -48,6 +50,7 @@ public class LD24 extends StateBasedGame {
 		this.getState(EmptyState.ID).init(container, this);
 		this.getState(NewGameState1.ID).init(container, this);
 		this.getState(EvolvingPhase.ID).init(container, this);
+		this.getState(AmbientPhase.ID).init(container, this);
 	}
 
 	public static void main(String[] args) throws SlickException {
