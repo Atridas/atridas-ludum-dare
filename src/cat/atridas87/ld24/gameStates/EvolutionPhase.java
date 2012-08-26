@@ -23,7 +23,7 @@ public class EvolutionPhase extends BasicGameState {
 	private float w, h;
 	private LD24 game;
 
-	private UnicodeFont font;
+	private UnicodeFont font, helpFont;
 
 	private PopupState popupState;
 	private ActionState actionState;
@@ -31,29 +31,35 @@ public class EvolutionPhase extends BasicGameState {
 	private SkillCard addedCards[] = new SkillCard[2];
 	private Creature creatureToAddCard;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void init(GameContainer container, StateBasedGame _game)
 			throws SlickException {
 		game = (LD24) _game;
+		try {
+			font = new UnicodeFont("resources/Font/accid___.ttf", 25,
+					false, false);// Create Instance
+			font.addAsciiGlyphs(); // Add Glyphs
+			font.addGlyphs(400, 600); // Add Glyphs
+			font.getEffects().add(new ColorEffect(java.awt.Color.WHITE)); // Add
+																			// Effects
+			font.loadGlyphs(); // Load Glyphs
+			
+			helpFont = new UnicodeFont("resources/Font/accid___.ttf", 15,
+					false, false);// Create Instance
+			helpFont.addAsciiGlyphs(); // Add Glyphs
+			helpFont.addGlyphs(400, 600); // Add Glyphs
+			helpFont.getEffects().add(new ColorEffect(java.awt.Color.WHITE)); // Add
+																			// Effects
+			helpFont.loadGlyphs(); // Load Glyphs
+		} catch (SlickException e) {
+			throw new IllegalStateException(e);
+		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void render(GameContainer container, StateBasedGame _game, Graphics g)
 			throws SlickException {
-		if (font == null) {
-			try {
-				font = new UnicodeFont("resources/Font/accid___.ttf", 25,
-						false, false);// Create Instance
-				font.addAsciiGlyphs(); // Add Glyphs
-				font.addGlyphs(400, 600); // Add Glyphs
-				font.getEffects().add(new ColorEffect(java.awt.Color.WHITE)); // Add
-																				// Effects
-				font.loadGlyphs(); // Load Glyphs
-			} catch (SlickException e) {
-				throw new IllegalStateException(e);
-			}
-		}
 
 		ImageManager im = ImageManager.getInstance();
 
@@ -73,11 +79,21 @@ public class EvolutionPhase extends BasicGameState {
 				8 * vUnit);
 
 		game.mainPlayer.drawHand(0, 8 * vUnit, 8 * hUnit, 4 * vUnit);
+		
+		
+		String text;
+		if(addedCards[0] == null) {
+			text = "You have to change 3 skill cards from your creatures";
+		} else if(addedCards[1] == null) {
+			text = "You have to change 2 skill cards from your creatures";
+		} else {
+			text = "You have to change one skill card from your creatures";
+		}
+		helpFont.drawString(0.75f * hUnit, 8.5f * vUnit, text);
 
 		// popup
 		if (popupState != PopupState.DISMISSED) {
 
-			String text;
 			if (popupState == PopupState.FIRST) {
 				text = "Here you have the chance to change 3 cards from\n"
 						+ "all of your creatures skill cards." + "\n\n"
@@ -132,6 +148,7 @@ public class EvolutionPhase extends BasicGameState {
 				default:
 					break;
 				}
+				Resources.next.play(1, 0.25f);
 			} else if (popupState == PopupState.DISMISSED && x >= 14.75f * hUnit && y >= 0.25f * vUnit
 					&& x <= 15.75f * hUnit && y <= 1.25f * vUnit) {
 				popupState = PopupState.FIRST;
@@ -147,6 +164,7 @@ public class EvolutionPhase extends BasicGameState {
 						creatureToAddCard = cac.creature;
 						game.board.discardCard(cac.card);
 						actionState = ActionState.SELECT_NEW_CARD;
+						Resources.select.play(1, 0.25f);
 					}
 				}
 			} else if (actionState == ActionState.SELECT_NEW_CARD) {
@@ -155,6 +173,7 @@ public class EvolutionPhase extends BasicGameState {
 				if (card != null) {
 					game.mainPlayer.addCardToCreature(creatureToAddCard, card);
 					actionState = ActionState.DISCARD_CARD;
+					Resources.select.play(1, 0.25f);
 					if (addedCards[0] == null) {
 						addedCards[0] = card;
 					} else if (addedCards[1] == null) {

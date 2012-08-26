@@ -35,29 +35,27 @@ public class RegenerationPhase extends BasicGameState {
 
 	private HashSet<SkillColor> possibleDecks;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void init(GameContainer container, StateBasedGame _game)
 			throws SlickException {
 		game = (LD24) _game;
+		try {
+			font = new UnicodeFont("resources/Font/accid___.ttf", 25,
+					false, false);// Create Instance
+			font.addAsciiGlyphs(); // Add Glyphs
+			font.addGlyphs(400, 600); // Add Glyphs
+			font.getEffects().add(new ColorEffect(java.awt.Color.WHITE)); // Add
+																			// Effects
+			font.loadGlyphs(); // Load Glyphs
+		} catch (SlickException e) {
+			throw new IllegalStateException(e);
+		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void render(GameContainer container, StateBasedGame _game, Graphics g)
 			throws SlickException {
-		if (font == null) {
-			try {
-				font = new UnicodeFont("resources/Font/accid___.ttf", 25,
-						false, false);// Create Instance
-				font.addAsciiGlyphs(); // Add Glyphs
-				font.addGlyphs(400, 600); // Add Glyphs
-				font.getEffects().add(new ColorEffect(java.awt.Color.WHITE)); // Add
-																				// Effects
-				font.loadGlyphs(); // Load Glyphs
-			} catch (SlickException e) {
-				throw new IllegalStateException(e);
-			}
-		}
 		ImageManager im = ImageManager.getInstance();
 
 		w = container.getWidth();
@@ -219,6 +217,7 @@ public class RegenerationPhase extends BasicGameState {
 				default:
 					break;
 				}
+				Resources.next.play(1, 0.25f);
 			} else if (popupState == PopupState.DISMISSED && x >= 14.75f * hUnit && y >= 0.25f * vUnit
 					&& x <= 15.75f * hUnit && y <= 1.25f * vUnit) {
 				popupState = PopupState.FIRST;
@@ -228,6 +227,7 @@ public class RegenerationPhase extends BasicGameState {
 				if (card != null) {
 					game.mainPlayer
 							.addCardToCreature(regeneratedCreature, card);
+					Resources.select.play(1, 0.25f);
 					if (game.mainPlayer.getCreatureSkills(regeneratedCreature)
 							.size() == 3) {
 						actionState = ActionState.CHOOSE_CARDS;
@@ -245,6 +245,7 @@ public class RegenerationPhase extends BasicGameState {
 						possibleDecks);
 				if (card != null) {
 					game.mainPlayer.addCardToHand(card);
+					Resources.select.play(1, 0.25f);
 
 					if (game.mainPlayer.getHandSize() == 6) {
 
@@ -275,6 +276,7 @@ public class RegenerationPhase extends BasicGameState {
 				if (card != null) {
 					game.mainPlayer
 							.addCardToCreature(regeneratedCreature, card);
+					Resources.select.play(1, 0.25f);
 					if (game.mainPlayer.getCreatureSkills(regeneratedCreature)
 							.size() == 5) {
 						doIA();
@@ -355,8 +357,8 @@ public class RegenerationPhase extends BasicGameState {
 			HashSet<Creature> creatures) {
 		HashSet<SkillColor> decks = new HashSet<>();
 
+		int maxStrength = 0;
 		for (Creature creature : creatures) {
-			int maxStrength = 0;
 
 			for (Attribute attr : Attribute.values()) {
 				int str = player.getAttributeCount(creature, attr);
@@ -364,7 +366,9 @@ public class RegenerationPhase extends BasicGameState {
 					maxStrength = str;
 				}
 			}
+		}
 
+		for (Creature creature : creatures) {
 			for (Attribute attr : Attribute.values()) {
 				int str = player.getAttributeCount(creature, attr);
 				if (str == maxStrength) {
@@ -372,7 +376,6 @@ public class RegenerationPhase extends BasicGameState {
 				}
 			}
 		}
-
 		return decks;
 	}
 

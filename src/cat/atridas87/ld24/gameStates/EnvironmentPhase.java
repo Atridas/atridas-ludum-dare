@@ -130,6 +130,7 @@ public final class EnvironmentPhase extends BasicGameState {
 				default:
 					break;
 				}
+				Resources.next.play(1, 0.25f);
 			} else if (popupState == PopupState.DISMISSED && x >= 14.75f * hUnit && y >= 0.25f * vUnit
 					&& x <= 15.75f * hUnit && y <= 1.25f * vUnit) {
 				popupState = PopupState.FIRST;
@@ -157,6 +158,7 @@ public final class EnvironmentPhase extends BasicGameState {
 							game.mainPlayer.discardAllCardsFromCreature(creature, game.board);
 							
 							game.mainPlayer.addSurvivingCreaturePoints();
+							Resources.hit.play(1, 0.25f);
 							
 							doIA();
 							

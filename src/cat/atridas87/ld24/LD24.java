@@ -30,6 +30,8 @@ public class LD24 extends StateBasedGame {
 	public EnemyAI ai[];
 	public UnicodeFont popupFont;
 	
+	public GameMusic gameMusic;
+	
 	public Random globalRnd;
 
 	public LD24() {
@@ -45,11 +47,16 @@ public class LD24 extends StateBasedGame {
 		addState(new FinalScreen());
 		
 		this.enterState(EmptyState.ID);
+		
 	}
 
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {
 		ImageManager.getInstance().init();
+		Resources.init();
+		gameMusic = new GameMusic();
+		
+		gameMusic.start();
 
 		this.getState(EmptyState.ID).init(container, this);
 		this.getState(NewGameState1.ID).init(container, this);
@@ -63,7 +70,10 @@ public class LD24 extends StateBasedGame {
 		AppGameContainer container = new AppGameContainer(new LD24());
 		
 		container.setDisplayMode(800, 600, false);
+		container.setShowFPS(false);
 		container.start();
+		
+		System.out.println("Exit");
 	}
 	
 	public void startNewGame() {

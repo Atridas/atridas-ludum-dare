@@ -230,6 +230,7 @@ public class NewGameState1 extends BasicGameState {
 				default:
 					break;
 				}
+				Resources.next.play(1, 0.25f);
 			} else if (popupState == PopupState.DISMISSED && x >= 14.75f * hUnit && y >= 0.25f * vUnit
 					&& x <= 15.75f * hUnit && y <= 1.25f * vUnit) {
 				popupState = PopupState.FIRST;
@@ -242,6 +243,7 @@ public class NewGameState1 extends BasicGameState {
 					ArrayList<SkillCard> skills = skillsPlaced.get(creature);
 					if (skills.size() < 5) {
 						skills.add(skillsToPlace.remove(0));
+						Resources.select.play(1, 0.25f);
 					}
 				}
 			}
