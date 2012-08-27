@@ -11,6 +11,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import cat.atridas87.ld24.ai.EnemyAI;
 import cat.atridas87.ld24.ai.RandomAI;
+import cat.atridas87.ld24.gameStates.CombatPhase;
 import cat.atridas87.ld24.gameStates.EnvironmentPhase;
 import cat.atridas87.ld24.gameStates.EmptyState;
 import cat.atridas87.ld24.gameStates.EvolutionPhase;
@@ -43,6 +44,7 @@ public class LD24 extends StateBasedGame {
 		addState(new NewGameState1());
 		addState(new EvolutionPhase());
 		addState(new EnvironmentPhase());
+		addState(new CombatPhase());
 		addState(new RegenerationPhase());
 		addState(new FinalScreen());
 		
@@ -62,6 +64,7 @@ public class LD24 extends StateBasedGame {
 		this.getState(NewGameState1.ID).init(container, this);
 		this.getState(EvolutionPhase.ID).init(container, this);
 		this.getState(EnvironmentPhase.ID).init(container, this);
+		this.getState(CombatPhase.ID).init(container, this);
 		this.getState(RegenerationPhase.ID).init(container, this);
 		this.getState(FinalScreen.ID).init(container, this);
 	}

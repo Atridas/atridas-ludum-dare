@@ -83,6 +83,19 @@ public class RandomAI implements EnemyAI {
 		return null;
 	}
 
+	public Creature combatPhase(GameBoard board,
+			PlayerBoard myBoard)
+	{
+		int index = rnd.nextInt(myBoard.getCreatures().size());
+		for(Creature creature : myBoard.getCreatures()) {
+			if (index == 0)
+				return creature;
+			else
+				index--;
+		}
+		return null;
+	}
+
 	@Override
 	public void regenerationPhaseAddCards1(GameBoard board,
 			PlayerBoard myBoard, Creature resurrectedCreature, SkillCard[] out) {

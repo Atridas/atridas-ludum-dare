@@ -20,6 +20,8 @@ public interface EnemyAI {
 	public Creature environmentPhase(GameBoard board,
 			PlayerBoard myBoard, Set<Creature> lessAdaptedCreatures);
 	
+	public Creature combatPhase(GameBoard board,
+			PlayerBoard myBoard);
 
 	public void regenerationPhaseAddCards1(GameBoard board,
 			PlayerBoard myBoard, Creature resurrectedCreature, SkillCard[] out);

@@ -1,8 +1,5 @@
 package cat.atridas87.ld24.gameStates;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -15,11 +12,10 @@ import cat.atridas87.ld24.LD24;
 import cat.atridas87.ld24.Resources;
 import cat.atridas87.ld24.ai.EnemyAI;
 import cat.atridas87.ld24.modelData.Creature;
-import cat.atridas87.ld24.modelData.EnvironmentCard;
 import cat.atridas87.ld24.modelData.PlayerBoard;
 import cat.atridas87.ld24.render.ImageManager;
 
-public final class EnvironmentPhase extends BasicGameState {
+public class CombatPhase extends BasicGameState {
 
 	private float w, h;
 	private LD24 game;
@@ -27,8 +23,8 @@ public final class EnvironmentPhase extends BasicGameState {
 	private UnicodeFont font;
 
 	private PopupState popupState;
-
-	private final HashSet<Creature> lessAdaptedCreatures = new HashSet<>();
+	
+	private Creature creatures[] = new Creature[4];
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -61,7 +57,7 @@ public final class EnvironmentPhase extends BasicGameState {
 
 		im.getBackground().draw(0, 0, w, h);
 
-		font.drawString(hUnit * 6, vUnit * .5f, "Environment Phase");
+		font.drawString(hUnit * 6, vUnit * .5f, "Combat Phase");
 
 		game.board.draw(0, 0, w, h);
 
@@ -70,34 +66,24 @@ public final class EnvironmentPhase extends BasicGameState {
 
 		game.mainPlayer.drawHand(0, 8 * vUnit, 8 * hUnit, 4 * vUnit);
 
-		// creatures
-		float cardSizeW = 8 * vUnit
-				/ (game.mainPlayer.getCreatures().size() + 1);
-
-		float interCardW = cardSizeW
-				/ (game.mainPlayer.getCreatures().size() + 1);
-
-		float posX = 8 * vUnit + interCardW;
-		for (Creature creature : game.mainPlayer.getCreatures()) {
-
-			if (lessAdaptedCreatures.contains(creature)) {
-				// creature icon
-				float posY = 7 * vUnit - cardSizeW;
-
-				im.getCreatureImage(creature).draw(posX - cardSizeW * 0.125f,
-						posY - cardSizeW * 0.125f, cardSizeW * 1.25f,
-						cardSizeW * 1.25f);
-			}
-			// next position
-			posX += interCardW + cardSizeW;
-		}
-
 		// popup
 		if (popupState != PopupState.DISMISSED) {
 
-			String text = "Here you have to choose wich creature will perish.\n"
-					+ "Your options will be limited to those less adapted."
-					+ "\n\n" + "Click here to dismiss.";
+			String text;
+			if (popupState == PopupState.FIRST) {
+
+				text = "Now you have to choose a creature to combat.\n"
+						+ "Your creature will be compared to those of the\n"
+						+ "other players and the winner will award 3 times it's\n"
+						+ "star values. The looser will award it's stars too,\n"
+						+ "so keep that in mind!" + "\n\n"
+						+ "Click here to show next.";
+			} else {
+				text = "Remember that you can see the other player's\n"
+						+ "creatures at any time clicking on their names\n"
+						+ "on the upper right corner." + "\n\n"
+						+ "Click here to dismiss.";
+			}
 
 			game.drawPopup(8 * hUnit, vUnit, 7 * hUnit, (7.f * 11.f / 20.f)
 					* hUnit, text);
@@ -125,6 +111,8 @@ public final class EnvironmentPhase extends BasicGameState {
 					&& y <= (1 + 7.f * 11.f / 20.f) * hUnit) {
 				switch (popupState) {
 				case FIRST:
+					popupState = PopupState.SECOND;
+				case SECOND:
 					popupState = PopupState.DISMISSED;
 					break;
 				default:
@@ -147,35 +135,33 @@ public final class EnvironmentPhase extends BasicGameState {
 				float posX = 8 * vUnit + interCardW;
 				for (Creature creature : game.mainPlayer.getCreatures()) {
 
-					if (lessAdaptedCreatures.contains(creature)) {
-						// creature icon
-						float posY = 7 * vUnit - cardSizeW;
+					float posY = 7 * vUnit - cardSizeW;
 
-						if (x >= posX - cardSizeW * 0.125f
-								&& y >= posY - cardSizeW * 0.125f
-								&& x <= posX + cardSizeW * 1.125f
-								&& y <= posY + cardSizeW * 1.125f) {
+					if (x >= posX && y >= posY && x <= posX + cardSizeW && y <= posY + cardSizeW) {
 
-							game.mainPlayer.discardAllCardsFromCreature(
-									creature, game.board);
+						// TODO
+						creatures[0] = creature;
 
-							game.mainPlayer.addSurvivingCreaturePoints();
-							Resources.hit.play(1, 0.25f);
+						doIA();
 
-							doIA();
-
-							((CombatPhase) game.getState(CombatPhase.ID))
-									.enterPhase();
-							game.enterState(CombatPhase.ID);
+						if(game.board.getNextEnvironment() != null)
+						{
+							((RegenerationPhase)game.getState(RegenerationPhase.ID)).enterPhase();
+							game.enterState(RegenerationPhase.ID);
+						} else {
+							//((FinalScreen)game.getState(FinalScreen.ID)).enterPhase();
+							game.enterState(FinalScreen.ID);
 						}
-						// im.getCreatureImage(creature).draw(posX - cardSizeW *
-						// 0.125f,
-						// posY - cardSizeW * 0.125f, cardSizeW * 1.25f,
-						// cardSizeW * 1.25f);
 					}
+					// im.getCreatureImage(creature).draw(posX - cardSizeW *
+					// 0.125f,
+					// posY - cardSizeW * 0.125f, cardSizeW * 1.25f,
+					// cardSizeW * 1.25f);
+					
 					// next position
 					posX += interCardW + cardSizeW;
 				}
+
 			}
 		}
 	}
@@ -185,16 +171,7 @@ public final class EnvironmentPhase extends BasicGameState {
 			EnemyAI ai = game.ai[i];
 			PlayerBoard playerBoard = game.board.getPlayers().get(i + 1);
 
-			HashSet<Creature> iaLessAdaptedCreatures = new HashSet<>();
-			lessAdaptedCreature(game.board.getCurrentEnvironment(),
-					playerBoard, iaLessAdaptedCreatures);
-
-			Creature creature = ai.environmentPhase(game.board, playerBoard,
-					iaLessAdaptedCreatures);
-
-			playerBoard.discardAllCardsFromCreature(creature, game.board);
-
-			playerBoard.addSurvivingCreaturePoints();
+			creatures[i + 1] = ai.combatPhase(game.board, playerBoard);
 		}
 	}
 
@@ -204,28 +181,8 @@ public final class EnvironmentPhase extends BasicGameState {
 	}
 
 	public void enterPhase() {
-		lessAdaptedCreatures.clear();
-
-		lessAdaptedCreature(game.board.getCurrentEnvironment(),
-				game.mainPlayer, lessAdaptedCreatures);
-	}
-
-	public static void lessAdaptedCreature(EnvironmentCard environment,
-			PlayerBoard playerBoard, Set<Creature> lessAdaptedCreatures) {
-		int lessAdaptedValue = 13;
-
-		for (Creature creature : playerBoard.getCreatures()) {
-			int str = playerBoard.getStrength(creature, environment);
-			if (str < lessAdaptedValue) {
-				lessAdaptedValue = str;
-			}
-		}
-
-		for (Creature creature : playerBoard.getCreatures()) {
-			int str = playerBoard.getStrength(creature, environment);
-			if (str == lessAdaptedValue) {
-				lessAdaptedCreatures.add(creature);
-			}
+		for(int i = 0; i < creatures.length; i++) {
+			creatures[i] = null;
 		}
 	}
 
@@ -234,9 +191,9 @@ public final class EnvironmentPhase extends BasicGameState {
 		return ID;
 	}
 
-	public static final int ID = Resources.State.ENVIRONMENT_PHASE.ordinal();
+	public static final int ID = Resources.State.COMBAT_PHASE.ordinal();
 
 	private static enum PopupState {
-		FIRST, DISMISSED;
+		FIRST, SECOND, DISMISSED;
 	}
 }
