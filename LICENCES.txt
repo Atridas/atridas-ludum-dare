@@ -12,6 +12,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>
     
 
+ * Uses the Slick Game Library
+      http://slick.cokeandcode.com/
+      
+ * Sound Effects created with sfxr
+      http://www.drpetter.se/project_sfxr.html
+
  * Main Background:
       http://andrearusky.deviantart.com/art/Vintage-Background-4-portaits-29219790
 

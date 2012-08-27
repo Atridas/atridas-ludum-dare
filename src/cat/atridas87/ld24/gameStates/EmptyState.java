@@ -16,8 +16,8 @@ import cat.atridas87.ld24.render.ImageManager;
 public class EmptyState extends BasicGameState {
 
 	private LD24 game;
-	private UnicodeFont font;
-	
+	private UnicodeFont font, font2;
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public void init(GameContainer container, StateBasedGame _game)
@@ -25,13 +25,21 @@ public class EmptyState extends BasicGameState {
 		game = (LD24) _game;
 
 		try {
-			font = new UnicodeFont("resources/Font/accid___.ttf", 31,
-					false, false);// Create Instance
+			font = new UnicodeFont("resources/Font/accid___.ttf", 31, false,
+					false);// Create Instance
 			font.addAsciiGlyphs(); // Add Glyphs
 			font.addGlyphs(400, 600); // Add Glyphs
 			font.getEffects().add(new ColorEffect(java.awt.Color.WHITE)); // Add
-																		  // Effects
+																			// Effects
 			font.loadGlyphs(); // Load Glyphs
+
+			font2 = new UnicodeFont("resources/Font/accid___.ttf", 20, false,
+					false);// Create Instance
+			font2.addAsciiGlyphs(); // Add Glyphs
+			font2.addGlyphs(400, 600); // Add Glyphs
+			font2.getEffects().add(new ColorEffect(java.awt.Color.WHITE)); // Add
+																			// Effects
+			font2.loadGlyphs(); // Load Glyphs
 		} catch (SlickException e) {
 			throw new IllegalStateException(e);
 		}
@@ -41,29 +49,35 @@ public class EmptyState extends BasicGameState {
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
 		ImageManager im = ImageManager.getInstance();
-		
+
 		Image bk = im.getScoreBackground();
 
 		int w = bk.getWidth();
 		int h = bk.getHeight();
 
-		int timesX = container.getWidth()  / w;
+		int timesX = container.getWidth() / w;
 		int timesY = container.getHeight() / h;
-		
-		for(int x = 0; x <= timesX; x++) {
-			for(int y = 0; y <= timesY; y++) {
+
+		for (int x = 0; x <= timesX; x++) {
+			for (int y = 0; y <= timesY; y++) {
 				bk.draw(x * w, y * h);
 			}
 		}
-		
-		font.drawString(200, 200, "Ludum Card Evolution\n" +
-				"is a game created by Isaac 'Atridas' Serrano Guash\n" +
-				"for Ludum Dare 24.\n" +
-				"This game was created in 48 hours, is distributed\n" +
-				"with the GPLv3 and contains art not created by me\n" +
-				"(see LICENCE.txt for info avout that art and music\n" +
-				"and finding the source code).");
-		
+
+		font.drawString(100, 100, "Ludum Card Evolution\n"
+				+ "is a game created by Isaac 'Atridas' Serrano Guash\n"
+				+ "for Ludum Dare 24.\n"
+				+ "This game was created in 48 hours, is distributed\n"
+				+ "with the GPLv3 and contains art not created by me.\n\n"
+				+ "Developed using the Slick library and sound\n"
+				+ "effects created with sfxr.");
+		font2.drawString(
+				100,
+				440,
+				"Music: http://www.toucanmusic.co.uk\n"
+						+ "Background: http://andrearusky.deviantart.com/art/Vintage-Background-4-portaits-29219790\n" +
+						"Menu Background: http://www.squidfingers.com/patterns/3/");
+
 		im.getOk().draw(650, 50, 100, 100);
 	}
 
@@ -73,8 +87,8 @@ public class EmptyState extends BasicGameState {
 	}
 
 	public void mouseClicked(int button, int x, int y, int clickCount) {
-		if(button == 0 && clickCount == 1) {
-			if(x >= 650 && y >= 50 && x <= 750 && y <= 150) {
+		if (button == 0 && clickCount == 1) {
+			if (x >= 650 && y >= 50 && x <= 750 && y <= 150) {
 				game.startNewGame();
 			}
 		}
