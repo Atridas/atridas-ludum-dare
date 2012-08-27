@@ -142,11 +142,12 @@ public class NewGameState1 extends BasicGameState {
 		} else {
 			im.getInfo().draw(14.75f * hUnit, 0.25f * vUnit, hUnit, hUnit);
 		}
-		
+
 		if(showBoard != null) {
 			Image popupImage = im.getPopupBackground();
 			popupImage.draw(4 * hUnit, 1 * vUnit, 8 * hUnit, 10 * hUnit);
-			showBoard.drawCreatures(4 * hUnit, 1 * vUnit, 8 * hUnit, 8 * hUnit);
+			showBoard.drawCreatures(4 * hUnit, 1.25f * vUnit, 8 * hUnit, 8 * hUnit);
+			showBoard.drawBackHand(4 * hUnit, 9 * vUnit, 8 * hUnit, 2 * hUnit);
 		}
 	}
 

@@ -14,7 +14,6 @@ import cat.atridas87.ld24.Resources;
 import cat.atridas87.ld24.ai.EnemyAI;
 import cat.atridas87.ld24.modelData.Attribute;
 import cat.atridas87.ld24.modelData.Creature;
-import cat.atridas87.ld24.modelData.GameBoard;
 import cat.atridas87.ld24.modelData.PlayerBoard;
 import cat.atridas87.ld24.render.ImageManager;
 
@@ -30,6 +29,8 @@ public class CombatPhase extends BasicGameState {
 	private Creature creatures[] = new Creature[4];
 	
 	private int winnersValue, losersValue;
+	
+	private PlayerBoard showBoard;
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -166,6 +167,13 @@ public class CombatPhase extends BasicGameState {
 		} else {
 			im.getInfo().draw(14.75f * hUnit, 0.25f * vUnit, hUnit, hUnit);
 		}
+
+		if(showBoard != null) {
+			Image popupImage = im.getPopupBackground();
+			popupImage.draw(4 * hUnit, 1 * vUnit, 8 * hUnit, 10 * hUnit);
+			showBoard.drawCreatures(4 * hUnit, 1.25f * vUnit, 8 * hUnit, 8 * hUnit);
+			showBoard.drawBackHand(4 * hUnit, 9 * vUnit, 8 * hUnit, 2 * hUnit);
+		}
 	}
 
 	@Override
@@ -190,9 +198,21 @@ public class CombatPhase extends BasicGameState {
 				}
 				return;
 			}
-			
+
+			if(showBoard != null) {
+				showBoard = null;
+				return;
+			}
+
 			float hUnit = w / 16;
 			float vUnit = h / 12;
+			
+			{
+				showBoard = game.board.clickBoard(hUnit, vUnit, x, y);
+				if(showBoard != null) {
+					return;
+				}
+			}
 
 			if (popupState != PopupState.DISMISSED && x >= 8 * hUnit
 					&& y >= vUnit && x <= 15 * hUnit
@@ -291,6 +311,7 @@ public class CombatPhase extends BasicGameState {
 		for(int i = 0; i < creatures.length; i++) {
 			creatures[i] = null;
 		}
+		showBoard = null;
 	}
 
 	@Override

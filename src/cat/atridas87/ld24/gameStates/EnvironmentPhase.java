@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
@@ -27,6 +28,8 @@ public final class EnvironmentPhase extends BasicGameState {
 	private UnicodeFont font;
 
 	private PopupState popupState;
+	
+	private PlayerBoard showBoard;
 
 	private final HashSet<Creature> lessAdaptedCreatures = new HashSet<>();
 
@@ -105,6 +108,13 @@ public final class EnvironmentPhase extends BasicGameState {
 		} else {
 			im.getInfo().draw(14.75f * hUnit, 0.25f * vUnit, hUnit, hUnit);
 		}
+
+		if(showBoard != null) {
+			Image popupImage = im.getPopupBackground();
+			popupImage.draw(4 * hUnit, 1 * vUnit, 8 * hUnit, 10 * hUnit);
+			showBoard.drawCreatures(4 * hUnit, 1.25f * vUnit, 8 * hUnit, 8 * hUnit);
+			showBoard.drawBackHand(4 * hUnit, 9 * vUnit, 8 * hUnit, 2 * hUnit);
+		}
 	}
 
 	@Override
@@ -117,8 +127,20 @@ public final class EnvironmentPhase extends BasicGameState {
 	public void mouseClicked(int button, int x, int y, int clickCount) {
 		if (button == 0 && clickCount == 1) {
 
+			if(showBoard != null) {
+				showBoard = null;
+				return;
+			}
+			
 			float hUnit = w / 16;
 			float vUnit = h / 12;
+
+			{
+				showBoard = game.board.clickBoard(hUnit, vUnit, x, y);
+				if(showBoard != null) {
+					return;
+				}
+			}
 
 			if (popupState != PopupState.DISMISSED && x >= 8 * hUnit
 					&& y >= vUnit && x <= 15 * hUnit
@@ -208,6 +230,7 @@ public final class EnvironmentPhase extends BasicGameState {
 
 		lessAdaptedCreature(game.board.getCurrentEnvironment(),
 				game.mainPlayer, lessAdaptedCreatures);
+		showBoard = null;
 	}
 
 	public static void lessAdaptedCreature(EnvironmentCard environment,
