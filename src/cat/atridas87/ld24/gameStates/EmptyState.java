@@ -69,8 +69,8 @@ public class EmptyState extends BasicGameState {
 				+ "for Ludum Dare 24.\n"
 				+ "This game was created in 48 hours, is distributed\n"
 				+ "with the GPLv3 and contains art not created by me.\n\n"
-				+ "Developed using the Slick library and sound\n"
-				+ "effects created with sfxr.");
+				+ "Developed using the Slick and jorbis libraries.\n" +
+				"Sound effects created with sfxr.");
 		font2.drawString(
 				100,
 				440,
