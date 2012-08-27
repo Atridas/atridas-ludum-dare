@@ -5,7 +5,7 @@ import org.newdawn.slick.Sound;
 
 public abstract class Resources {
 
-	public static final String APP_NAME = "LD24";
+	public static final String APP_NAME = "LUDUM CARD EVOLUTION";
 	
 
 	public static enum State
