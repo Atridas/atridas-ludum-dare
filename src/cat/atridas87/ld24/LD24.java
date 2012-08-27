@@ -54,6 +54,7 @@ public class LD24 extends StateBasedGame {
 
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {
+		container.setShowFPS(false);
 		ImageManager.getInstance().init();
 		Resources.init();
 		gameMusic = new GameMusic();
@@ -73,7 +74,6 @@ public class LD24 extends StateBasedGame {
 		AppGameContainer container = new AppGameContainer(new LD24());
 		
 		container.setDisplayMode(800, 600, false);
-		container.setShowFPS(false);
 		container.start();
 		
 		System.out.println("Exit");
