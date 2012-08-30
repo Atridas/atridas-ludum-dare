@@ -25,19 +25,21 @@ import cat.atridas87.ld24.render.ImageManager;
 import cat.atridas87.ld24.Resources;
 
 public class LD24 extends StateBasedGame {
-	
+
+	public static final boolean FULL_GAME = false;
+
 	public GameBoard board;
 	public PlayerBoard mainPlayer;
 	public EnemyAI ai[];
 	public UnicodeFont popupFont;
-	
+
 	public GameMusic gameMusic;
-	
+
 	public Random globalRnd;
 
 	public LD24() {
 		super(Resources.APP_NAME);
-		
+
 		globalRnd = new Random();
 
 		addState(new EmptyState());
@@ -47,9 +49,9 @@ public class LD24 extends StateBasedGame {
 		addState(new CombatPhase());
 		addState(new RegenerationPhase());
 		addState(new FinalScreen());
-		
+
 		this.enterState(EmptyState.ID);
-		
+
 	}
 
 	@Override
@@ -57,10 +59,10 @@ public class LD24 extends StateBasedGame {
 		container.setShowFPS(false);
 		ImageManager.getInstance().init();
 		Resources.init();
-		gameMusic = new GameMusic();
-		
-		gameMusic.start();
-
+		if (FULL_GAME) {
+			gameMusic = new GameMusic();
+			gameMusic.start();
+		}
 		this.getState(EmptyState.ID).init(container, this);
 		this.getState(NewGameState1.ID).init(container, this);
 		this.getState(EvolutionPhase.ID).init(container, this);
@@ -72,47 +74,49 @@ public class LD24 extends StateBasedGame {
 
 	public static void main(String[] args) throws SlickException {
 		AppGameContainer container = new AppGameContainer(new LD24());
-		
+
 		container.setDisplayMode(800, 600, false);
 		container.start();
-		
+
 		System.out.println("Exit");
 	}
-	
+
 	public void startNewGame() {
 		board = new GameBoard(globalRnd.nextLong());
 		board.initGame();
 		board.initGraphics();
-		
+
 		mainPlayer = board.getPlayers().get(0);
 
 		ai = new RandomAI[3];
-		
+
 		ai[0] = new RandomAI(globalRnd.nextLong());
 		ai[1] = new RandomAI(globalRnd.nextLong());
 		ai[2] = new RandomAI(globalRnd.nextLong());
-		
-		((NewGameState1)this.getState(NewGameState1.ID)).reset(this);
+
+		((NewGameState1) this.getState(NewGameState1.ID)).reset(this);
 
 		this.enterState(Resources.State.NEW_GAME_STATE_1.ordinal());
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void drawPopup(float x, float y, float w, float h, String text) {
-		if(popupFont == null) {
+		if (popupFont == null) {
 			try {
-				popupFont = new UnicodeFont("resources/Font/accid___.ttf", 20, false, false);//Create Instance
-				popupFont.addAsciiGlyphs();   //Add Glyphs
-				popupFont.addGlyphs(400, 600); //Add Glyphs
-				popupFont.getEffects().add(new ColorEffect(java.awt.Color.WHITE)); //Add Effects
-				popupFont.loadGlyphs();  //Load Glyphs
+				popupFont = new UnicodeFont("resources/Font/accid___.ttf", 20,
+						false, false);// Create Instance
+				popupFont.addAsciiGlyphs(); // Add Glyphs
+				popupFont.addGlyphs(400, 600); // Add Glyphs
+				popupFont.getEffects().add(
+						new ColorEffect(java.awt.Color.WHITE)); // Add Effects
+				popupFont.loadGlyphs(); // Load Glyphs
 			} catch (SlickException e) {
 				throw new IllegalStateException(e);
-			} 
+			}
 		}
-		
-		ImageManager.getInstance().getPopupBackground().draw(x,y,w,h);
-		
+
+		ImageManager.getInstance().getPopupBackground().draw(x, y, w, h);
+
 		popupFont.drawString(x + 0.06f * w, y + 0.06f * w, text);
 	}
 }

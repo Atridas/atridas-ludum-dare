@@ -1,5 +1,6 @@
 package cat.atridas87.ld24.render;
 
+import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
@@ -154,5 +155,19 @@ public final class ImageManager {
 	
 	public static ImageManager getInstance() {
 		return im;
+	}
+	
+	public void drawTiledBackground(GameContainer container) {
+		int w = scoreBackground.getWidth();
+		int h = scoreBackground.getHeight();
+
+		int timesX = container.getWidth() / w;
+		int timesY = container.getHeight() / h;
+
+		for (int x = 0; x <= timesX; x++) {
+			for (int y = 0; y <= timesY; y++) {
+				scoreBackground.draw(x * w, y * h);
+			}
+		}
 	}
 }

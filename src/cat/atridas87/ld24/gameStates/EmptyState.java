@@ -2,7 +2,6 @@ package cat.atridas87.ld24.gameStates;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
@@ -50,33 +49,26 @@ public class EmptyState extends BasicGameState {
 			throws SlickException {
 		ImageManager im = ImageManager.getInstance();
 
-		Image bk = im.getScoreBackground();
-
-		int w = bk.getWidth();
-		int h = bk.getHeight();
-
-		int timesX = container.getWidth() / w;
-		int timesY = container.getHeight() / h;
-
-		for (int x = 0; x <= timesX; x++) {
-			for (int y = 0; y <= timesY; y++) {
-				bk.draw(x * w, y * h);
-			}
-		}
+		im.drawTiledBackground(container);
 
 		font.drawString(100, 100, "Ludum Card Evolution\n"
 				+ "is a game created by Isaac 'Atridas' Serrano Guash\n"
 				+ "for Ludum Dare 24.\n"
 				+ "This game was created in 48 hours, is distributed\n"
 				+ "with the GPLv3 and contains art not created by me.\n\n"
-				+ "Developed using the Slick and jorbis libraries.\n" +
-				"Sound effects created with sfxr.");
-		font2.drawString(
-				100,
-				440,
-				"Music: http://www.toucanmusic.co.uk\n"
-						+ "Background: http://andrearusky.deviantart.com/art/Vintage-Background-4-portaits-29219790\n" +
-						"Menu Background: http://www.squidfingers.com/patterns/3/");
+				+ "Developed using the Slick and jorbis libraries.\n"
+				+ "Sound effects created with sfxr.");
+
+		String credits;
+		if (LD24.FULL_GAME) {
+			credits = "Music: http://www.toucanmusic.co.uk\n"
+					+ "Background: http://andrearusky.deviantart.com/art/Vintage-Background-4-portaits-29219790\n"
+					+ "Menu Background was developed from: http://www.squidfingers.com/patterns/";
+		} else {
+			credits = "Menu Background was developed from: http://www.squidfingers.com/patterns/";
+		}
+
+		font2.drawString(100, 440, credits);
 
 		im.getOk().draw(650, 50, 100, 100);
 	}

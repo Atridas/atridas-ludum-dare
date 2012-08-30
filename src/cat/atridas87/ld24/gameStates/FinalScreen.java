@@ -2,7 +2,6 @@ package cat.atridas87.ld24.gameStates;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
@@ -40,20 +39,8 @@ public class FinalScreen extends BasicGameState {
 	public void render(GameContainer container, StateBasedGame _game, Graphics g)
 			throws SlickException {
 		ImageManager im = ImageManager.getInstance();
-		
-		Image bk = im.getScoreBackground();
 
-		int w = bk.getWidth();
-		int h = bk.getHeight();
-
-		int timesX = container.getWidth()  / w;
-		int timesY = container.getHeight() / h;
-		
-		for(int x = 0; x <= timesX; x++) {
-			for(int y = 0; y <= timesY; y++) {
-				bk.draw(x * w, y * h);
-			}
-		}
+		im.drawTiledBackground(container);
 
 		String str1 = "You got " + game.mainPlayer.getPoints() + " points";
 		String str2 = "AI 1 got " + game.board.getPlayers().get(1).getPoints() + " points";

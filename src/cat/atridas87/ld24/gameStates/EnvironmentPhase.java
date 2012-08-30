@@ -62,7 +62,11 @@ public final class EnvironmentPhase extends BasicGameState {
 		float hUnit = w / 16;
 		float vUnit = h / 12;
 
-		im.getBackground().draw(0, 0, w, h);
+		if(LD24.FULL_GAME) {
+			im.getBackground().draw(0, 0, w, h);
+		} else {
+			im.drawTiledBackground(container);
+		}
 
 		font.drawString(hUnit * 6, vUnit * .5f, "Environment Phase");
 
