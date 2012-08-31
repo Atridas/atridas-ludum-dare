@@ -28,10 +28,10 @@ public final class EnvironmentPhase extends BasicGameState {
 	private UnicodeFont font;
 
 	private PopupState popupState;
-	
+
 	private PlayerBoard showBoard;
 
-	private final HashSet<Creature> lessAdaptedCreatures = new HashSet<>();
+	private final HashSet<Creature> lessAdaptedCreatures = new HashSet<Creature>();
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -62,7 +62,7 @@ public final class EnvironmentPhase extends BasicGameState {
 		float hUnit = w / 16;
 		float vUnit = h / 12;
 
-		if(LD24.FULL_GAME) {
+		if (LD24.FULL_GAME) {
 			im.getBackground().draw(0, 0, w, h);
 		} else {
 			im.drawTiledBackground(container);
@@ -113,10 +113,11 @@ public final class EnvironmentPhase extends BasicGameState {
 			im.getInfo().draw(14.75f * hUnit, 0.25f * vUnit, hUnit, hUnit);
 		}
 
-		if(showBoard != null) {
+		if (showBoard != null) {
 			Image popupImage = im.getPopupBackground();
 			popupImage.draw(4 * hUnit, 1 * vUnit, 8 * hUnit, 10 * hUnit);
-			showBoard.drawCreatures(4 * hUnit, 1.25f * vUnit, 8 * hUnit, 8 * hUnit);
+			showBoard.drawCreatures(4 * hUnit, 1.25f * vUnit, 8 * hUnit,
+					8 * hUnit);
 			showBoard.drawBackHand(4 * hUnit, 9 * vUnit, 8 * hUnit, 2 * hUnit);
 		}
 	}
@@ -131,17 +132,17 @@ public final class EnvironmentPhase extends BasicGameState {
 	public void mouseClicked(int button, int x, int y, int clickCount) {
 		if (button == 0 && clickCount == 1) {
 
-			if(showBoard != null) {
+			if (showBoard != null) {
 				showBoard = null;
 				return;
 			}
-			
+
 			float hUnit = w / 16;
 			float vUnit = h / 12;
 
 			{
 				showBoard = game.board.clickBoard(hUnit, vUnit, x, y);
-				if(showBoard != null) {
+				if (showBoard != null) {
 					return;
 				}
 			}
@@ -211,7 +212,7 @@ public final class EnvironmentPhase extends BasicGameState {
 			EnemyAI ai = game.ai[i];
 			PlayerBoard playerBoard = game.board.getPlayers().get(i + 1);
 
-			HashSet<Creature> iaLessAdaptedCreatures = new HashSet<>();
+			HashSet<Creature> iaLessAdaptedCreatures = new HashSet<Creature>();
 			lessAdaptedCreature(game.board.getCurrentEnvironment(),
 					playerBoard, iaLessAdaptedCreatures);
 

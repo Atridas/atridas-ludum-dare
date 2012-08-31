@@ -23,7 +23,7 @@ public class RandomAI implements EnemyAI {
 
 	public Map<Creature, ArrayList<SkillColor>> distributeInitialCards(
 			GameBoard board, PlayerBoard myBoard) {
-		ArrayList<SkillColor> hand = new ArrayList<>();
+		ArrayList<SkillColor> hand = new ArrayList<SkillColor>();
 
 		for (SkillColor color : SkillColor.values()) {
 			hand.add(color);
@@ -34,10 +34,10 @@ public class RandomAI implements EnemyAI {
 		}
 
 		Collections.shuffle(hand, rnd);
-		HashMap<Creature, ArrayList<SkillColor>> out = new HashMap<>();
+		HashMap<Creature, ArrayList<SkillColor>> out = new HashMap<Creature, ArrayList<SkillColor>>();
 
 		for (Creature creature : myBoard.getCreatures()) {
-			ArrayList<SkillColor> skills = new ArrayList<>();
+			ArrayList<SkillColor> skills = new ArrayList<SkillColor>();
 			skills.add(hand.remove(0));
 			skills.add(hand.remove(0));
 			skills.add(hand.remove(0));
@@ -53,19 +53,22 @@ public class RandomAI implements EnemyAI {
 	@Override
 	public void evolutionPhase(GameBoard board, PlayerBoard myBoard,
 			DiscardAndReplace[] out) {
-		
-		ArrayList<SkillCard> hand = new ArrayList<>(myBoard.getHand());
+
+		ArrayList<SkillCard> hand = new ArrayList<SkillCard>(myBoard.getHand());
 		Collections.shuffle(hand, rnd);
-		
-		ArrayList<Creature> creatures = new ArrayList<>(myBoard.getCreatures());
+
+		ArrayList<Creature> creatures = new ArrayList<Creature>(
+				myBoard.getCreatures());
 		Collections.shuffle(creatures, rnd);
-		
-		for(int i = 0; i < out.length; i++) {
-			ArrayList<SkillCard> skills = new ArrayList<>(myBoard.getCreatureSkills(creatures.get(i)));
+
+		for (int i = 0; i < out.length; i++) {
+			ArrayList<SkillCard> skills = new ArrayList<SkillCard>(
+					myBoard.getCreatureSkills(creatures.get(i)));
 			SkillCard discart = skills.get(rnd.nextInt(skills.size()));
-			
-			out[i] = new DiscardAndReplace(creatures.get(i), discart, hand.get(i));
-			if(discart == null) {
+
+			out[i] = new DiscardAndReplace(creatures.get(i), discart,
+					hand.get(i));
+			if (discart == null) {
 				throw new IllegalStateException();
 			}
 		}
@@ -83,11 +86,9 @@ public class RandomAI implements EnemyAI {
 		return null;
 	}
 
-	public Creature combatPhase(GameBoard board,
-			PlayerBoard myBoard)
-	{
+	public Creature combatPhase(GameBoard board, PlayerBoard myBoard) {
 		int index = rnd.nextInt(myBoard.getCreatures().size());
-		for(Creature creature : myBoard.getCreatures()) {
+		for (Creature creature : myBoard.getCreatures()) {
 			if (index == 0)
 				return creature;
 			else
@@ -116,8 +117,8 @@ public class RandomAI implements EnemyAI {
 	public void regenerationPhaseAddCards2(GameBoard board,
 			PlayerBoard myBoard, Creature resurrectedCreature, SkillCard[] out) {
 		for (int i = 0; i < out.length; i++) {
-			int index = rnd.nextInt( myBoard.getHandSize() );
-			
+			int index = rnd.nextInt(myBoard.getHandSize());
+
 			out[i] = myBoard.getHand().get(index);
 			for (int j = 0; j < i; j++) {
 				if (out[i] == out[j]) {

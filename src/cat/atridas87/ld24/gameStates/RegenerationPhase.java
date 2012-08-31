@@ -35,7 +35,7 @@ public class RegenerationPhase extends BasicGameState {
 	private Creature regeneratedCreature;
 
 	private HashSet<SkillColor> possibleDecks;
-	
+
 	private PlayerBoard showBoard;
 
 	@SuppressWarnings("unchecked")
@@ -44,8 +44,8 @@ public class RegenerationPhase extends BasicGameState {
 			throws SlickException {
 		game = (LD24) _game;
 		try {
-			font = new UnicodeFont("resources/Font/accid___.ttf", 25,
-					false, false);// Create Instance
+			font = new UnicodeFont("resources/Font/accid___.ttf", 25, false,
+					false);// Create Instance
 			font.addAsciiGlyphs(); // Add Glyphs
 			font.addGlyphs(400, 600); // Add Glyphs
 			font.getEffects().add(new ColorEffect(java.awt.Color.WHITE)); // Add
@@ -67,7 +67,7 @@ public class RegenerationPhase extends BasicGameState {
 		float hUnit = w / 16;
 		float vUnit = h / 12;
 
-		if(LD24.FULL_GAME) {
+		if (LD24.FULL_GAME) {
 			im.getBackground().draw(0, 0, w, h);
 		} else {
 			im.drawTiledBackground(container);
@@ -150,11 +150,12 @@ public class RegenerationPhase extends BasicGameState {
 		} else {
 			im.getInfo().draw(14.75f * hUnit, 0.25f * vUnit, hUnit, hUnit);
 		}
-		
-		if(showBoard != null) {
+
+		if (showBoard != null) {
 			Image popupImage = im.getPopupBackground();
 			popupImage.draw(4 * hUnit, 1 * vUnit, 8 * hUnit, 10 * hUnit);
-			showBoard.drawCreatures(4 * hUnit, 1.25f * vUnit, 8 * hUnit, 8 * hUnit);
+			showBoard.drawCreatures(4 * hUnit, 1.25f * vUnit, 8 * hUnit,
+					8 * hUnit);
 			showBoard.drawBackHand(4 * hUnit, 9 * vUnit, 8 * hUnit, 2 * hUnit);
 		}
 	}
@@ -215,17 +216,17 @@ public class RegenerationPhase extends BasicGameState {
 	public void mouseClicked(int button, int x, int y, int clickCount) {
 		if (button == 0 && clickCount == 1) {
 
-			if(showBoard != null) {
+			if (showBoard != null) {
 				showBoard = null;
 				return;
 			}
-			
+
 			float hUnit = w / 16;
 			float vUnit = h / 12;
 
 			{
 				showBoard = game.board.clickBoard(hUnit, vUnit, x, y);
-				if(showBoard != null) {
+				if (showBoard != null) {
 					return;
 				}
 			}
@@ -244,7 +245,8 @@ public class RegenerationPhase extends BasicGameState {
 					break;
 				}
 				Resources.next.play(1, 0.25f);
-			} else if (popupState == PopupState.DISMISSED && x >= 14.75f * hUnit && y >= 0.25f * vUnit
+			} else if (popupState == PopupState.DISMISSED
+					&& x >= 14.75f * hUnit && y >= 0.25f * vUnit
 					&& x <= 15.75f * hUnit && y <= 1.25f * vUnit) {
 				popupState = PopupState.FIRST;
 			} else if (actionState == ActionState.ADD_CARDS_1) {
@@ -306,11 +308,11 @@ public class RegenerationPhase extends BasicGameState {
 					if (game.mainPlayer.getCreatureSkills(regeneratedCreature)
 							.size() == 5) {
 						doIA();
-						
-						game.board.doEnviromentalChangePhase();
-						
 
-						((EvolutionPhase)game.getState(EvolutionPhase.ID)).enterPhase();
+						game.board.doEnviromentalChangePhase();
+
+						((EvolutionPhase) game.getState(EvolutionPhase.ID))
+								.enterPhase();
 						game.enterState(EvolutionPhase.ID);
 					}
 				}
@@ -330,7 +332,7 @@ public class RegenerationPhase extends BasicGameState {
 			}
 		}
 
-		HashSet<Creature> creatures = new HashSet<>();
+		HashSet<Creature> creatures = new HashSet<Creature>();
 
 		for (Creature creature : player.getCreatures()) {
 			if (creature != regeneratedCreature
@@ -367,7 +369,7 @@ public class RegenerationPhase extends BasicGameState {
 			}
 		}
 
-		HashSet<Creature> creatures = new HashSet<>();
+		HashSet<Creature> creatures = new HashSet<Creature>();
 
 		for (Creature creature : player.getCreatures()) {
 			if (creature != regeneratedCreature
@@ -381,7 +383,7 @@ public class RegenerationPhase extends BasicGameState {
 
 	private static HashSet<SkillColor> possibleDecks(PlayerBoard player,
 			HashSet<Creature> creatures) {
-		HashSet<SkillColor> decks = new HashSet<>();
+		HashSet<SkillColor> decks = new HashSet<SkillColor>();
 
 		int maxStrength = 0;
 		for (Creature creature : creatures) {
@@ -421,7 +423,7 @@ public class RegenerationPhase extends BasicGameState {
 					aiRegeneratedCreature);
 			HashSet<SkillColor> aiPossibleDecks2;
 			if (creatures.size() == 0) {
-				aiPossibleDecks2 = new HashSet<>();
+				aiPossibleDecks2 = new HashSet<SkillColor>();
 				for (SkillColor color : SkillColor.values()) {
 					aiPossibleDecks2.add(color);
 				}
@@ -455,8 +457,10 @@ public class RegenerationPhase extends BasicGameState {
 
 			cardsToDraw = new SkillColor[2];
 
-			checkDecks(aiPossibleDecks1, game.board); // TODO això caldria fer-ho d'una altra manera
-			//pero pal extrem
+			checkDecks(aiPossibleDecks1, game.board); // TODO això caldria
+														// fer-ho d'una altra
+														// manera
+			// pero pal extrem
 			ai.regenerationPhaseDrawCards2(game.board, playerBoard,
 					aiRegeneratedCreature, aiPossibleDecks2, cardsToDraw);
 

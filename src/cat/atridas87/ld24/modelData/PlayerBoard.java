@@ -18,10 +18,10 @@ public final class PlayerBoard {
 
 	private UnicodeFont font;
 
-	private final TreeSet<Creature> creatures = new TreeSet<>();
-	private final HashMap<Creature, ArrayList<SkillCard>> creatureSkills = new HashMap<>();
+	private final TreeSet<Creature> creatures = new TreeSet<Creature>();
+	private final HashMap<Creature, ArrayList<SkillCard>> creatureSkills = new HashMap<Creature, ArrayList<SkillCard>>();
 
-	private final ArrayList<SkillCard> hand = new ArrayList<>();
+	private final ArrayList<SkillCard> hand = new ArrayList<SkillCard>();
 
 	private int points;
 
@@ -102,7 +102,7 @@ public final class PlayerBoard {
 			creatureSkills.get(creature).clear();
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw e;
+			throw new IllegalStateException(e);
 		}
 	}
 
@@ -110,7 +110,7 @@ public final class PlayerBoard {
 		try {
 			creatureSkills.get(creature).add(card);
 		} catch (Exception e) {
-			throw e;
+			throw new IllegalStateException(e);
 		}
 	}
 
@@ -227,7 +227,7 @@ public final class PlayerBoard {
 		}
 		ImageManager im = ImageManager.getInstance();
 
-		//float hUnit = w / 8;
+		// float hUnit = w / 8;
 		float vUnit = h / 8;
 
 		float cardSizeW = w / (creatures.size() + 1);
@@ -286,12 +286,12 @@ public final class PlayerBoard {
 			posX += interCardW + cardSizeW;
 		}
 		/*
-		float posY = y + 3 * vUnit - cardSizeW * 0.5f - hUnit * 0.125f;
-
-		im.getStar().draw(x - hUnit * 0.5f, posY, hUnit * 0.25f, hUnit * 0.25f);
-		font.drawString(x - hUnit * 0.125f,
-				posY + hUnit * 0.25f - font.getAscent(), "" + points);
-		*/
+		 * float posY = y + 3 * vUnit - cardSizeW * 0.5f - hUnit * 0.125f;
+		 * 
+		 * im.getStar().draw(x - hUnit * 0.5f, posY, hUnit * 0.25f, hUnit *
+		 * 0.25f); font.drawString(x - hUnit * 0.125f, posY + hUnit * 0.25f -
+		 * font.getAscent(), "" + points);
+		 */
 	}
 
 	public void drawHand(float x, float y, float w, float h) {
@@ -313,18 +313,19 @@ public final class PlayerBoard {
 	public void drawBackHand(float x, float y, float w, float h) {
 		ImageManager im = ImageManager.getInstance();
 		float hUnit = w / 8;
-		//float vUnit = h / 2;
+		// float vUnit = h / 2;
 
 		float posX = x;
 		float posY = y;
-		
+
 		float dX = hUnit * 6.f / 10.f;
 
 		float cardSizeW = 1.33f * hUnit;
 		float cardSizeH = 2 * hUnit;
 
 		for (SkillCard card : hand) {
-			im.getCardBackSide(card.getSkillColor()).draw(posX, posY, cardSizeW, cardSizeH);
+			im.getCardBackSide(card.getSkillColor()).draw(posX, posY,
+					cardSizeW, cardSizeH);
 			posX += dX;
 		}
 	}
@@ -379,7 +380,7 @@ public final class PlayerBoard {
 
 			aux.append("}");
 		}
-		
+
 		return aux.toString();
 	}
 }

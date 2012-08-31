@@ -33,7 +33,7 @@ public class NewGameState1 extends BasicGameState {
 	private float w, h;
 	private LD24 game;
 	private PopupState popupState;
-	
+
 	private PlayerBoard showBoard;
 
 	@Override
@@ -67,7 +67,7 @@ public class NewGameState1 extends BasicGameState {
 		float hUnit = w / 16;
 		float vUnit = h / 12;
 
-		if(LD24.FULL_GAME) {
+		if (LD24.FULL_GAME) {
 			im.getBackground().draw(0, 0, w, h);
 		} else {
 			im.drawTiledBackground(container);
@@ -147,10 +147,11 @@ public class NewGameState1 extends BasicGameState {
 			im.getInfo().draw(14.75f * hUnit, 0.25f * vUnit, hUnit, hUnit);
 		}
 
-		if(showBoard != null) {
+		if (showBoard != null) {
 			Image popupImage = im.getPopupBackground();
 			popupImage.draw(4 * hUnit, 1 * vUnit, 8 * hUnit, 10 * hUnit);
-			showBoard.drawCreatures(4 * hUnit, 1.25f * vUnit, 8 * hUnit, 8 * hUnit);
+			showBoard.drawCreatures(4 * hUnit, 1.25f * vUnit, 8 * hUnit,
+					8 * hUnit);
 			showBoard.drawBackHand(4 * hUnit, 9 * vUnit, 8 * hUnit, 2 * hUnit);
 		}
 	}
@@ -184,10 +185,10 @@ public class NewGameState1 extends BasicGameState {
 				Map<Creature, ArrayList<SkillColor>> cardColors = ai
 						.distributeInitialCards(game.board, playerBoard);
 
-				HashMap<Creature, ArrayList<SkillCard>> cards = new HashMap<>();
+				HashMap<Creature, ArrayList<SkillCard>> cards = new HashMap<Creature, ArrayList<SkillCard>>();
 				for (Entry<Creature, ArrayList<SkillColor>> entry : cardColors
 						.entrySet()) {
-					ArrayList<SkillCard> deck = new ArrayList<>();
+					ArrayList<SkillCard> deck = new ArrayList<SkillCard>();
 					for (SkillColor color : entry.getValue()) {
 						deck.add(game.board.drawSkill(color));
 					}
@@ -211,9 +212,11 @@ public class NewGameState1 extends BasicGameState {
 			}
 
 			((EvolutionPhase) game.getState(EvolutionPhase.ID)).setFirstTime();
-			((EnvironmentPhase) game.getState(EnvironmentPhase.ID)).setFirstTime();
+			((EnvironmentPhase) game.getState(EnvironmentPhase.ID))
+					.setFirstTime();
 			((CombatPhase) game.getState(CombatPhase.ID)).setFirstTime();
-			((RegenerationPhase) game.getState(RegenerationPhase.ID)).setFirstTime();
+			((RegenerationPhase) game.getState(RegenerationPhase.ID))
+					.setFirstTime();
 			game.enterState(EvolutionPhase.ID);
 		}
 
@@ -221,18 +224,18 @@ public class NewGameState1 extends BasicGameState {
 
 	public void mouseClicked(int button, int x, int y, int clickCount) {
 		if (button == 0 && clickCount == 1) {
-			
-			if(showBoard != null) {
+
+			if (showBoard != null) {
 				showBoard = null;
 				return;
 			}
 
 			float hUnit = w / 16;
 			float vUnit = h / 12;
-			
+
 			{
 				showBoard = game.board.clickBoard(hUnit, vUnit, x, y);
-				if(showBoard != null) {
+				if (showBoard != null) {
 					return;
 				}
 			}
@@ -258,7 +261,8 @@ public class NewGameState1 extends BasicGameState {
 					break;
 				}
 				Resources.next.play(1, 0.25f);
-			} else if (popupState == PopupState.DISMISSED && x >= 14.75f * hUnit && y >= 0.25f * vUnit
+			} else if (popupState == PopupState.DISMISSED
+					&& x >= 14.75f * hUnit && y >= 0.25f * vUnit
 					&& x <= 15.75f * hUnit && y <= 1.25f * vUnit) {
 				popupState = PopupState.FIRST;
 			} else if (skillsToPlace.size() > 0) {
@@ -285,8 +289,8 @@ public class NewGameState1 extends BasicGameState {
 	public static final int ID = Resources.State.NEW_GAME_STATE_1.ordinal();
 
 	public void reset(LD24 game) {
-		skillsToPlace = new ArrayList<>(4 * 5);
-		skillsPlaced = new HashMap<>();
+		skillsToPlace = new ArrayList<SkillCard>(4 * 5);
+		skillsPlaced = new HashMap<Creature, ArrayList<SkillCard>>();
 		for (Creature creature : game.mainPlayer.getCreatures()) {
 			skillsPlaced.put(creature, new ArrayList<SkillCard>(5));
 		}

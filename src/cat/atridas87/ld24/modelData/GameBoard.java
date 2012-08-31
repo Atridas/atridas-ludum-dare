@@ -51,15 +51,15 @@ public final class GameBoard {
 	private EnvironmentCard currentEnvironment, nextEnvironment;
 	private EnvironmentCard combatCard;
 
-	private ArrayList<EnvironmentCard> environmentDeck = new ArrayList<>();
-	private ArrayList<EnvironmentCard> combatDeck = new ArrayList<>();
-	private ArrayList<EnvironmentCard> environmentDiscardDeck = new ArrayList<>();
-	private ArrayList<EnvironmentCard> combatDiscardDeck = new ArrayList<>();
+	private ArrayList<EnvironmentCard> environmentDeck = new ArrayList<EnvironmentCard>();
+	private ArrayList<EnvironmentCard> combatDeck = new ArrayList<EnvironmentCard>();
+	private ArrayList<EnvironmentCard> environmentDiscardDeck = new ArrayList<EnvironmentCard>();
+	private ArrayList<EnvironmentCard> combatDiscardDeck = new ArrayList<EnvironmentCard>();
 
-	private HashMap<SkillColor, ArrayList<SkillCard>> skillDecks = new HashMap<>();
-	private HashMap<SkillColor, ArrayList<SkillCard>> skillDiscardDecks = new HashMap<>();
+	private HashMap<SkillColor, ArrayList<SkillCard>> skillDecks = new HashMap<SkillColor, ArrayList<SkillCard>>();
+	private HashMap<SkillColor, ArrayList<SkillCard>> skillDiscardDecks = new HashMap<SkillColor, ArrayList<SkillCard>>();
 
-	private ArrayList<PlayerBoard> players = new ArrayList<>();
+	private ArrayList<PlayerBoard> players = new ArrayList<PlayerBoard>();
 
 	public GameBoard(long randomSeed) {
 		rnd = new Random(randomSeed);
@@ -188,7 +188,7 @@ public final class GameBoard {
 		try {
 			skillDiscardDecks.get(card.getSkillColor()).add(card);
 		} catch (Exception e) {
-			throw e;
+			throw new IllegalStateException(e);
 		}
 	}
 
@@ -204,7 +204,7 @@ public final class GameBoard {
 	}
 
 	public void initGame() {
-		HashSet<Creature> chosenCreatures = new HashSet<>();
+		HashSet<Creature> chosenCreatures = new HashSet<Creature>();
 		for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
 			PlayerBoard player = new PlayerBoard();
 
@@ -250,7 +250,7 @@ public final class GameBoard {
 	}
 
 	static ArrayList<EnvironmentCard> createPeriod1Cards() {
-		ArrayList<EnvironmentCard> period1 = new ArrayList<>();
+		ArrayList<EnvironmentCard> period1 = new ArrayList<EnvironmentCard>();
 
 		for (Attribute attribute : Attribute.values()) {
 			period1.add(new EnvironmentCard(attribute));
@@ -262,7 +262,7 @@ public final class GameBoard {
 	}
 
 	static ArrayList<EnvironmentCard> createPeriod2Cards() {
-		ArrayList<EnvironmentCard> period2 = new ArrayList<>();
+		ArrayList<EnvironmentCard> period2 = new ArrayList<EnvironmentCard>();
 
 		for (int i = 0; i < Attribute.values().length; i++) {
 			Attribute attribute1 = Attribute.values()[i];
@@ -284,8 +284,8 @@ public final class GameBoard {
 		Collections.shuffle(period1, rnd);
 		Collections.shuffle(period2, rnd);
 
-		environmentDeck = new ArrayList<>();
-		environmentDiscardDeck = new ArrayList<>();
+		environmentDeck = new ArrayList<EnvironmentCard>();
+		environmentDiscardDeck = new ArrayList<EnvironmentCard>();
 
 		for (int i = 0; i < ENVIRONMENT_DECK_PERIOD_1_SIZE; i++) {
 			environmentDeck.add(period1.remove(0));
@@ -297,7 +297,7 @@ public final class GameBoard {
 			environmentDeck.add(period2.remove(0));
 		}
 
-		combatDeck = new ArrayList<>();
+		combatDeck = new ArrayList<EnvironmentCard>();
 		combatDeck.addAll(period1);
 		combatDeck.addAll(period2);
 
@@ -315,7 +315,7 @@ public final class GameBoard {
 	 * SKILL_DECK_STAR_CARD_COUNT = 10;
 	 */
 	static ArrayList<SkillCard> createSkillDeck(SkillColor color) {
-		ArrayList<SkillCard> deck = new ArrayList<>();
+		ArrayList<SkillCard> deck = new ArrayList<SkillCard>();
 
 		for (int i = 0; i < SKILL_DECK_MAIN_SKILL_CARD_COUNT; i++) {
 			deck.add(new SkillCard(color.mainAttribute, color));
@@ -393,14 +393,14 @@ public final class GameBoard {
 				font.getEffects().add(new ColorEffect(java.awt.Color.WHITE)); // Add
 																				// Effects
 				font.loadGlyphs(); // Load Glyphs
-				
 
 				playerFont = new UnicodeFont("resources/Font/accid___.ttf", 20,
 						false, false);// Create Instance
 				playerFont.addAsciiGlyphs(); // Add Glyphs
 				playerFont.addGlyphs(400, 600); // Add Glyphs
-				playerFont.getEffects().add(new ColorEffect(java.awt.Color.WHITE)); // Add
-																				// Effects
+				playerFont.getEffects().add(
+						new ColorEffect(java.awt.Color.WHITE)); // Add
+				// Effects
 				playerFont.loadGlyphs(); // Load Glyphs
 			} catch (SlickException e) {
 				throw new IllegalStateException(e);
@@ -505,35 +505,41 @@ public final class GameBoard {
 				sDeckY -= hUnit / 200.f;
 			}
 		}
-		
+
 		// Player puntuations
 		playerFont.drawString(hUnit * 0.375f, vUnit * 0.25f, "Player");
 		playerFont.drawString(hUnit * 1.875f, vUnit * 0.25f, "AI 1");
 		playerFont.drawString(hUnit * 3.375f, vUnit * 0.25f, "AI 2");
 		playerFont.drawString(hUnit * 4.875f, vUnit * 0.25f, "AI 3");
-		
+
 		Image star = im.getStar();
 		star.draw(hUnit * 0.375f, vUnit * 1.0f, hUnit * 0.33f, hUnit * 0.33f);
 		star.draw(hUnit * 1.875f, vUnit * 1.0f, hUnit * 0.33f, hUnit * 0.33f);
 		star.draw(hUnit * 3.375f, vUnit * 1.0f, hUnit * 0.33f, hUnit * 0.33f);
 		star.draw(hUnit * 4.875f, vUnit * 1.0f, hUnit * 0.33f, hUnit * 0.33f);
-		
-		playerFont.drawString(hUnit * 0.875f, vUnit * .9f, "" + players.get(0).getPoints());
-		playerFont.drawString(hUnit * 2.375f, vUnit * .9f, "" + players.get(1).getPoints());
-		playerFont.drawString(hUnit * 3.875f, vUnit * .9f, "" + players.get(2).getPoints());
-		playerFont.drawString(hUnit * 5.375f, vUnit * .9f, "" + players.get(3).getPoints());
+
+		playerFont.drawString(hUnit * 0.875f, vUnit * .9f, ""
+				+ players.get(0).getPoints());
+		playerFont.drawString(hUnit * 2.375f, vUnit * .9f, ""
+				+ players.get(1).getPoints());
+		playerFont.drawString(hUnit * 3.875f, vUnit * .9f, ""
+				+ players.get(2).getPoints());
+		playerFont.drawString(hUnit * 5.375f, vUnit * .9f, ""
+				+ players.get(3).getPoints());
 	}
-	
-	public PlayerBoard clickBoard(float hUnit, float vUnit, float mouseX, float mouseY) {
+
+	public PlayerBoard clickBoard(float hUnit, float vUnit, float mouseX,
+			float mouseY) {
 		float posX = hUnit * 0.375f;
 		float posY = vUnit * 0.25f;
 		float maxY = vUnit * 0.9f + hUnit * 0.33f;
-		for(PlayerBoard board : players) {
+		for (PlayerBoard board : players) {
 			float maxX = posX + hUnit * 0.75f;
-			if(mouseX >= posX && mouseY >= posY && mouseY <= maxY && mouseX <= maxX) {
+			if (mouseX >= posX && mouseY >= posY && mouseY <= maxY
+					&& mouseX <= maxX) {
 				return board;
 			}
-			
+
 			posX += hUnit * 1.5f;
 		}
 		return null;
