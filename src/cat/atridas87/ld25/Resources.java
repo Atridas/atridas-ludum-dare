@@ -10,6 +10,7 @@ import cat.atridas87.ld25.modelData.Castle;
 import cat.atridas87.ld25.modelData.Sala;
 import cat.atridas87.ld25.modelData.Soul;
 import cat.atridas87.ld25.modelData.Castle.RoomSocket;
+import cat.atridas87.ld25.modelData.Wave;
 
 public abstract class Resources {
 
@@ -50,6 +51,108 @@ public abstract class Resources {
 		
 		
 		return new Castle(540, 540, new Image("resources/images/level_0.png"), sales, sockets, salesInicials);
+	}
+	
+	public static ArrayList<Wave> createLevel0Waves() {
+		ArrayList<Wave> waves = new ArrayList<Wave>();
+
+		//waves.add(new Wave(0,0,0));
+		waves.add(new Wave(1,0,0));
+		//waves.add(new Wave(0,0,0));
+		waves.add(new Wave(0,1,0));
+		//waves.add(new Wave(0,0,0));
+		waves.add(new Wave(0,0,1));
+
+		waves.add(new Wave(0,0,0));
+		waves.add(new Wave(1,1,1));
+
+		waves.add(new Wave(0,0,0));
+		waves.add(new Wave(0,0,0));
+		waves.add(new Wave(2,0,0));
+		waves.add(new Wave(0,0,0));
+		waves.add(new Wave(0,0,2));
+		waves.add(new Wave(0,0,0));
+		waves.add(new Wave(0,2,0));
+
+		waves.add(new Wave(0,0,0));
+		waves.add(new Wave(0,0,0));
+		waves.add(new Wave(2,1,0));
+		waves.add(new Wave(0,0,0));
+		waves.add(new Wave(1,2,0));
+		waves.add(new Wave(0,0,0));
+		waves.add(new Wave(0,1,2));
+
+		waves.add(new Wave(0,0,0));
+		waves.add(new Wave(0,0,0));
+		waves.add(new Wave(2,1,2));
+		waves.add(new Wave(0,0,0));
+		waves.add(new Wave(1,2,2));
+		waves.add(new Wave(0,0,0));
+		waves.add(new Wave(2,1,2));
+
+		waves.add(new Wave(0,0,0));
+		waves.add(new Wave(0,0,0));
+		waves.add(new Wave(2,2,2));
+		waves.add(new Wave(0,0,0));
+		waves.add(new Wave(1,2,2));
+		waves.add(new Wave(0,0,0));
+		waves.add(new Wave(2,1,2));
+
+		// ----------------------
+
+		waves.add(new Wave(0,0,0));
+		waves.add(new Wave(0,0,0));
+		waves.add(new Wave(0,0,0));
+		waves.add(new Wave(1,0,0));
+		waves.add(new Wave(0,1,0));
+		waves.add(new Wave(0,0,1));
+
+		waves.add(new Wave(0,0,0));
+		waves.add(new Wave(1,1,1));
+
+		waves.add(new Wave(2,0,0));
+		waves.add(new Wave(0,0,2));
+		waves.add(new Wave(0,2,0));
+
+		waves.add(new Wave(0,0,0));
+		waves.add(new Wave(2,1,0));
+		waves.add(new Wave(1,2,0));
+		waves.add(new Wave(0,1,2));
+
+		waves.add(new Wave(0,0,0));
+		waves.add(new Wave(2,1,2));
+		waves.add(new Wave(1,2,2));
+		waves.add(new Wave(2,1,2));
+
+		waves.add(new Wave(2,2,2));
+		waves.add(new Wave(1,2,2));
+		waves.add(new Wave(2,1,2));
+		waves.add(new Wave(2,2,1));
+
+		waves.add(new Wave(2,2,2));
+		waves.add(new Wave(2,2,2));
+
+
+		// ----------------------
+
+		waves.add(new Wave(0,0,0));
+		waves.add(new Wave(2,2,2));
+		waves.add(new Wave(4,1,1));
+		waves.add(new Wave(1,1,4));
+		waves.add(new Wave(0,0,0));
+
+
+		// ----------------------
+
+		waves.add(new Wave(3,1,0));
+		waves.add(new Wave(1,1,5));
+		waves.add(new Wave(0,3,1));
+		waves.add(new Wave(5,1,1));
+		waves.add(new Wave(1,0,3));
+		waves.add(new Wave(1,5,1));
+		waves.add(new Wave(0,0,0));
+		
+		return waves;
 	}
 
 	public static enum State

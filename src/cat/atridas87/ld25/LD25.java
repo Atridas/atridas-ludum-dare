@@ -42,7 +42,7 @@ public class LD25 extends StateBasedGame {
 	}
 	
 	public void startNewGame() throws SlickException {
-		currentLevel = new Level(Resources.createLevel0Castle(), 100);
+		currentLevel = new Level(Resources.createLevel0Castle(), Resources.createLevel0Waves(), 100);
 	}
 
 }
