@@ -1,7 +1,6 @@
 package cat.atridas87.ld25.modelData;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
@@ -10,7 +9,7 @@ import cat.atridas87.ld25.render.ImageManager;
 
 public class Sala implements Comparable<Sala> {
 
-	private final HashMap<Integer, EstatSala> estatEspais = new HashMap<Integer, EstatSala>();
+	private final ArrayList<EstatSala> estatEspais = new ArrayList<EstatSala>();
 	private final ArrayList<Soul> espais;
 	private final Image backgroundImage;
 	
@@ -20,19 +19,52 @@ public class Sala implements Comparable<Sala> {
 		backgroundImage = _backgroundImage;
 		price = _price;
 		espais = new ArrayList<Soul>(_souls.length);
-		int i = 0;
 		for(Soul soul : _souls) {
 			espais.add(soul);
-			estatEspais.put(i, EstatSala.LLIURE);
-			i++;
+			estatEspais.add(EstatSala.LLIURE);
 		}
 	}
 	
 	public int getPrice() {
 		return price;
 	}
-	
 
+	public int availableSoulSpaces(Soul soul) {
+		int spaces = 0;
+		for(int i = 0; i < espais.size(); i++) {
+			if(espais.get(i) == soul && estatEspais.get(i) == EstatSala.LLIURE) {
+				spaces++;
+			}
+		}
+		return spaces;
+	}
+
+	public int process() {
+		int processed = 0;
+		for(int i = 0; i < estatEspais.size(); i++) {
+			switch(estatEspais.get(i)) {
+			case OCUPAT:
+				processed++;
+				estatEspais.set(i, EstatSala.LLIURE);
+				break;
+			case ENTRANT:
+				estatEspais.set(i, EstatSala.OCUPAT);
+				break;
+			default:
+				// --
+			}
+		}
+		return processed;
+	}
+	
+	public void putSoul(Soul soul) {
+		for(int i = 0; i < espais.size(); i++) {
+			if(espais.get(i) == soul && estatEspais.get(i) == EstatSala.LLIURE) {
+				estatEspais.set(i, EstatSala.ENTRANT);
+				return;
+			}
+		}
+	}
 	
 	public void draw(ImageManager im, float x, float y, float w, float h) {
 		draw(im, x, y, w, h, Color.white);
