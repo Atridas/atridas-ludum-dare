@@ -40,8 +40,8 @@ public class ImageManager {
 
 		coin = new Image("resources/images/icons/coin.png");
 		points = new Image("resources/images/icons/points.png");
-		fullCircle = new Image("resources/images/icons/Full_Circle.png");
-		emptyCircle = new Image("resources/images/icons/Empty_Circle.png");
+		fullCircle = new Image("resources/images/icons/Full_circle.png");
+		emptyCircle = new Image("resources/images/icons/Empty_circle.png");
 		ocupiedCircle = new Image("resources/images/icons/Ocupied_circle.png");
 		roomBase = new Image("resources/images/room_base.png");
 		roomHighlight = new Image("resources/images/room_highlight.png");
