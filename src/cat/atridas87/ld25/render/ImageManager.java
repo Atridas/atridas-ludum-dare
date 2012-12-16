@@ -20,6 +20,8 @@ public class ImageManager {
 	
 	private Image roomBase;
 	
+	private Image nextButton, nextButtonPressed;
+	
 	private ImageManager() {};
 	
 	public void init() throws SlickException {
@@ -42,6 +44,9 @@ public class ImageManager {
 		emptyCircle = new Image("resources/images/icons/Empty_Circle.png");
 		ocupiedCircle = new Image("resources/images/icons/Ocupied_circle.png");
 		roomBase = new Image("resources/images/room_base.png");
+		
+		nextButton = new Image("resources/images/next_normal.png");
+		nextButtonPressed = new Image("resources/images/next_pressed.png");
 	}
 	
 	public Image getSoulImage(Soul soul) {
@@ -87,6 +92,21 @@ public class ImageManager {
 	
 	public Image getRoomBase() {
 		return roomBase;
+	}
+	
+	public Image getNextButton(ButtonState buttonState) {
+		switch(buttonState) {
+		case NORMAL:
+			return nextButton;
+		case PRESSED:
+			return nextButtonPressed;
+		default:
+			throw new RuntimeException();
+		}
+	}
+	
+	public static enum ButtonState {
+		NORMAL, PRESSED
 	}
 	
 	private static ImageManager im = new ImageManager();

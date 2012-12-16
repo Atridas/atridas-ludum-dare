@@ -8,6 +8,7 @@ import org.newdawn.slick.UnicodeFont;
 
 import cat.atridas87.ld25.render.FontManager;
 import cat.atridas87.ld25.render.ImageManager;
+import cat.atridas87.ld25.render.ImageManager.ButtonState;
 
 public final class Level {
 	private Castle castle;
@@ -105,9 +106,15 @@ public final class Level {
 		// -------
 		
 		castle.drawConstructibleRooms(
-				540 * w / 180,
-				130 * h / 540,
+				x,
+				y + 130 * h / 540,
 				w,
-				410 * h / 540);
+				360 * h / 540);
+		
+		im.getNextButton(ButtonState.NORMAL).draw(
+				x +  49 * w / 180,
+				y + 499 * h / 540,
+				82 * w / 180,
+				33 * w / 180);
 	}
 }
