@@ -18,7 +18,7 @@ public class ImageManager {
 	
 	private Image fullCircle, emptyCircle, ocupiedCircle;
 	
-	private Image roomBase;
+	private Image roomBase, roomHighlight;
 	
 	private Image nextButton, nextButtonPressed;
 	
@@ -44,6 +44,7 @@ public class ImageManager {
 		emptyCircle = new Image("resources/images/icons/Empty_Circle.png");
 		ocupiedCircle = new Image("resources/images/icons/Ocupied_circle.png");
 		roomBase = new Image("resources/images/room_base.png");
+		roomHighlight = new Image("resources/images/room_highlight.png");
 		
 		nextButton = new Image("resources/images/next_normal.png");
 		nextButtonPressed = new Image("resources/images/next_pressed.png");
@@ -92,6 +93,10 @@ public class ImageManager {
 	
 	public Image getRoomBase() {
 		return roomBase;
+	}
+	
+	public Image getRoomHighlight() {
+		return roomHighlight;
 	}
 	
 	public Image getNextButton(ButtonState buttonState) {

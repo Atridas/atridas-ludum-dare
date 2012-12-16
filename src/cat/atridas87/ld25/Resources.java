@@ -16,6 +16,9 @@ public abstract class Resources {
 
 	public static final String APP_NAME = "LD25";
 	
+	public static final float DRAG_THRESHOLD = 10;
+	
+	
 	public static Castle createLevel0Castle() throws SlickException {
 		
 		TreeSet<Sala> sales = new TreeSet<Sala>();
