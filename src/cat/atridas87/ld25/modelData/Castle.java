@@ -20,6 +20,8 @@ public class Castle {
 	private final ArrayList<Sala> salesConstruides;
 	private final ArrayList<RoomSocket> sockets;
 	private final ArrayList<ArrayList<Point>> waypoints;
+	
+	private final ArrayList<WalkingSoul> walkingSouls = new ArrayList<Castle.WalkingSoul>();
 
 	private float scroll = 0;
 
@@ -37,6 +39,10 @@ public class Castle {
 		for(ArrayList<Point> waypointList : _waypoints) {
 			waypoints.add(new ArrayList<Castle.Point>(waypointList));
 		}
+	}
+	
+	public void AddWalingSoul(Soul soul) {
+		walkingSouls.add(new WalkingSoul(soul));
 	}
 
 	public ArrayList<Sala> getFreeRooms() {
@@ -144,6 +150,18 @@ public class Castle {
 		}
 		assert (false);
 	}
+	
+	public void update(float ds) {
+		float addDelta = ds / Resources.TIME_BETWEN_SOCKETS;
+		for(WalkingSoul walkingSoul : walkingSouls) {
+			walkingSoul.delta += addDelta;
+			while(walkingSoul.delta > 0) {
+				walkingSoul.delta -= 1;
+				walkingSoul.goingToSoket++;
+				// TODO
+			}
+		}
+	}
 
 	public void drawCastle(float x, float y, float w, float h) {
 		ImageManager im = ImageManager.getInstance();
@@ -163,6 +181,13 @@ public class Castle {
 		}
 
 		background.draw(x, y, w, h);
+		
+		float soulSize = w * 17.f / 540;
+		for(WalkingSoul walkingSoul : walkingSouls) {
+			Point p = walkingSoul.getPoint();
+
+			im.getSoulImage(walkingSoul.kind).draw(p.x - soulSize / 2, y - soulSize / 2, soulSize, soulSize);
+		}
 	}
 
 	public void drawConstructibleRooms(float x, float y, float w, float h) {
