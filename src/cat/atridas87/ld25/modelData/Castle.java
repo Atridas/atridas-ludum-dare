@@ -19,12 +19,13 @@ public class Castle {
 	private final TreeSet<Sala> sales;
 	private final ArrayList<Sala> salesConstruides;
 	private final ArrayList<RoomSocket> sockets;
+	private final ArrayList<ArrayList<Point>> waypoints;
 
 	private float scroll = 0;
 
 	public Castle(float _width, float _height, Image _background,
 			Set<Sala> _sales, List<RoomSocket> _sockets,
-			List<Sala> _salesConstruides) {
+			List<Sala> _salesConstruides, ArrayList<ArrayList<Point>> _waypoints) {
 		width = _width;
 		height = _height;
 		background = _background;
@@ -32,6 +33,10 @@ public class Castle {
 		assert (_salesConstruides.size() == _sockets.size());
 		salesConstruides = new ArrayList<Sala>(_salesConstruides);
 		sockets = new ArrayList<RoomSocket>(_sockets);
+		waypoints = new ArrayList<ArrayList<Point>>(_waypoints.size());
+		for(ArrayList<Point> waypointList : _waypoints) {
+			waypoints.add(new ArrayList<Castle.Point>(waypointList));
+		}
 	}
 
 	public ArrayList<Sala> getFreeRooms() {
@@ -222,6 +227,61 @@ public class Castle {
 			socket = _socket;
 			points = _points;
 			coins = _coins;
+		}
+	}
+	
+	public static class Point {
+		public float x, y;
+		
+		public Point(float _x, float _y) {
+			x = _x;
+			y = _y;
+		}
+	}
+	
+	private class WalkingSoul {
+		Soul kind;
+		int goingToSoket;
+		float delta;
+		
+		WalkingSoul(Soul soul) {
+			kind = soul;
+			goingToSoket = 0;
+			delta = 0;
+		}
+		
+		Point getPoint() {
+			ArrayList<Point> path = waypoints.get(goingToSoket);
+			float length = 0;
+			for(int i = 1; i < path.size(); i++) {
+				Point p0 = path.get(i-1);
+				Point p1 = path.get(i);
+				
+				float l = (p0.x - p1.x) * (p0.x - p1.x) + (p0.y - p1.y) * (p0.y - p1.y);
+				length += (float)Math.sqrt(l);
+			}
+			float currentLength = 0;
+
+			for(int i = 1; i < path.size(); i++) {
+				Point p0 = path.get(i-1);
+				Point p1 = path.get(i);
+				
+				float l = (p0.x - p1.x) * (p0.x - p1.x) + (p0.y - p1.y) * (p0.y - p1.y);
+				
+				if((currentLength + l) / length > delta) {
+					
+					float currentDelta = (delta - currentLength / length) / (l / length);
+
+					float x = p0.x * (1 - currentDelta) + p1.x * currentDelta;
+					float y = p0.y * (1 - currentDelta) + p1.y * currentDelta;
+					
+					return new Point(x, y);
+				}
+				
+				currentLength += (float)Math.sqrt(l);
+			}
+			
+			return path.get(path.size() - 1);
 		}
 	}
 }
