@@ -7,16 +7,15 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import cat.atridas87.ld25.LD25;
 import cat.atridas87.ld25.Resources;
-import cat.atridas87.ld25.modelData.Castle;
 
 public class PlayerTurn extends BasicGameState {
-	private Castle castleTest;
-
+	
 	@Override
 	public void init(GameContainer _gameContainer,
 			StateBasedGame _stateBasedGame) throws SlickException {
-		castleTest = Resources.createLevel0Castle();
+
 	}
 
 	@Override
@@ -25,10 +24,8 @@ public class PlayerTurn extends BasicGameState {
 			throws SlickException {
 
 		_graphics.setBackground(Color.cyan);
-
-		castleTest.drawCastle(0, 0, 540, 540);
-
-		castleTest.drawConstructibleRooms(540, 100, 180, 440);
+		
+		((LD25)_stateBasedGame).getCurrentLevel().draw(0, 0, 720, 540);
 	}
 
 	@Override

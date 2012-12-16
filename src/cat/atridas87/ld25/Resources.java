@@ -46,7 +46,7 @@ public abstract class Resources {
 		salesInicials.add(null);sockets.add(new RoomSocket(302, 257, 144, 81));
 		salesInicials.add(null);sockets.add(new RoomSocket(107, 255, 144, 81));
 
-		salesInicials.add(null);sockets.add(new RoomSocket(209, 132, 144, 81));
+		//salesInicials.add(null);sockets.add(new RoomSocket(209, 132, 144, 81));
 		
 		
 		return new Castle(540, 540, new Image("resources/images/level_0.png"), sales, sockets, salesInicials);
