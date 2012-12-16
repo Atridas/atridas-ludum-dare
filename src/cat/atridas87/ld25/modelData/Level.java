@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.newdawn.slick.UnicodeFont;
 
+import cat.atridas87.ld25.modelData.Castle.RoomSocket;
 import cat.atridas87.ld25.render.FontManager;
 import cat.atridas87.ld25.render.ImageManager;
 import cat.atridas87.ld25.render.ImageManager.ButtonState;
@@ -32,6 +33,46 @@ public final class Level {
 	public int getReserve(Soul soul) {
 		return reserve.get(soul);
 	}
+
+	public void scroll(float dy) {
+		castle.scroll(dy);
+	}
+
+	public RoomSocket isSocket(float x, float y) {
+		return castle.isSocket(x, y);
+	}
+
+	public void setRoom(RoomSocket socket, Sala room) {
+		castle.setRoom(socket, room);
+	}
+	
+	public void takeCoins(int _coins) {
+		assert(_coins <= coins);
+		assert(_coins >= 0);
+		coins -= _coins;
+	}
+	
+	public void addCoins(int _coins) {
+		assert(_coins >= 0);
+		coins += _coins;
+	}
+	
+	public int getCoins() {
+		return coins;
+	}
+	
+	public int getPoints() {
+		return points;
+	}
+	
+	public void addPoints(int _points) {
+		assert(_points >= 0);
+		points += _points;
+	}
+	
+	public Sala canGrabRoom(float x, float y) {
+		return castle.canGrabRoom(x, y);
+	}
 	
 	public void draw(float x, float y, float w, float h) {
 		ImageManager im = ImageManager.getInstance();
@@ -48,6 +89,15 @@ public final class Level {
 	}
 	
 	private void drawRightUI(ImageManager im, float x, float y, float w, float h) {
+
+		
+		castle.drawConstructibleRooms(
+				x,
+				y + 130 * h / 540,
+				w,
+				360 * h / 540);
+		
+		// ------
 
 		float coinsDx = 10.f * w / 180;
 		float pointsDx = 100.f * w / 180;
@@ -104,12 +154,6 @@ public final class Level {
 		}
 		
 		// -------
-		
-		castle.drawConstructibleRooms(
-				x,
-				y + 130 * h / 540,
-				w,
-				360 * h / 540);
 		
 		im.getNextButton(ButtonState.NORMAL).draw(
 				x +  49 * w / 180,

@@ -19,6 +19,8 @@ public class Castle {
 	private final ArrayList<Sala> salesConstruides;
 	private final ArrayList<RoomSocket> sockets;
 	
+	private float scroll = 0;
+	
 	public Castle(float _width, float _height, Image _background, Set<Sala> _sales, List<RoomSocket> _sockets, List<Sala> _salesConstruides) {
 		width = _width;
 		height = _height;
@@ -37,6 +39,58 @@ public class Castle {
 			}
 		}
 		return freeRooms;
+	}
+	
+	public void scroll(float dy) {
+		scroll += dy;
+		if(scroll < 0) scroll = 0;
+	}
+	
+	public Sala canGrabRoom(float x, float y) {
+		float roomDx = 550;
+		float roomDy = 30;
+		float roomW = 144;
+		float roomH = 81;
+		
+		float itemDy = roomW;
+		
+		float currentDY = 130;
+		
+		ArrayList<Sala> freeRooms = getFreeRooms();
+		
+		for(Sala sala : freeRooms) {
+			float currentY = currentDY - scroll;
+			
+			if(x > roomDx && x < roomDx + roomW && y > currentY + roomDy && y < currentY + roomDy + roomH) {
+				return sala;
+			}
+			
+			currentDY += itemDy;
+		}
+		return null;
+	}
+	
+	public RoomSocket isSocket(float x, float y) {
+		for(RoomSocket socket : sockets) {
+			if(x > socket.x && x < socket.x + socket.w && y > socket.y && y < socket.y + socket.h) {
+				return socket;
+			}
+		}
+		return null;
+	}
+	
+	public void setRoom(RoomSocket socket, Sala room) {
+		assert(!salesConstruides.contains(room));
+		assert(sales.contains(room));
+		assert(sockets.contains(socket));
+		
+		for(int i = 0; i < sockets.size(); i++) {
+			if(sockets.get(i) == socket) {
+				salesConstruides.set(i, room);
+				return;
+			}
+		}
+		assert(false);
 	}
 	
 	public void drawCastle(float x, float y, float w, float h) {
@@ -78,8 +132,14 @@ public class Castle {
 		
 		float currentDY = 0;
 		
-		for(Sala sala : getFreeRooms()) {
-			float currentY = y + currentDY;
+		ArrayList<Sala> freeRooms = getFreeRooms();
+		
+		float totalHeight = freeRooms.size() * itemDy;
+		if(scroll + h > totalHeight) scroll = totalHeight - h;
+		if(scroll < 0) scroll = 0;
+		
+		for(Sala sala : freeRooms) {
+			float currentY = y + currentDY - scroll;
 			im.getCoinImage().draw(x + coinDx, currentY + coinDy, coinSize, coinSize);
 			
 			sala.draw(im, x + roomDx, currentY + roomDy, roomW, roomH);
@@ -87,7 +147,7 @@ public class Castle {
 			font.drawString(x + stringDx, currentY + stringDy, Integer.toString(sala.getPrice()));
 			
 			currentDY += itemDy;
-			if(currentDY >= h) break;
+			//if(currentDY >= h) break;
 		}
 	}
 	

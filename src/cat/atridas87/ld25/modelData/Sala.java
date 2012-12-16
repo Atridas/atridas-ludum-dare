@@ -3,6 +3,7 @@ package cat.atridas87.ld25.modelData;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 
 import cat.atridas87.ld25.render.ImageManager;
@@ -31,12 +32,18 @@ public class Sala implements Comparable<Sala> {
 		return price;
 	}
 	
+
+	
 	public void draw(ImageManager im, float x, float y, float w, float h) {
+		draw(im, x, y, w, h, Color.white);
+	}
 		
-		im.getRoomBase().draw(x, y, w, h);
+	public void draw(ImageManager im, float x, float y, float w, float h, Color filter) {
+		
+		im.getRoomBase().draw(x, y, w, h, filter);
 		
 		float backgroundWidth = w * 108 / 144;
-		backgroundImage.draw(x, y, backgroundWidth, h);
+		backgroundImage.draw(x, y, backgroundWidth, h, filter);
 		
 		float soulSize = Math.min(w * 17 / 144, h * 17 / 81);
 		float centerDelta = w * 18 / 144;
@@ -71,8 +78,8 @@ public class Sala implements Comparable<Sala> {
 			
 			float soulX = x + centre - (soulSize / 2);
 			
-			estat.getImage(im).draw(soulX, soulY, soulSize, soulSize);
-			im.getSoulImage(soul).draw(soulX, soulY, soulSize, soulSize);
+			estat.getImage(im).draw(soulX, soulY, soulSize, soulSize, filter);
+			im.getSoulImage(soul).draw(soulX, soulY, soulSize, soulSize, filter);
 		}
 	}
 	
