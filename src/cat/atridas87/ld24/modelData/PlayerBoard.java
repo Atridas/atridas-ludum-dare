@@ -11,10 +11,10 @@ import cat.atridas87.ld24.render.ImageManager;
 
 public final class PlayerBoard {
 
-	private final HashSet<Creature> creatures = new HashSet<>();
-	private final HashMap<Creature, ArrayList<SkillCard>> creatureSkills = new HashMap<>();
+	private final HashSet<Creature> creatures = new HashSet<Creature>();
+	private final HashMap<Creature, ArrayList<SkillCard>> creatureSkills = new HashMap<Creature, ArrayList<SkillCard>>();
 	
-	private final ArrayList<SkillCard> hand = new ArrayList<>();
+	private final ArrayList<SkillCard> hand = new ArrayList<SkillCard>();
 	
 	public Set<Creature> getCreatures() {
 		return Collections.unmodifiableSet(creatures);

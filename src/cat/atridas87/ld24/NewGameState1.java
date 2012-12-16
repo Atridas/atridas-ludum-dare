@@ -124,8 +124,8 @@ public class NewGameState1 extends BasicGameState {
 	}
 
 	public void reset(LD24 game) {
-		skillsToPlace = new ArrayList<>(4 * 5);
-		skillsPlaced = new HashMap<>();
+		skillsToPlace = new ArrayList<SkillCard>(4 * 5);
+		skillsPlaced = new HashMap<Creature, ArrayList<SkillCard>>();
 		for (Creature creature : game.mainPlayer.getCreatures()) {
 			skillsPlaced.put(creature, new ArrayList<SkillCard>(5));
 		}

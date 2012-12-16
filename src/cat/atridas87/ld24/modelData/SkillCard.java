@@ -28,7 +28,7 @@ public final class SkillCard {
 		type = SkillCardType.SKILL;
 		skillColor = color;
 		
-		ArrayList<Attribute> atts = new ArrayList<>(1);
+		ArrayList<Attribute> atts = new ArrayList<Attribute>(1);
 		atts.add(attribute);
 		
 		attributes = Collections.unmodifiableList(atts);
@@ -38,7 +38,7 @@ public final class SkillCard {
 		type = SkillCardType.SKILL;
 		skillColor = color;
 		
-		ArrayList<Attribute> atts = new ArrayList<>(2);
+		ArrayList<Attribute> atts = new ArrayList<Attribute>(2);
 		atts.add(attribute);
 		atts.add(attribute2);
 		
@@ -49,7 +49,7 @@ public final class SkillCard {
 		type = SkillCardType.SKILL;
 		skillColor = color;
 		
-		ArrayList<Attribute> atts = new ArrayList<>(3);
+		ArrayList<Attribute> atts = new ArrayList<Attribute>(3);
 		atts.add(attribute);
 		atts.add(attribute2);
 		atts.add(attribute3);

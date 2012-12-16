@@ -23,14 +23,14 @@ public final class EnvironmentCard {
 	
 	public EnvironmentCard(Attribute attribute) {
 		type = EnvironmentType.PERIOD_1;
-		HashSet<Attribute> atts = new HashSet<>();
+		HashSet<Attribute> atts = new HashSet<Attribute>();
 		atts.add(attribute);
 		attributes = Collections.unmodifiableSet(atts);
 	}
 	
 	public EnvironmentCard(Attribute attribute, Attribute attribute2) {
 		type = EnvironmentType.PERIOD_2;
-		HashSet<Attribute> atts = new HashSet<>(2);
+		HashSet<Attribute> atts = new HashSet<Attribute>(2);
 		atts.add(attribute);
 		atts.add(attribute2);
 		attributes = Collections.unmodifiableSet(atts);
@@ -42,7 +42,7 @@ public final class EnvironmentCard {
 		} else {
 			type = EnvironmentType.PERIOD_2;
 		}
-		HashSet<Attribute> atts = new HashSet<>(Attribute.values().length);
+		HashSet<Attribute> atts = new HashSet<Attribute>(Attribute.values().length);
 		for(Attribute attribute : Attribute.values()) {
 			atts.add(attribute);
 		}
