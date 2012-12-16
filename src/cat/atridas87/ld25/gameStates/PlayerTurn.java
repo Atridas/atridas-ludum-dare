@@ -78,6 +78,11 @@ public class PlayerTurn extends BasicGameState {
 				canDropRoomHere = true;
 			}
 		}
+		
+		float ds = ms * 1000.f;
+		if(ds > 0.05) ds = 0.05f;
+		
+		level.getCastle().update(ds);
 	}
 
 	@Override
@@ -143,6 +148,10 @@ public class PlayerTurn extends BasicGameState {
 		level.addSoulsToReserve(Soul.A, wave.getSouls(Soul.A));
 		level.addSoulsToReserve(Soul.B, wave.getSouls(Soul.B));
 		level.addSoulsToReserve(Soul.C, wave.getSouls(Soul.C));
+		
+		
+		// TODO
+		castle.AddWalingSoul(Soul.A);
 	}
 
 	public void levelCompelete() {
