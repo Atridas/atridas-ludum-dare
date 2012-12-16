@@ -22,7 +22,7 @@ public class LD25 extends StateBasedGame {
 	public void initStatesList(GameContainer container) throws SlickException {
 		ImageManager.getInstance().init();
 
-		this.getState(Resources.State.PLAYER_TURN.ordinal()).init(container, this);
+		//this.getState(Resources.State.PLAYER_TURN.ordinal()).init(container, this);
 	}
 
 	public static void main(String[] args) throws SlickException {

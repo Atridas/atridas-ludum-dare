@@ -1,41 +1,39 @@
 package cat.atridas87.ld25.gameStates;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import cat.atridas87.ld25.Resources;
-import cat.atridas87.ld25.modelData.Sala;
-import cat.atridas87.ld25.modelData.Soul;
+import cat.atridas87.ld25.modelData.Castle;
 
 public class PlayerTurn extends BasicGameState {
+	private Castle castleTest;
 
-	Sala test1, test2, test3;
-	
 	@Override
-	public void init(GameContainer _gameContainer, StateBasedGame _stateBasedGame)
-			throws SlickException {
-		test1 = new Sala(new Image("resources/images/rooms/aa.png"), Soul.A, Soul.A);
-		test2 = new Sala(new Image("resources/images/rooms/ab.png"), Soul.A, Soul.B);
-		test3 = new Sala(new Image("resources/images/rooms/aabbcc.png"), Soul.A, Soul.A, Soul.B, Soul.B, Soul.C, Soul.C);
+	public void init(GameContainer _gameContainer,
+			StateBasedGame _stateBasedGame) throws SlickException {
+		castleTest = Resources.createLevel0Castle();
 	}
 
 	@Override
-	public void render(GameContainer _gameContainer, StateBasedGame _stateBasedGame, Graphics _graphics)
+	public void render(GameContainer _gameContainer,
+			StateBasedGame _stateBasedGame, Graphics _graphics)
 			throws SlickException {
 
-		test1.draw(50, 50, 144, 81);
-		test2.draw(300, 50, 144, 81);
-		test3.draw(100, 200, 144, 81);
+		_graphics.setBackground(Color.cyan);
 
+		castleTest.drawCastle(0, 0, 540, 540);
+
+		castleTest.drawConstructibleRooms(540, 100, 180, 440);
 	}
 
 	@Override
-	public void update(GameContainer _gameContainer, StateBasedGame _stateBasedGame, int arg2)
-			throws SlickException {
+	public void update(GameContainer _gameContainer,
+			StateBasedGame _stateBasedGame, int arg2) throws SlickException {
 		// TODO Auto-generated method stub
 
 	}
