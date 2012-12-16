@@ -7,15 +7,17 @@ import org.newdawn.slick.Image;
 
 import cat.atridas87.ld25.render.ImageManager;
 
-public class Sala {
+public class Sala implements Comparable<Sala> {
 
 	private final HashMap<Integer, EstatSala> estatEspais = new HashMap<Integer, EstatSala>();
 	private final ArrayList<Soul> espais;
 	private final Image backgroundImage;
 	
+	private final int price;
 	
-	public Sala(Image _backgroundImage, Soul... _souls) {
+	public Sala(Image _backgroundImage, int _price, Soul... _souls) {
 		backgroundImage = _backgroundImage;
+		price = _price;
 		espais = new ArrayList<Soul>(_souls.length);
 		int i = 0;
 		for(Soul soul : _souls) {
@@ -25,8 +27,11 @@ public class Sala {
 		}
 	}
 	
-	public void draw(float x, float y, float w, float h) {
-		ImageManager im = ImageManager.getInstance();
+	public int getPrice() {
+		return price;
+	}
+	
+	public void draw(ImageManager im, float x, float y, float w, float h) {
 		
 		im.getRoomBase().draw(x, y, w, h);
 		
@@ -88,5 +93,25 @@ public class Sala {
 				throw new RuntimeException();
 			}
 		}
+	}
+
+	@Override
+	public int compareTo(Sala o) {
+		int result = price - o.price;
+		if(result == 0) {
+			result = espais.size() - o.espais.size();
+			if(result == 0) {
+				for(int i = 0; i < espais.size(); i++) {
+					Soul mine = espais.get(i);
+					Soul its = o.espais.get(i);
+					result = mine.ordinal() - its.ordinal();
+					if(result != 0) {
+						break;
+					}
+				}
+			}
+		}
+		
+		return result;
 	}
 }
