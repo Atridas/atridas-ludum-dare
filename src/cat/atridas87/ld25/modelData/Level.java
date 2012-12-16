@@ -19,6 +19,8 @@ public final class Level {
 	
 	private int coins, points;
 	
+	private boolean holdingMouse = false;
+	
 	public Level(Castle _castle, List<Wave> _waves, int initialCoins) {
 		castle = _castle;
 		coins = initialCoins;
@@ -30,12 +32,44 @@ public final class Level {
 		}
 	}
 	
+	public Castle getCastle() {
+		return castle;
+	}
+	
 	public int getReserve(Soul soul) {
 		return reserve.get(soul);
+	}
+	
+	public void getSoulsFromReserve(Soul soul, int num) {
+		assert(num >= 0);
+		int res = reserve.get(soul);
+		res -= num;
+		assert(res >= 0);
+		reserve.put(soul, res);
+	}
+	
+	public void addSoulsToReserve(Soul soul, int num) {
+		assert(num >= 0);
+		int res = reserve.get(soul);
+		res += num;
+		assert(res >= 0);
+		reserve.put(soul, res);
+	}
+	
+	public Wave getNextWave() {
+		if(waves.size() > 0) {
+			return waves.removeFirst();
+		} else {
+			return null;
+		}
 	}
 
 	public void scroll(float dy) {
 		castle.scroll(dy);
+	}
+	
+	public void holdButton(boolean hold) {
+		holdingMouse = hold;
 	}
 
 	public RoomSocket isSocket(float x, float y) {
@@ -60,14 +94,14 @@ public final class Level {
 	public int getCoins() {
 		return coins;
 	}
-	
-	public int getPoints() {
-		return points;
-	}
-	
+
 	public void addPoints(int _points) {
 		assert(_points >= 0);
 		points += _points;
+	}
+	
+	public int getPoints() {
+		return points;
 	}
 	
 	public Sala canGrabRoom(float x, float y) {
@@ -155,7 +189,7 @@ public final class Level {
 		
 		// -------
 		
-		im.getNextButton(ButtonState.NORMAL).draw(
+		im.getNextButton(holdingMouse ? ButtonState.PRESSED : ButtonState.NORMAL).draw(
 				x +  49 * w / 180,
 				y + 499 * h / 540,
 				82 * w / 180,

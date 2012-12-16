@@ -158,6 +158,28 @@ public abstract class Resources {
 		return waves;
 	}
 
+	public static int pointCombo(int numSouls) {
+		switch(numSouls) {
+		case 1:
+			return 10;
+		case 2:
+			return 25;
+		case 3:
+			return 40;
+		case 4:
+			return 55;
+		case 5:
+			return 70;
+		case 6:
+			return 100;
+		}
+		throw new RuntimeException();
+	}
+
+	public static int coinCombo(int numSouls) {
+		return numSouls * 50;
+	}
+	
 	public static enum State
 	{
 		PLAYER_TURN
