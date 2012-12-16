@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.newdawn.slick.Image;
 import org.newdawn.slick.UnicodeFont;
@@ -15,7 +16,7 @@ public class Castle {
 
 	private final float width, height;
 	private final Image background;
-	private final HashSet<Sala> sales; 
+	private final TreeSet<Sala> sales; 
 	private final ArrayList<Sala> salesConstruides;
 	private final ArrayList<RoomSocket> sockets;
 	
@@ -23,7 +24,7 @@ public class Castle {
 		width = _width;
 		height = _height;
 		background = _background;
-		sales = new HashSet<Sala>(_sales);
+		sales = new TreeSet<Sala>(_sales);
 		assert(_salesConstruides.size() == _sockets.size());
 		salesConstruides = new ArrayList<Sala>(_salesConstruides);
 		sockets = new ArrayList<RoomSocket>(_sockets);
