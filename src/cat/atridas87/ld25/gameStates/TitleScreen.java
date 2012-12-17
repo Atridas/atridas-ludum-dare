@@ -72,9 +72,15 @@ public class TitleScreen extends BasicGameState {
 		if(x > 210 && x < 510) {
 			if(pressingNewGame && y > 240 && y < 340) {
 				LD25.getInstance().enterState(Resources.State.PLAYER_TURN.ordinal());
+				((PlayerTurn)LD25.getInstance().getState(Resources.State.PLAYER_TURN.ordinal())).reset();
 			}
 			if(pressingTutorial && y > 420 && y < 520) {
-				// TODO tutorial
+				LD25.getInstance().enterState(Resources.State.TUTORIAL.ordinal());
+				try {
+					((Tutorial)LD25.getInstance().getState(Resources.State.TUTORIAL.ordinal())).reset();
+				} catch (SlickException e) {
+					throw new RuntimeException(e);
+				}
 			}
 		}
 
@@ -100,6 +106,9 @@ public class TitleScreen extends BasicGameState {
 			} else {
 				hoveringTutorial = false;
 			}
+		} else {
+			hoveringNewGame = false;
+			hoveringTutorial = false;
 		}
 		
 	}
