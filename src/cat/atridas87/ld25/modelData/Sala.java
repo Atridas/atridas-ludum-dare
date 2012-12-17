@@ -12,27 +12,27 @@ public class Sala implements Comparable<Sala> {
 	private final ArrayList<EstatSala> estatEspais = new ArrayList<EstatSala>();
 	private final ArrayList<Soul> espais;
 	private final Image backgroundImage;
-	
+
 	private final int price;
-	
+
 	public Sala(Image _backgroundImage, int _price, Soul... _souls) {
 		backgroundImage = _backgroundImage;
 		price = _price;
 		espais = new ArrayList<Soul>(_souls.length);
-		for(Soul soul : _souls) {
+		for (Soul soul : _souls) {
 			espais.add(soul);
 			estatEspais.add(EstatSala.LLIURE);
 		}
 	}
-	
+
 	public int getPrice() {
 		return price;
 	}
 
 	public int availableSoulSpaces(Soul soul) {
 		int spaces = 0;
-		for(int i = 0; i < espais.size(); i++) {
-			if(espais.get(i) == soul && estatEspais.get(i) == EstatSala.LLIURE) {
+		for (int i = 0; i < espais.size(); i++) {
+			if (espais.get(i) == soul && estatEspais.get(i) == EstatSala.LLIURE) {
 				spaces++;
 			}
 		}
@@ -41,8 +41,8 @@ public class Sala implements Comparable<Sala> {
 
 	public int process() {
 		int processed = 0;
-		for(int i = 0; i < estatEspais.size(); i++) {
-			switch(estatEspais.get(i)) {
+		for (int i = 0; i < estatEspais.size(); i++) {
+			switch (estatEspais.get(i)) {
 			case OCUPAT:
 				processed++;
 				estatEspais.set(i, EstatSala.LLIURE);
@@ -56,20 +56,20 @@ public class Sala implements Comparable<Sala> {
 		}
 		return processed;
 	}
-	
+
 	public void putSoul(Soul soul) {
-		for(int i = 0; i < espais.size(); i++) {
-			if(espais.get(i) == soul && estatEspais.get(i) == EstatSala.LLIURE) {
+		for (int i = 0; i < espais.size(); i++) {
+			if (espais.get(i) == soul && estatEspais.get(i) == EstatSala.LLIURE) {
 				estatEspais.set(i, EstatSala.ENTRANT);
 				return;
 			}
 		}
 	}
-	
+
 	public void draw(ImageManager im, float x, float y, float w, float h) {
 		draw(im, x, y, w, h, Color.white);
 	}
-		
+
 	public void draw(ImageManager im, float x, float y, float w, float h, Color filter) {
 		
 		im.getRoomBase().draw(x, y, w, h, filter);
@@ -110,18 +110,20 @@ public class Sala implements Comparable<Sala> {
 			
 			float soulX = x + centre - (soulSize / 2);
 			
-			estat.getImage(im).draw(soulX, soulY, soulSize, soulSize, filter);
+			//estat.getImage(im).draw(soulX, soulY, soulSize, soulSize, filter);
+			
+			EstatSala.drawPercentage(im, .5f, soulX, soulY, soulSize, soulSize, filter);
+					
+			
 			im.getSoulImage(soul).draw(soulX, soulY, soulSize, soulSize, filter);
 		}
 	}
-	
+
 	public static enum EstatSala {
-		LLIURE,
-		OCUPAT,
-		ENTRANT;
-		
+		LLIURE, OCUPAT, ENTRANT;
+
 		public Image getImage(ImageManager im) {
-			switch(this) {
+			switch (this) {
 			case LLIURE:
 				return im.getEmptyCircleImage();
 			case OCUPAT:
@@ -132,25 +134,44 @@ public class Sala implements Comparable<Sala> {
 				throw new RuntimeException();
 			}
 		}
+
+		public static void drawPercentage(ImageManager im, float percent, float x,
+				float y, float w, float h, Color filter) {
+
+			Image lliure = EstatSala.LLIURE.getImage(im);
+			Image ocupat = EstatSala.OCUPAT.getImage(im);
+
+			int baseHeight = lliure.getHeight();
+			
+			int topHeight = (int) (baseHeight * (1 - percent));
+			int botHeight = baseHeight - topHeight;
+
+			//Image topImage = lliure.getSubImage(0, 0, lliure.getWidth(), topHeight);
+			Image botImage = ocupat.getSubImage(0, topHeight, ocupat.getWidth(), botHeight);
+
+			lliure.draw(x, y, w, h, filter);
+			//topImage.draw(x, y,                     w, h * (1 - percent), filter);
+			botImage.draw(x, y + h * (1 - percent), w, h * percent,       filter);
+		}
 	}
 
 	@Override
 	public int compareTo(Sala o) {
 		int result = price - o.price;
-		if(result == 0) {
+		if (result == 0) {
 			result = espais.size() - o.espais.size();
-			if(result == 0) {
-				for(int i = 0; i < espais.size(); i++) {
+			if (result == 0) {
+				for (int i = 0; i < espais.size(); i++) {
 					Soul mine = espais.get(i);
 					Soul its = o.espais.get(i);
 					result = mine.ordinal() - its.ordinal();
-					if(result != 0) {
+					if (result != 0) {
 						break;
 					}
 				}
 			}
 		}
-		
+
 		return result;
 	}
 }

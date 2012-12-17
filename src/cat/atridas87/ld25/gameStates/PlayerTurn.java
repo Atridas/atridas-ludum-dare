@@ -79,7 +79,7 @@ public class PlayerTurn extends BasicGameState {
 			}
 		}
 		
-		float ds = ms * 1000.f;
+		float ds = ms / 1000.f;
 		if(ds > 0.05) ds = 0.05f;
 		
 		level.getCastle().update(ds);

@@ -18,7 +18,7 @@ public abstract class Resources {
 	public static final String APP_NAME = "LD25";
 
 	public static final float DRAG_THRESHOLD = 10;
-	public static final float TIME_BETWEN_SOCKETS = 5;
+	public static final float TIME_BETWEN_SOCKETS = 4;
 	
 
 	public static Castle createLevel0Castle() throws SlickException {
@@ -27,11 +27,11 @@ public abstract class Resources {
 		ArrayList<RoomSocket> sockets = new ArrayList<Castle.RoomSocket>();
 		ArrayList<Sala> salesInicials = new ArrayList<Sala>();
 
-		Sala aa = new Sala(new Image("resources/images/rooms/aa.png"), 50,
+		Sala aa = new Sala(new Image("resources/images/rooms/electricitat-petit.png"), 50,
 				Soul.A, Soul.A);
-		Sala bb = new Sala(new Image("resources/images/rooms/bb.png"), 50,
+		Sala bb = new Sala(new Image("resources/images/rooms/infectades-petit.png"), 50,
 				Soul.B, Soul.B);
-		Sala cc = new Sala(new Image("resources/images/rooms/cc.png"), 50,
+		Sala cc = new Sala(new Image("resources/images/rooms/parrilla-petit.png"), 50,
 				Soul.C, Soul.C);
 		Sala ab = new Sala(new Image("resources/images/rooms/ab.png"), 75,
 				Soul.A, Soul.B);
@@ -39,9 +39,9 @@ public abstract class Resources {
 				Soul.A, Soul.C);
 		Sala bc = new Sala(new Image("resources/images/rooms/bc.png"), 75,
 				Soul.B, Soul.C);
-		Sala abc = new Sala(new Image("resources/images/rooms/abc.png"), 100,
+		Sala abc = new Sala(new Image("resources/images/rooms/vampireses-petit.png"), 100,
 				Soul.A, Soul.B, Soul.C);
-		Sala aabbcc = new Sala(new Image("resources/images/rooms/aabbcc.png"),
+		Sala aabbcc = new Sala(new Image("resources/images/rooms/gel-petit.png"),
 				250, Soul.A, Soul.A, Soul.B, Soul.B, Soul.C, Soul.C);
 
 		sales.add(aa);
