@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.newdawn.slick.UnicodeFont;
 
+import cat.atridas87.ld25.LD25;
 import cat.atridas87.ld25.Resources;
 import cat.atridas87.ld25.modelData.Castle.RoomSocket;
 import cat.atridas87.ld25.render.FontManager;
@@ -121,10 +122,14 @@ public final class Level {
 		//addSoulsToReserve(soul, 1);
 		breakCombo();
 		lives--;
+		
+		if(lives <= 0) {
+			levelComplete();
+		}
 	}
 	
 	private void levelComplete() {
-		// TODO
+		LD25.getInstance().enterState(Resources.State.GAME_OVER.ordinal());
 	}
 	
 	public Wave getNextWave() {
