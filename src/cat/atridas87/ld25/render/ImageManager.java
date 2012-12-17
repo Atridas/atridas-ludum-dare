@@ -22,7 +22,7 @@ public class ImageManager {
 
 	public Image roomBase, roomHighlight;
 
-	public Image menuTop;
+	public Image menuTop, menuBot;
 
 	public Image fons;
 	public Image titleScreenBackground;
@@ -58,6 +58,7 @@ public class ImageManager {
 		roomHighlight = new Image("resources/images/room_highlight.png");
 
 		menuTop = new Image("resources/images/menu-sobre.png");
+		menuBot = new Image("resources/images/menu-sota.png");
 		fons = new Image("resources/images/fons.png");
 		titleScreenBackground = new Image("resources/images/title_screen.png");
 		gameoverBackground = titleScreenBackground; // TODO

@@ -211,10 +211,10 @@ public class Castle {
 		for (int i = 0; i < sockets.length; i++) {
 			if (sockets[i] == socket) {
 				if(salesConstruides[i] != null) {
-					salesConstruides[i].reset();
 					if(salesConstruides[i].processingSouls()) {
 						LD25.getInstance().getCurrentLevel().breakCombo();
 					}
+					salesConstruides[i].reset();
 				}
 				
 				salesConstruides[i] = room;
