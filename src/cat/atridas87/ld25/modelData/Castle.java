@@ -401,7 +401,7 @@ public class Castle {
 
 		for (Sala sala : freeRooms) {
 			float currentY = y + currentDY - scroll;
-			im.getCoinImage().draw(x + coinDx, currentY + coinDy, coinSize,
+			im.coin.draw(x + coinDx, currentY + coinDy, coinSize,
 					coinSize);
 
 			sala.draw(im, x + roomDx, currentY + roomDy, roomW, roomH);

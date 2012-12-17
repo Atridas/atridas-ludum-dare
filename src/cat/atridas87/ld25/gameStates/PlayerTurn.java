@@ -27,8 +27,8 @@ public class PlayerTurn extends BasicGameState {
 	private Level level;
 
 	private Color dragFilter = new Color(1, 1, 1, 0.75f);
-	private Color validDragFilter = new Color(0.75f, 1, 0.75f, 0.75f);
-	private Color invalidDragFilter = new Color(1, 0.75f, 0.75f, 0.75f);
+	private Color validDragFilter = new Color(0.5f, 1, 0.5f, 0.75f);
+	private Color invalidDragFilter = new Color(1, 0.5f, 0.5f, 0.75f);
 
 	@Override
 	public void init(GameContainer _gameContainer,
@@ -44,9 +44,12 @@ public class PlayerTurn extends BasicGameState {
 	public void render(GameContainer _gameContainer,
 			StateBasedGame _stateBasedGame, Graphics _graphics)
 			throws SlickException {
+		_graphics.setBackground(Color.cyan);
+		
+		
 		ImageManager im = ImageManager.getInstance();
 		
-		_graphics.setBackground(Color.cyan);
+		im.fons.draw(0,0);
 
 		level.draw(0, 0, 720, 540);
 		
@@ -84,75 +87,6 @@ public class PlayerTurn extends BasicGameState {
 	public int getID() {
 		return Resources.State.PLAYER_TURN.ordinal();
 	}
-	/*
-	private void next() {
-		
-		Castle castle = level.getCastle();
-		
-		// 1 - compute how many souls we can consume
-		int soulsToConsumeA = level.getReserve(Soul.A);
-		int soulsToConsumeB = level.getReserve(Soul.B);
-		int soulsToConsumeC = level.getReserve(Soul.C);
-
-		int availableConsumptionsA = castle.availableSoulSpaces(Soul.A);
-		int availableConsumptionsB = castle.availableSoulSpaces(Soul.B);
-		int availableConsumptionsC = castle.availableSoulSpaces(Soul.C);
-
-		soulsToConsumeA = (soulsToConsumeA > availableConsumptionsA) ? availableConsumptionsA : soulsToConsumeA;
-		soulsToConsumeB = (soulsToConsumeB > availableConsumptionsB) ? availableConsumptionsB : soulsToConsumeB;
-		soulsToConsumeC = (soulsToConsumeC > availableConsumptionsC) ? availableConsumptionsC : soulsToConsumeC;
-
-		// 2 - Take those souls from the reserve
-		
-		level.getSoulsFromReserve(Soul.A, soulsToConsumeA);
-		level.getSoulsFromReserve(Soul.B, soulsToConsumeB);
-		level.getSoulsFromReserve(Soul.C, soulsToConsumeC);
-		
-		// 3 - Find the place for those souls
-		ArrayList<Integer> roomsForSoulsA = new ArrayList<Integer>();
-		ArrayList<Integer> roomsForSoulsB = new ArrayList<Integer>();
-		ArrayList<Integer> roomsForSoulsC = new ArrayList<Integer>();
-
-		for(int i = 0; i < soulsToConsumeA; i++) {
-			roomsForSoulsA.add(castle.putSoulInRoom(Soul.A));
-		}
-		for(int i = 0; i < soulsToConsumeB; i++) {
-			roomsForSoulsB.add(castle.putSoulInRoom(Soul.B));
-		}
-		for(int i = 0; i < soulsToConsumeC; i++) {
-			roomsForSoulsC.add(castle.putSoulInRoom(Soul.C));
-		}
-		
-		
-		// 4 - Process All the souls, and add points / coins
-		ArrayList<RoomResult> results = castle.processRooms();
-		
-		for(RoomResult result : results) {
-			level.addCoins(result.coins);
-			level.addPoints(result.points);
-		}
-		
-		
-		// 5 - Move the threadmill
-		
-		Wave wave = level.getNextWave();
-		
-		if(wave == null) {
-			levelCompelete();
-			return;
-		}
-
-		level.addSoulsToReserve(Soul.A, wave.getSouls(Soul.A));
-		level.addSoulsToReserve(Soul.B, wave.getSouls(Soul.B));
-		level.addSoulsToReserve(Soul.C, wave.getSouls(Soul.C));
-		
-		
-		// TODO
-		castle.AddWalingSoul(Soul.A);
-		
-		
-	}
-	*/
 
 	public void levelCompelete() {
 		// TODO
