@@ -25,9 +25,11 @@ public class Castle {
 	private final ArrayList<Point>[] waypoints;
 	private final ArrayList<Point>[] entryWaypoints;
 	private final ArrayList<Point> dieWaypoints;
+	private final ArrayList<Point> enterWaypoints;
 
-	private final ArrayList<WalkingSoul> walkingSouls = new ArrayList<Castle.WalkingSoul>();
 	private final ArrayList<WalkingSoul> enteringSouls = new ArrayList<Castle.WalkingSoul>();
+	private final ArrayList<WalkingSoul> walkingSouls = new ArrayList<Castle.WalkingSoul>();
+	private final ArrayList<WalkingSoul> preprocessingSouls = new ArrayList<Castle.WalkingSoul>();
 	private final ArrayList<WalkingSoul> dyingSouls = new ArrayList<Castle.WalkingSoul>();
 
 	private float scroll = 0;
@@ -37,7 +39,7 @@ public class Castle {
 			Set<Sala> _sales, List<RoomSocket> _sockets,
 			List<Sala> _salesConstruides,
 			ArrayList<ArrayList<Point>> _waypoints,
-			ArrayList<ArrayList<Point>> _entryWaypoints,ArrayList<Point> _dieWaypoints) {
+			ArrayList<ArrayList<Point>> _entryWaypoints,ArrayList<Point> _dieWaypoints,ArrayList<Point> _enterWaypoints) {
 		width = _width;
 		height = _height;
 		background = _background;
@@ -62,12 +64,13 @@ public class Castle {
 			entryWaypoints[i] = new ArrayList<Castle.Point>(waypointList);
 			i++;
 		}
-		
+
 		dieWaypoints = new ArrayList<Castle.Point>(_dieWaypoints);
+		enterWaypoints = new ArrayList<Castle.Point>(_enterWaypoints);
 	}
 
 	public void addWalingSoul(Soul soul) {
-		walkingSouls.add(new WalkingSoul(soul));
+		enteringSouls.add(new WalkingSoul(soul));
 	}
 
 	public boolean hasBuildRoom(Sala sala) {
@@ -111,6 +114,24 @@ public class Castle {
 			i++;
 		}
 		throw new RuntimeException();
+	}
+	
+	public int getWalkingSouls(Soul kind) {
+		int cont = 0;
+
+		for(WalkingSoul soul : walkingSouls) {
+			if(soul.kind == kind) {
+				cont++;
+			}
+		}
+		
+		for(WalkingSoul soul : enteringSouls) {
+			if(soul.kind == kind) {
+				cont++;
+			}
+		}
+		
+		return cont;
 	}
 
 	/*
@@ -182,6 +203,9 @@ public class Castle {
 			if (sockets[i] == socket) {
 				if(salesConstruides[i] != null) {
 					salesConstruides[i].reset();
+					if(salesConstruides[i].processingSouls()) {
+						LD25.getInstance().getCurrentLevel().breakCombo();
+					}
 				}
 				
 				salesConstruides[i] = room;
@@ -199,15 +223,15 @@ public class Castle {
 			}
 		}
 
-		float addDelta = ds / Resources.TIME_ENTER;
+		float addDelta = ds / Resources.TIME_PREPROCESS;
 		LinkedList<WalkingSoul> removableSouls = new LinkedList<Castle.WalkingSoul>();
-		for (WalkingSoul walkingSoul : enteringSouls) {
+		for (WalkingSoul walkingSoul : preprocessingSouls) {
 			walkingSoul.delta += addDelta;
 			if (walkingSoul.delta > 1) {
 				removableSouls.add(walkingSoul);
 			}
 		}
-		enteringSouls.removeAll(removableSouls);
+		preprocessingSouls.removeAll(removableSouls);
 		
 		// ------
 
@@ -238,7 +262,7 @@ public class Castle {
 					sala.putSoul(walkingSoul.kind);
 					removableSouls.add(walkingSoul);
 					walkingSoul.delta = 0;
-					enteringSouls.add(walkingSoul);
+					preprocessingSouls.add(walkingSoul);
 				} else {
 
 					walkingSoul.goingToSoket++;
@@ -254,6 +278,21 @@ public class Castle {
 			}
 		}
 		walkingSouls.removeAll(removableSouls);
+		
+		// ------
+
+		addDelta = ds / Resources.TIME_ENTER;
+		removableSouls.clear();
+
+		for (WalkingSoul walkingSoul : enteringSouls) {
+			walkingSoul.delta += addDelta;
+			if (walkingSoul.delta > 1) {
+				walkingSouls.add(walkingSoul);
+				walkingSoul.delta = 0; // TODO
+				removableSouls.add(walkingSoul);
+			}
+		}
+		enteringSouls.removeAll(removableSouls);
 	}
 
 	public void drawCastle(float x, float y, float w, float h) {
@@ -289,7 +328,7 @@ public class Castle {
 
 		final Color filter = new Color(1.f, 1.f, 1.f, 1.f);
 
-		for (WalkingSoul walkingSoul : enteringSouls) {
+		for (WalkingSoul walkingSoul : preprocessingSouls) {
 			Point p = pointInPath(entryWaypoints[walkingSoul.goingToSoket],
 					walkingSoul.delta);
 
@@ -311,6 +350,20 @@ public class Castle {
 			float py = p.y * h / 540;
 			
 			filter.a = (float) Math.sqrt(1 - walkingSoul.delta);
+
+			im.getSoulImage(walkingSoul.kind).draw(px - soulSize / 2,
+					py - soulSize / 2, soulSize, soulSize, filter);
+
+		}
+		
+		for (WalkingSoul walkingSoul : enteringSouls) {
+			Point p = pointInPath(enterWaypoints,
+					walkingSoul.delta);
+
+			float px = p.x * w / 540;
+			float py = p.y * h / 540;
+			
+			filter.a = (float) Math.sqrt(walkingSoul.delta);
 
 			im.getSoulImage(walkingSoul.kind).draw(px - soulSize / 2,
 					py - soulSize / 2, soulSize, soulSize, filter);
