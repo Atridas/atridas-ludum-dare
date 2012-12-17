@@ -74,7 +74,7 @@ public class PlayerTurn extends BasicGameState {
 			}
 		}
 		
-		float ds = 3 * ms / 1000.f;
+		float ds = Resources.SPEED * ms / 1000.f;
 		if(ds > 0.05) ds = 0.05f;
 
 		level.update(ds);
@@ -205,7 +205,7 @@ public class PlayerTurn extends BasicGameState {
 		if (!scrolling && grabedRoom == null) {
 			float dy = Math.abs(newy - mouseFirstY);
 			if (dy > Resources.DRAG_THRESHOLD
-					&& pointIsInScrollableZone(mouseFirstX, mouseFirstY)) {
+					&& pointIsInScrollableZone(mouseFirstX, mouseFirstY) && level.canScroll()) {
 				scrolling = true;
 
 				level.scroll(mouseFirstY - newy); // la dy es passa invertida

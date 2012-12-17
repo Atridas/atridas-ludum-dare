@@ -21,6 +21,8 @@ public final class Level {
 	private float deltaToNextSoul = 0;
 	private Soul lastEnteringSoul = Soul.C;
 	
+	private int lives = 10;
+	private int soulsCombo = 0;
 	private int coins, points;
 	
 	//private boolean holdingMouse = false;
@@ -101,12 +103,24 @@ public final class Level {
 		reserve.put(soul, res);
 	}
 	
+	public void breakCombo() {
+		soulsCombo = 0;
+	}
+	
 	public void finishProcessingSoul() {
-		// TODO
+		soulsCombo++;
+		addCoins(Resources.coinCombo(soulsCombo));
+		addPoints(Resources.pointCombo(soulsCombo));
+		
+		if(soulsCombo % Resources.SOULS_TO_LIVE == 0) {
+			lives++;
+		}
 	}
 	
 	public void dropSoul(Soul soul) {
-		addSoulsToReserve(soul, 1);
+		//addSoulsToReserve(soul, 1);
+		breakCombo();
+		lives--;
 	}
 	
 	private void levelComplete() {
@@ -123,6 +137,10 @@ public final class Level {
 
 	public void scroll(float dy) {
 		castle.scroll(dy);
+	}
+
+	public boolean canScroll() {
+		return castle.getFreeRooms().size() > 2;
 	}
 	
 	/*
@@ -182,13 +200,15 @@ public final class Level {
 	}
 	
 	private void drawRightUI(ImageManager im, float x, float y, float w, float h) {
+		
+		// ------
 
 		
 		castle.drawConstructibleRooms(
 				x,
-				y + 130 * h / 540,
+				y + 160 * h / 540,
 				w,
-				410 * h / 540);
+				380 * h / 540);
 		
 		// ------
 
@@ -207,12 +227,22 @@ public final class Level {
 
 		font.drawString(x + stringCoinsDx, y + stringDy, Integer.toString(coins));
 		font.drawString(x + stringPointsDx, y + stringDy, Integer.toString(points));
-				
+		
+		// ------
+		
+		float livesDy = 32.f * w / 180;
+		
+		im.getLivesImage().draw(x + coinsDx, y + livesDy, uiSize, uiSize);
+		im.getPointsImage().draw(x + pointsDx, y + livesDy, uiSize, uiSize);
+
+		font.drawString(x + stringCoinsDx, y + livesDy, Integer.toString(lives));
+		font.drawString(x + stringPointsDx, y + livesDy, "x " + Integer.toString(Resources.pointCombo(soulsCombo)) + " (" + Integer.toString(soulsCombo) + ")");
+		
 		// -------
 
-		float aDy = 32.f * w / 180;
-		float bDy = 62.f * w / 180;
-		float cDy = 92.f * w / 180;
+		float aDy = 62.f * w / 180;
+		float bDy = 92.f * w / 180;
+		float cDy = 122.f * w / 180;
 		
 		float iconDx = 10.f * w / 180;
 		float stringDx = 30.f * w / 180;
@@ -221,9 +251,9 @@ public final class Level {
 		im.getSoulImage(Soul.B).draw(x + iconDx, bDy, uiSize, uiSize);
 		im.getSoulImage(Soul.C).draw(x + iconDx, cDy, uiSize, uiSize);
 		
-		font.drawString(x + stringDx, aDy, Integer.toString(getReserve(Soul.A)) + " / 10" );
-		font.drawString(x + stringDx, bDy, Integer.toString(getReserve(Soul.B)) + " / 10" );
-		font.drawString(x + stringDx, cDy, Integer.toString(getReserve(Soul.C)) + " / 10" );
+		font.drawString(x + stringDx, aDy, Integer.toString(getReserve(Soul.A) + castle.getWalkingSouls(Soul.A)) );
+		font.drawString(x + stringDx, bDy, Integer.toString(getReserve(Soul.B) + castle.getWalkingSouls(Soul.B)) );
+		font.drawString(x + stringDx, cDy, Integer.toString(getReserve(Soul.C) + castle.getWalkingSouls(Soul.C)) );
 		
 		float waveDx = 80.f * w / 180;
 		float nextWaveDx = 30.f * w / 180;
