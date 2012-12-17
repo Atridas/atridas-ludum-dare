@@ -90,10 +90,6 @@ public class PlayerTurn extends BasicGameState {
 	public int getID() {
 		return Resources.State.PLAYER_TURN.ordinal();
 	}
-
-	public void levelCompelete() {
-		// TODO
-	}
 	
 	@Override
 	public void mousePressed(int button, int x, int y) {

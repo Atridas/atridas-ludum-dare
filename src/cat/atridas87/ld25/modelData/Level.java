@@ -26,6 +26,9 @@ public final class Level {
 	private int soulsCombo = 0;
 	private int coins, points;
 	
+	public int maxCombo = 0;
+	public int soulCounter = 0;
+	
 	//private boolean holdingMouse = false;
 	
 	public Level(Castle _castle, List<Wave> _waves, int initialCoins) {
@@ -49,15 +52,11 @@ public final class Level {
 			
 			Wave wave = getNextWave();
 			
-			if(wave == null) {
-				levelComplete();
-				break;
-			}
-
-			addSoulsToReserve(Soul.A, wave.getSouls(Soul.A));
+			if(wave != null) {
+				addSoulsToReserve(Soul.A, wave.getSouls(Soul.A));
 			addSoulsToReserve(Soul.B, wave.getSouls(Soul.B));
 			addSoulsToReserve(Soul.C, wave.getSouls(Soul.C));
-		}
+		}}
 		
 		float soulDelta = ds / Resources.ENTER_TIME;
 		
@@ -78,6 +77,23 @@ public final class Level {
 		}
 		
 		castle.update(ds);
+		
+		if(checkLevelComplete()) {
+			LD25.getInstance().enterState(Resources.State.GAME_OVER.ordinal());
+		}
+	}
+	
+	
+	private boolean checkLevelComplete() {
+		if(waves.size() != 0) {
+			return false;
+		}
+		for(Soul soul : Soul.values()) {
+			if(castle.getWalkingSouls(soul) != 0) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	public Castle getCastle() {
@@ -110,11 +126,16 @@ public final class Level {
 	
 	public void finishProcessingSoul() {
 		soulsCombo++;
+		soulCounter++;
 		addCoins(Resources.coinCombo(soulsCombo));
 		addPoints(Resources.pointCombo(soulsCombo));
 		
 		if(soulsCombo % Resources.SOULS_TO_LIVE == 0) {
 			lives++;
+		}
+		
+		if(maxCombo < soulsCombo) {
+			maxCombo = soulsCombo;
 		}
 	}
 	
@@ -124,12 +145,8 @@ public final class Level {
 		lives--;
 		
 		if(lives <= 0) {
-			levelComplete();
+			LD25.getInstance().enterState(Resources.State.GAME_OVER.ordinal());
 		}
-	}
-	
-	private void levelComplete() {
-		LD25.getInstance().enterState(Resources.State.GAME_OVER.ordinal());
 	}
 	
 	public Wave getNextWave() {
@@ -186,6 +203,10 @@ public final class Level {
 		return points;
 	}
 	
+	public int getLives() {
+		return lives;
+	}
+	
 	public Sala canGrabRoom(float x, float y) {
 		return castle.canGrabRoom(x, y);
 	}
@@ -214,6 +235,10 @@ public final class Level {
 				y + 160 * h / 540,
 				w,
 				380 * h / 540);
+		
+		// ------
+		
+		im.menuTop.draw(x, y);
 		
 		// ------
 

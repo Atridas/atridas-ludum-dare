@@ -17,7 +17,7 @@ public class TitleScreen extends BasicGameState {
 	private boolean pressingTutorial = false;
 
 	private boolean hoveringNewGame = false;
-	private boolean hoveringTutorial = false; 
+	private boolean hoveringTutorial = false;
 
 	@Override
 	public void init(GameContainer arg0, StateBasedGame arg1)
@@ -27,18 +27,20 @@ public class TitleScreen extends BasicGameState {
 		pressingTutorial = false;
 
 		hoveringNewGame = false;
-		hoveringTutorial = false; 
+		hoveringTutorial = false;
 	}
 
 	@Override
 	public void render(GameContainer arg0, StateBasedGame arg1, Graphics arg2)
 			throws SlickException {
 		ImageManager im = ImageManager.getInstance();
-		
+
 		im.titleScreenBackground.draw();
 
-		Image newGameButton = hoveringNewGame ? im.newGameButtonPressed : im.newGameButtonNormal;
-		Image tutorialButton = hoveringTutorial ? im.tutorialButtonPressed : im.tutorialButtonNormal;
+		Image newGameButton = hoveringNewGame ? im.newGameButtonPressed
+				: im.newGameButtonNormal;
+		Image tutorialButton = hoveringTutorial ? im.tutorialButtonPressed
+				: im.tutorialButtonNormal;
 
 		newGameButton.draw(210, 270);
 		tutorialButton.draw(210, 420);
@@ -49,59 +51,67 @@ public class TitleScreen extends BasicGameState {
 			throws SlickException {
 
 	}
-	
+
 	@Override
 	public void mousePressed(int button, int x, int y) {
 		super.mousePressed(button, x, y);
 
-		if(x > 210 && x < 510) {
-			if(y > 240 && y < 340) {
+		if (x > 210 && x < 510) {
+			if (y > 240 && y < 340) {
 				hoveringNewGame = pressingNewGame = true;
 			}
-			if(y > 420 && y < 520) {
+			if (y > 420 && y < 520) {
 				hoveringTutorial = pressingTutorial = true;
 			}
 		}
-		
+
 	}
 
 	@Override
 	public void mouseReleased(int button, int x, int y) {
-		super.mouseReleased(button, x, y);
-	
-		if(x > 210 && x < 510) {
-			if(pressingNewGame && y > 240 && y < 340) {
-				LD25.getInstance().enterState(Resources.State.PLAYER_TURN.ordinal());
-				((PlayerTurn)LD25.getInstance().getState(Resources.State.PLAYER_TURN.ordinal())).reset();
-			}
-			if(pressingTutorial && y > 420 && y < 520) {
-				LD25.getInstance().enterState(Resources.State.TUTORIAL.ordinal());
-				try {
-					((Tutorial)LD25.getInstance().getState(Resources.State.TUTORIAL.ordinal())).reset();
-				} catch (SlickException e) {
-					throw new RuntimeException(e);
+		try {
+			super.mouseReleased(button, x, y);
+
+			if (x > 210 && x < 510) {
+				if (pressingNewGame && y > 240 && y < 340) {
+					LD25.getInstance().enterState(
+							Resources.State.PLAYER_TURN.ordinal());
+
+					LD25.getInstance().startNewGame();
+
+					((PlayerTurn) LD25.getInstance().getState(
+							Resources.State.PLAYER_TURN.ordinal())).reset();
+				}
+				if (pressingTutorial && y > 420 && y < 520) {
+					LD25.getInstance().enterState(
+							Resources.State.TUTORIAL.ordinal());
+					((Tutorial) LD25.getInstance().getState(
+							Resources.State.TUTORIAL.ordinal())).reset();
+
 				}
 			}
+
+			pressingNewGame = false;
+			pressingTutorial = false;
+
+			hoveringNewGame = false;
+			hoveringTutorial = false;
+		} catch (SlickException e) {
+			throw new RuntimeException(e);
 		}
-
-		pressingNewGame = false;
-		pressingTutorial = false;
-
-		hoveringNewGame = false;
-		hoveringTutorial = false; 
 	}
-	
+
 	@Override
 	public void mouseDragged(int oldx, int oldy, int newx, int newy) {
 		super.mouseDragged(oldx, oldy, newx, newy);
 
-		if(newx > 210 && newx < 510) {
-			if(pressingNewGame && newy > 240 && newy < 340) {
+		if (newx > 210 && newx < 510) {
+			if (pressingNewGame && newy > 240 && newy < 340) {
 				hoveringNewGame = true;
 			} else {
 				hoveringNewGame = false;
 			}
-			if(pressingTutorial && newy > 420 && newy < 520) {
+			if (pressingTutorial && newy > 420 && newy < 520) {
 				hoveringTutorial = true;
 			} else {
 				hoveringTutorial = false;
@@ -110,7 +120,7 @@ public class TitleScreen extends BasicGameState {
 			hoveringNewGame = false;
 			hoveringTutorial = false;
 		}
-		
+
 	}
 
 	@Override
