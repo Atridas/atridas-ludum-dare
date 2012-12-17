@@ -15,11 +15,12 @@ public class LD25 extends StateBasedGame {
 
 	public LD25() {
 		super(Resources.APP_NAME);
+		
+		instance = this;
 
 		addState(new PlayerTurn());
 		
 		this.enterState(Resources.State.PLAYER_TURN.ordinal());
-		
 	}
 
 	@Override
@@ -43,6 +44,11 @@ public class LD25 extends StateBasedGame {
 	
 	public void startNewGame() throws SlickException {
 		currentLevel = new Level(Resources.createLevel0Castle(), Resources.createLevel0Waves(), 100);
+	}
+	
+	private static LD25 instance;
+	public static LD25 getInstance() {
+		return instance;
 	}
 
 }

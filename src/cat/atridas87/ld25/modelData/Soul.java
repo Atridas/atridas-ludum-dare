@@ -10,4 +10,9 @@ public enum Soul {
 	private Soul(String resource) {
 		imageString = resource;
 	}
+	
+	public Soul next() {
+		int ordinal = (ordinal() + 1) % Soul.values().length;
+		return Soul.values()[ordinal];
+	}
 }
