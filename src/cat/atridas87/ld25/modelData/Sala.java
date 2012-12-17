@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 
+import cat.atridas87.ld25.LD25;
 import cat.atridas87.ld25.Resources;
 import cat.atridas87.ld25.render.ImageManager;
 
@@ -30,6 +31,21 @@ public class Sala implements Comparable<Sala> {
 		return price;
 	}
 
+	public void reset() {
+		for(int i = 0; i < estatEspais.size(); i++) {
+			estatEspais.get(i).reset();
+		}
+	}
+	
+	public boolean processingSouls() {
+		for (int i = 0; i < espais.size(); i++) {
+			if(estatEspais.get(i).ocupat) {
+				return true;
+			}
+		}
+		return false;
+	}
+		
 	public int availableSoulSpaces(Soul soul) {
 		int spaces = 0;
 		for (int i = 0; i < espais.size(); i++) {
@@ -47,8 +63,9 @@ public class Sala implements Comparable<Sala> {
 			if(estat.ocupat) {
 				estat.processant += addDelta;
 				if(estat.processant >= 1) {
-					// TODO
 					estat.ocupat = false;
+					estat.processant = 0;
+					LD25.getInstance().getCurrentLevel().finishProcessingSoul();
 				}
 			}
 		}
@@ -78,7 +95,7 @@ public class Sala implements Comparable<Sala> {
 	public void draw(ImageManager im, float x, float y, float w, float h,
 			Color filter) {
 
-		im.getRoomBase().draw(x, y, w, h, filter);
+		im.roomBase.draw(x, y, w, h, filter);
 
 		float backgroundWidth = w * 108 / 144;
 		backgroundImage.draw(x, y, backgroundWidth, h, filter);
@@ -120,9 +137,17 @@ public class Sala implements Comparable<Sala> {
 			// filter);
 
 			if(estat.ocupat) {
-				drawPercentage(im, estat.processant, soulX, soulY, soulSize, soulSize, filter);
+				
+				float enteringThreshold = Resources.TIME_PREPROCESS / Resources.TIME_CONSUMPTION;
+				
+				if(estat.processant < enteringThreshold) {
+					im.ocupiedCircle.draw(soulX, soulY, soulSize, soulSize, filter);
+				} else {
+					float d = (estat.processant - enteringThreshold) / (1 - enteringThreshold);
+					drawPercentage(im, d, soulX, soulY, soulSize, soulSize, filter);
+				}
 			} else {
-				im.getEmptyCircleImage().draw(soulX, soulY, soulSize, soulSize, filter);
+				im.emptyCircle.draw(soulX, soulY, soulSize, soulSize, filter);
 			}
 			im.getSoulImage(soul)
 					.draw(soulX, soulY, soulSize, soulSize, filter);
@@ -138,13 +163,18 @@ public class Sala implements Comparable<Sala> {
 			ocupat = true;
 			processant = 0;
 		}
+		
+		private void reset() {
+			ocupat = false;
+			processant = 0;
+		}
 	}
 
 	private static void drawPercentage(ImageManager im, float percent, float x,
 			float y, float w, float h, Color filter) {
 
-		Image lliure = im.getEmptyCircleImage();
-		Image ocupat = im.getFullCircleImage();
+		Image lliure = im.ocupiedCircle;
+		Image ocupat = im.fullCircle;
 
 		int baseHeight = lliure.getHeight();
 
