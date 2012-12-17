@@ -28,8 +28,10 @@ public class ImageManager {
 	public Image titleScreenBackground;
 	public Image gameoverBackground;
 
+	public Image title;
 	public Image newGameButtonPressed, newGameButtonNormal;
 	public Image tutorialButtonPressed, tutorialButtonNormal;
+	public Image creditsButtonPressed, creditsButtonNormal;
 
 	private ImageManager() {
 	};
@@ -63,6 +65,8 @@ public class ImageManager {
 		titleScreenBackground = new Image("resources/images/title_screen.png");
 		gameoverBackground = titleScreenBackground; // TODO
 
+		title = new Image(
+				"resources/images/buttons/Infernal_title.png");
 		newGameButtonPressed = new Image(
 				"resources/images/buttons/new_game_pressed.png");
 		newGameButtonNormal = new Image(
@@ -71,6 +75,10 @@ public class ImageManager {
 				"resources/images/buttons/tutorial_pressed.png");
 		tutorialButtonNormal = new Image(
 				"resources/images/buttons/tutorial_normal.png");
+		creditsButtonPressed = new Image(
+				"resources/images/buttons/credits_pressed.png");
+		creditsButtonNormal = new Image(
+				"resources/images/buttons/credits_normal.png");
 		
 		coinLarge = coin;
 		pointsLarge = points;
