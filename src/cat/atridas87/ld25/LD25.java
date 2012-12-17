@@ -7,6 +7,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import cat.atridas87.ld25.gameStates.PlayerTurn;
 import cat.atridas87.ld25.gameStates.TitleScreen;
+import cat.atridas87.ld25.gameStates.Tutorial;
 import cat.atridas87.ld25.modelData.Level;
 import cat.atridas87.ld25.render.ImageManager;
 
@@ -21,6 +22,7 @@ public class LD25 extends StateBasedGame {
 
 		addState(new PlayerTurn());
 		addState(new TitleScreen());
+		addState(new Tutorial());
 		
 		this.enterState(Resources.State.TITLE_SCREEN.ordinal());
 	}

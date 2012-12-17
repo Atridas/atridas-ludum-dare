@@ -33,9 +33,12 @@ public class PlayerTurn extends BasicGameState {
 	@Override
 	public void init(GameContainer _gameContainer,
 			StateBasedGame _stateBasedGame) throws SlickException {
-
+		reset();
+	}
+	
+	public void reset() {
 		scrolling = false;
-		level = ((LD25) _stateBasedGame).getCurrentLevel();
+		level = LD25.getInstance().getCurrentLevel();
 		grabedRoom = null;
 		hasTriedToGrabRoom = false;
 	}
