@@ -28,6 +28,10 @@ public abstract class Resources {
 	public static final float SPEED = 1;
 
 	public static final float SOULS_TO_LIVE = 50;
+	
+	public static final float FX_VOLUME = 0.25f;
+	
+	public static boolean soundsActivated = true;
 
 	public static Castle createLevel0Castle() throws SlickException {
 
