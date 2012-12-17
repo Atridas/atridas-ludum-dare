@@ -6,20 +6,24 @@ import java.util.List;
 
 import org.newdawn.slick.UnicodeFont;
 
+import cat.atridas87.ld25.Resources;
 import cat.atridas87.ld25.modelData.Castle.RoomSocket;
 import cat.atridas87.ld25.render.FontManager;
 import cat.atridas87.ld25.render.ImageManager;
-import cat.atridas87.ld25.render.ImageManager.ButtonState;
 
 public final class Level {
 	private Castle castle;
 	
 	private HashMap<Soul, Integer> reserve = new HashMap<Soul, Integer>();
 	private LinkedList<Wave> waves;
+
+	private float deltaToNextWave = 0;
+	private float deltaToNextSoul = 0;
+	private Soul lastEnteringSoul = Soul.C;
 	
 	private int coins, points;
 	
-	private boolean holdingMouse = false;
+	//private boolean holdingMouse = false;
 	
 	public Level(Castle _castle, List<Wave> _waves, int initialCoins) {
 		castle = _castle;
@@ -30,6 +34,47 @@ public final class Level {
 		for(Soul soul : Soul.values()) {
 			reserve.put(soul, 0);
 		}
+	}
+
+	public void update(float ds) {
+		float waveDelta = ds / Resources.WAVE_TIME;
+		
+		deltaToNextWave += waveDelta;
+		
+		while(deltaToNextWave >= 1) {
+			deltaToNextWave -= 1;
+			
+			Wave wave = getNextWave();
+			
+			if(wave == null) {
+				levelComplete();
+				break;
+			}
+
+			addSoulsToReserve(Soul.A, wave.getSouls(Soul.A));
+			addSoulsToReserve(Soul.B, wave.getSouls(Soul.B));
+			addSoulsToReserve(Soul.C, wave.getSouls(Soul.C));
+		}
+		
+		float soulDelta = ds / Resources.ENTER_TIME;
+		
+		deltaToNextSoul += soulDelta;
+		while(deltaToNextSoul > 1) {
+			deltaToNextSoul -= 1;
+			
+			int cont = 0;
+			do {
+				lastEnteringSoul = lastEnteringSoul.next();
+				if(getReserve(lastEnteringSoul) > 0) {
+					getSoulsFromReserve(lastEnteringSoul, 1);
+					castle.addWalingSoul(lastEnteringSoul);
+					break;
+				}
+				cont++;
+			} while(cont < Soul.values().length);
+		}
+		
+		castle.update(ds);
 	}
 	
 	public Castle getCastle() {
@@ -56,6 +101,18 @@ public final class Level {
 		reserve.put(soul, res);
 	}
 	
+	public void finishProcessingSoul() {
+		// TODO
+	}
+	
+	public void dropSoul(Soul soul) {
+		addSoulsToReserve(soul, 1);
+	}
+	
+	private void levelComplete() {
+		// TODO
+	}
+	
 	public Wave getNextWave() {
 		if(waves.size() > 0) {
 			return waves.removeFirst();
@@ -68,9 +125,11 @@ public final class Level {
 		castle.scroll(dy);
 	}
 	
+	/*
 	public void holdButton(boolean hold) {
 		holdingMouse = hold;
 	}
+	*/
 
 	public RoomSocket isSocket(float x, float y) {
 		return castle.isSocket(x, y);
@@ -129,7 +188,7 @@ public final class Level {
 				x,
 				y + 130 * h / 540,
 				w,
-				360 * h / 540);
+				410 * h / 540);
 		
 		// ------
 
@@ -169,6 +228,8 @@ public final class Level {
 		float waveDx = 80.f * w / 180;
 		float nextWaveDx = 30.f * w / 180;
 		
+		waveDx += nextWaveDx * (1 - deltaToNextWave);
+		
 		for(int i = 0; i < 4; i++) {
 			if(waves.size() <= i) break;
 			int a = waves.get(i).getSouls(Soul.A);
@@ -186,13 +247,5 @@ public final class Level {
 			
 			waveDx += nextWaveDx;
 		}
-		
-		// -------
-		
-		im.getNextButton(holdingMouse ? ButtonState.PRESSED : ButtonState.NORMAL).draw(
-				x +  49 * w / 180,
-				y + 499 * h / 540,
-				82 * w / 180,
-				33 * w / 180);
 	}
 }

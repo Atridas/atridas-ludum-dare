@@ -1,6 +1,7 @@
 package cat.atridas87.ld25.modelData;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -18,38 +19,67 @@ public class Castle {
 	private final float width, height;
 	private final Image background;
 	private final TreeSet<Sala> sales;
-	private final ArrayList<Sala> salesConstruides;
-	private final ArrayList<RoomSocket> sockets;
-	private final ArrayList<ArrayList<Point>> waypoints;
+	private final Sala[] salesConstruides;
+	private final RoomSocket[] sockets;
+	private final ArrayList<Point>[] waypoints;
+	private final ArrayList<Point>[] entryWaypoints;
 	
 	private final ArrayList<WalkingSoul> walkingSouls = new ArrayList<Castle.WalkingSoul>();
+	
+	private final HashMap<Soul, Float>[] enteringSouls;
 
 	private float scroll = 0;
 
+	@SuppressWarnings("unchecked")
 	public Castle(float _width, float _height, Image _background,
 			Set<Sala> _sales, List<RoomSocket> _sockets,
-			List<Sala> _salesConstruides, ArrayList<ArrayList<Point>> _waypoints) {
+			List<Sala> _salesConstruides, ArrayList<ArrayList<Point>> _waypoints, ArrayList<ArrayList<Point>> _entryWaypoints) {
 		width = _width;
 		height = _height;
 		background = _background;
 		sales = new TreeSet<Sala>(_sales);
 		assert (_salesConstruides.size() == _sockets.size());
-		salesConstruides = new ArrayList<Sala>(_salesConstruides);
-		sockets = new ArrayList<RoomSocket>(_sockets);
-		waypoints = new ArrayList<ArrayList<Point>>(_waypoints.size());
+		assert (_waypoints.size() == _sockets.size());
+		assert (_entryWaypoints.size() == _sockets.size());
+		salesConstruides = new ArrayList<Sala>(_salesConstruides).toArray(new Sala[_salesConstruides.size()]);
+		sockets = new ArrayList<RoomSocket>(_sockets).toArray(new RoomSocket[_sockets.size()]);
+		waypoints = new ArrayList[_waypoints.size()];
+		int i = 0;
 		for(ArrayList<Point> waypointList : _waypoints) {
-			waypoints.add(new ArrayList<Castle.Point>(waypointList));
+			waypoints[i] = new ArrayList<Castle.Point>(waypointList);
+			i++;
+		}
+		
+		entryWaypoints = new ArrayList[_waypoints.size()];
+		i = 0;
+		for(ArrayList<Point> waypointList : _entryWaypoints) {
+			entryWaypoints[i] = new ArrayList<Castle.Point>(waypointList);
+			i++;
+		}
+		
+		enteringSouls = new HashMap[_waypoints.size()];
+		for(i = 0; i < enteringSouls.length; i++) {
+			enteringSouls[i] = new HashMap<Soul, Float>();
 		}
 	}
 	
-	public void AddWalingSoul(Soul soul) {
+	public void addWalingSoul(Soul soul) {
 		walkingSouls.add(new WalkingSoul(soul));
+	}
+	
+	public boolean hasBuildRoom(Sala sala) {
+		for(Sala s : salesConstruides) {
+			if(s == sala) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public ArrayList<Sala> getFreeRooms() {
 		ArrayList<Sala> freeRooms = new ArrayList<Sala>();
 		for (Sala sala : sales) {
-			if (!salesConstruides.contains(sala)) {
+			if (!hasBuildRoom(sala)) {
 				freeRooms.add(sala);
 			}
 		}
@@ -80,6 +110,7 @@ public class Castle {
 		throw new RuntimeException();
 	}
 
+	/*
 	public ArrayList<RoomResult> processRooms() {
 		ArrayList<RoomResult> results = new ArrayList<Castle.RoomResult>();
 		for (int i = 0; i < sockets.size(); i++) {
@@ -96,6 +127,7 @@ public class Castle {
 		}
 		return results;
 	}
+	*/
 
 	public void scroll(float dy) {
 		scroll += dy;
@@ -137,15 +169,24 @@ public class Castle {
 		}
 		return null;
 	}
+	
+	private boolean socketExists(RoomSocket socket) {
+		for(RoomSocket s : sockets) {
+			if(socket == s) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public void setRoom(RoomSocket socket, Sala room) {
-		assert (!salesConstruides.contains(room));
+		assert (!hasBuildRoom(room));
 		assert (sales.contains(room));
-		assert (sockets.contains(socket));
+		assert (socketExists(socket));
 
-		for (int i = 0; i < sockets.size(); i++) {
-			if (sockets.get(i) == socket) {
-				salesConstruides.set(i, room);
+		for (int i = 0; i < sockets.length; i++) {
+			if (sockets[i] == socket) {
+				salesConstruides[i] = room;
 				return;
 			}
 		}
@@ -153,6 +194,14 @@ public class Castle {
 	}
 	
 	public void update(float ds) {
+		
+		for(Sala sala : salesConstruides) {
+			if(sala != null) {
+				sala.update(ds);
+			}
+		}
+		
+		
 		float addDelta = ds / Resources.TIME_BETWEN_SOCKETS;
 		
 		LinkedList<WalkingSoul> removableSouls = new LinkedList<Castle.WalkingSoul>();
@@ -161,11 +210,21 @@ public class Castle {
 			walkingSoul.delta += addDelta;
 			while(walkingSoul.delta > 1) {
 				walkingSoul.delta -= 1;
-				walkingSoul.goingToSoket++;
-				// TODO
 				
-				if(walkingSoul.goingToSoket >= sockets.size()) {
+				Sala sala = salesConstruides[walkingSoul.goingToSoket];
+				
+				if(sala != null && sala.availableSoulSpaces(walkingSoul.kind) > 0) {
+					sala.putSoul(walkingSoul.kind);
 					removableSouls.add(walkingSoul);
+					enteringSouls[walkingSoul.goingToSoket].put(walkingSoul.kind, 0.f);
+				} else {
+				
+					walkingSoul.goingToSoket++;
+					
+					if(walkingSoul.goingToSoket >= sockets.length) {
+						removableSouls.add(walkingSoul);
+						// TODO
+					}
 				}
 			}
 		}
@@ -176,11 +235,11 @@ public class Castle {
 	public void drawCastle(float x, float y, float w, float h) {
 		ImageManager im = ImageManager.getInstance();
 
-		for (int i = 0; i < sockets.size(); i++) {
-			Sala sala = salesConstruides.get(i);
+		for (int i = 0; i < sockets.length; i++) {
+			Sala sala = salesConstruides[i];
 			if (sala == null)
 				break;
-			RoomSocket socket = sockets.get(i);
+			RoomSocket socket = sockets[i];
 
 			float salaX = x + (socket.x * w / width);
 			float salaY = y + (socket.y * h / height);
@@ -289,7 +348,7 @@ public class Castle {
 		}
 		
 		Point getPoint() {
-			ArrayList<Point> path = waypoints.get(goingToSoket);
+			ArrayList<Point> path = waypoints[goingToSoket];
 			float length = 0;
 			for(int i = 1; i < path.size(); i++) {
 				Point p0 = path.get(i-1);

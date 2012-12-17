@@ -1,6 +1,5 @@
 package cat.atridas87.ld25.gameStates;
 
-import java.util.ArrayList;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -11,13 +10,9 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import cat.atridas87.ld25.LD25;
 import cat.atridas87.ld25.Resources;
-import cat.atridas87.ld25.modelData.Castle;
-import cat.atridas87.ld25.modelData.Castle.RoomResult;
 import cat.atridas87.ld25.modelData.Castle.RoomSocket;
 import cat.atridas87.ld25.modelData.Level;
 import cat.atridas87.ld25.modelData.Sala;
-import cat.atridas87.ld25.modelData.Soul;
-import cat.atridas87.ld25.modelData.Wave;
 import cat.atridas87.ld25.render.ImageManager;
 
 public class PlayerTurn extends BasicGameState {
@@ -79,17 +74,17 @@ public class PlayerTurn extends BasicGameState {
 			}
 		}
 		
-		float ds = ms / 1000.f;
+		float ds = 3 * ms / 1000.f;
 		if(ds > 0.05) ds = 0.05f;
-		
-		level.getCastle().update(ds);
+
+		level.update(ds);
 	}
 
 	@Override
 	public int getID() {
 		return Resources.State.PLAYER_TURN.ordinal();
 	}
-	
+	/*
 	private void next() {
 		
 		Castle castle = level.getCastle();
@@ -128,6 +123,7 @@ public class PlayerTurn extends BasicGameState {
 			roomsForSoulsC.add(castle.putSoulInRoom(Soul.C));
 		}
 		
+		
 		// 4 - Process All the souls, and add points / coins
 		ArrayList<RoomResult> results = castle.processRooms();
 		
@@ -135,6 +131,7 @@ public class PlayerTurn extends BasicGameState {
 			level.addCoins(result.coins);
 			level.addPoints(result.points);
 		}
+		
 		
 		// 5 - Move the threadmill
 		
@@ -152,22 +149,14 @@ public class PlayerTurn extends BasicGameState {
 		
 		// TODO
 		castle.AddWalingSoul(Soul.A);
+		
+		
 	}
+	*/
 
 	public void levelCompelete() {
 		// TODO
 	}
-	
-	/*
-	@Override
-	public void mouseClicked(int button, int x, int y, int clickCount) {
-		super.mouseClicked(button, x, y, clickCount);
-		
-		if(x > 589 && x < 671 && y > 499 && y < 532) {
-			next();
-		}
-	}
-	*/
 	
 	@Override
 	public void mousePressed(int button, int x, int y) {
@@ -178,11 +167,6 @@ public class PlayerTurn extends BasicGameState {
 
 		grabedRoom = null;
 		hasTriedToGrabRoom = false;
-		
-
-		if(x > 589 && x < 671 && y > 499 && y < 532) {
-			level.holdButton(true);
-		}
 	}
 
 	@Override
@@ -190,13 +174,6 @@ public class PlayerTurn extends BasicGameState {
 		super.mouseReleased(button, x, y);
 
 		scrolling = false;
-
-		if(mouseFirstX > 589 && mouseFirstX < 671 && mouseFirstY > 499 && mouseFirstY < 532) {
-			if(x > 589 && x < 671 && y > 499 && y < 532) {
-				next();
-			}
-		}
-		level.holdButton(false);
 
 		if(grabedRoom != null && level.getCoins() >= grabedRoom.getPrice()) {
 			RoomSocket socket = level.isSocket(x, y);
@@ -224,14 +201,6 @@ public class PlayerTurn extends BasicGameState {
 		
 		mouseX = newx;
 		mouseY = newy;
-
-		if(mouseFirstX > 589 && mouseFirstX < 671 && mouseFirstY > 499 && mouseFirstY < 532) {
-			if(newx > 589 && newx < 671 && newy > 499 && newy < 532) {
-				level.holdButton(true);
-			} else {
-				level.holdButton(false);
-			}
-		}
 
 		if (!scrolling && grabedRoom == null) {
 			float dy = Math.abs(newy - mouseFirstY);
@@ -268,6 +237,6 @@ public class PlayerTurn extends BasicGameState {
 	}
 
 	private boolean pointIsInScrollableZone(int x, int y) {
-		return x > 540 && y > 130 && y < 490;
+		return x > 540 && y > 130 && y < 540;
 	}
 }

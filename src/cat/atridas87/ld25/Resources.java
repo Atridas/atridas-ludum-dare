@@ -18,7 +18,10 @@ public abstract class Resources {
 	public static final String APP_NAME = "LD25";
 
 	public static final float DRAG_THRESHOLD = 10;
-	public static final float TIME_BETWEN_SOCKETS = 4;
+	public static final float TIME_BETWEN_SOCKETS = 3;
+	public static final float TIME_CONSUMPTION = 4f;
+	public static final float WAVE_TIME = 2f;
+	public static final float ENTER_TIME = 0.5f;
 	
 
 	public static Castle createLevel0Castle() throws SlickException {
@@ -72,13 +75,18 @@ public abstract class Resources {
 
 		Point w0 = new Point(0, 500);
 		Point w1 = new Point(75, 500);
+		Point ew0 = new Point(75, 450);
 		Point w2 = new Point(275, 500);
+		Point ew1 = new Point(275, 450);
 		Point w3 = new Point(440, 500);
+		Point ew2 = new Point(440, 450);
 		Point w4 = new Point(510, 500);
 
 		Point w5 = new Point(510, 370);
 		Point w6 = new Point(360, 370);
+		Point ew3 = new Point(360, 370);
 		Point w7 = new Point(175, 370);
+		Point ew4 = new Point(175, 370);
 
 		ArrayList<ArrayList<Point>> waypoints = new ArrayList<ArrayList<Point>>();
 
@@ -109,11 +117,41 @@ public abstract class Resources {
 		waypoints.add(path2);
 		waypoints.add(path3);
 		waypoints.add(path4);
+		
+		// -----
+
+		ArrayList<ArrayList<Point>> entryWaypoints = new ArrayList<ArrayList<Point>>();
+
+		ArrayList<Point> entryPath0 = new ArrayList<Castle.Point>();
+		entryPath0.add(w1);
+		entryPath0.add(ew0);
+
+		ArrayList<Point> entryPath1 = new ArrayList<Castle.Point>();
+		entryPath1.add(w2);
+		entryPath1.add(ew1);
+
+		ArrayList<Point> entryPath2 = new ArrayList<Castle.Point>();
+		entryPath2.add(w3);
+		entryPath2.add(ew2);
+
+		ArrayList<Point> entryPath3 = new ArrayList<Castle.Point>();
+		entryPath3.add(w6);
+		entryPath3.add(ew3);
+
+		ArrayList<Point> entryPath4 = new ArrayList<Castle.Point>();
+		entryPath4.add(w7);
+		entryPath4.add(ew4);
+
+		entryWaypoints.add(entryPath0);
+		entryWaypoints.add(entryPath1);
+		entryWaypoints.add(entryPath2);
+		entryWaypoints.add(entryPath3);
+		entryWaypoints.add(entryPath4);
 
 		// -----
 
 		return new Castle(540, 540, new Image("resources/images/level_0.png"),
-				sales, sockets, salesInicials, waypoints);
+				sales, sockets, salesInicials, waypoints, entryWaypoints);
 	}
 
 	public static ArrayList<Wave> createLevel0Waves() {
