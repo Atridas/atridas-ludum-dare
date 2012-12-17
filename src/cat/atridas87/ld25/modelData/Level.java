@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.UnicodeFont;
 
 import cat.atridas87.ld25.LD25;
@@ -29,7 +30,7 @@ public final class Level {
 	public int maxCombo = 0;
 	public int soulCounter = 0;
 	
-	//private boolean holdingMouse = false;
+	private Sound dieSound, pointsSound;
 	
 	public Level(Castle _castle, List<Wave> _waves, int initialCoins) {
 		castle = _castle;
@@ -39,6 +40,13 @@ public final class Level {
 		
 		for(Soul soul : Soul.values()) {
 			reserve.put(soul, 0);
+		}
+		
+		try {
+			dieSound = new Sound("resources/music/die.wav");
+			pointsSound = new Sound("resources/music/point.wav");
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -130,6 +138,10 @@ public final class Level {
 		soulCounter++;
 		addCoins(Resources.coinCombo(soulsCombo));
 		addPoints(Resources.pointCombo(soulsCombo));
+
+		if(Resources.soundsActivated) {
+			pointsSound.play(1, Resources.FX_VOLUME * .25f);
+		}
 		
 		if(soulsCombo % Resources.SOULS_TO_LIVE == 0) {
 			lives++;
@@ -141,7 +153,11 @@ public final class Level {
 	}
 	
 	public void dropSoul(Soul soul) {
-		//addSoulsToReserve(soul, 1);
+		
+		if(Resources.soundsActivated) {
+			dieSound.play(1, Resources.FX_VOLUME * .25f);
+		}
+		
 		breakCombo();
 		lives--;
 		
