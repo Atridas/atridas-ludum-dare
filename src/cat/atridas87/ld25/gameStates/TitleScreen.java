@@ -57,7 +57,7 @@ public class TitleScreen extends BasicGameState {
 		super.mousePressed(button, x, y);
 
 		if (x > 210 && x < 510) {
-			if (y > 240 && y < 340) {
+			if (y > 240 && y < 370) {
 				hoveringNewGame = pressingNewGame = true;
 			}
 			if (y > 420 && y < 520) {
@@ -73,7 +73,7 @@ public class TitleScreen extends BasicGameState {
 			super.mouseReleased(button, x, y);
 
 			if (x > 210 && x < 510) {
-				if (pressingNewGame && y > 240 && y < 340) {
+				if (pressingNewGame && y > 240 && y < 370) {
 					LD25.getInstance().enterState(
 							Resources.State.PLAYER_TURN.ordinal());
 
@@ -106,7 +106,7 @@ public class TitleScreen extends BasicGameState {
 		super.mouseDragged(oldx, oldy, newx, newy);
 
 		if (newx > 210 && newx < 510) {
-			if (pressingNewGame && newy > 240 && newy < 340) {
+			if (pressingNewGame && newy > 240 && newy < 370) {
 				hoveringNewGame = true;
 			} else {
 				hoveringNewGame = false;

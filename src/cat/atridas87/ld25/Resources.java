@@ -42,11 +42,11 @@ public abstract class Resources {
 				Soul.B, Soul.B);
 		Sala cc = new Sala(new Image("resources/images/rooms/parrilla-petit.png"), 75,
 				Soul.C, Soul.C);
-		Sala ab = new Sala(new Image("resources/images/rooms/aa.png"), 100,
+		Sala ab = new Sala(new Image("resources/images/rooms/aa.png"), 70,
 				Soul.A, Soul.A);
-		Sala ac = new Sala(new Image("resources/images/rooms/bb.png"), 100,
+		Sala ac = new Sala(new Image("resources/images/rooms/bb.png"), 70,
 				Soul.B, Soul.B);
-		Sala bc = new Sala(new Image("resources/images/rooms/vampireses-petit.png"), 100,
+		Sala bc = new Sala(new Image("resources/images/rooms/vampireses-petit.png"), 70,
 				Soul.C, Soul.C);
 		//Sala abc = new Sala(new Image("resources/images/rooms/vampireses-petit.png"), 100,
 		//		Soul.A, Soul.B, Soul.C);
