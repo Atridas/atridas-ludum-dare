@@ -5,7 +5,10 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
+import cat.atridas87.ld25.gameStates.GameOver;
 import cat.atridas87.ld25.gameStates.PlayerTurn;
+import cat.atridas87.ld25.gameStates.TitleScreen;
+import cat.atridas87.ld25.gameStates.Tutorial;
 import cat.atridas87.ld25.modelData.Level;
 import cat.atridas87.ld25.render.ImageManager;
 
@@ -19,8 +22,11 @@ public class LD25 extends StateBasedGame {
 		instance = this;
 
 		addState(new PlayerTurn());
+		addState(new TitleScreen());
+		addState(new Tutorial());
+		addState(new GameOver());
 		
-		this.enterState(Resources.State.PLAYER_TURN.ordinal());
+		this.enterState(Resources.State.TITLE_SCREEN.ordinal());
 	}
 
 	@Override

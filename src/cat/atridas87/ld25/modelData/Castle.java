@@ -1,15 +1,16 @@
 package cat.atridas87.ld25.modelData;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.UnicodeFont;
 
+import cat.atridas87.ld25.LD25;
 import cat.atridas87.ld25.Resources;
 import cat.atridas87.ld25.render.FontManager;
 import cat.atridas87.ld25.render.ImageManager;
@@ -23,17 +24,22 @@ public class Castle {
 	private final RoomSocket[] sockets;
 	private final ArrayList<Point>[] waypoints;
 	private final ArrayList<Point>[] entryWaypoints;
-	
+	private final ArrayList<Point> dieWaypoints;
+	private final ArrayList<Point> enterWaypoints;
+
+	private final ArrayList<WalkingSoul> enteringSouls = new ArrayList<Castle.WalkingSoul>();
 	private final ArrayList<WalkingSoul> walkingSouls = new ArrayList<Castle.WalkingSoul>();
-	
-	private final HashMap<Soul, Float>[] enteringSouls;
+	private final ArrayList<WalkingSoul> preprocessingSouls = new ArrayList<Castle.WalkingSoul>();
+	private final ArrayList<WalkingSoul> dyingSouls = new ArrayList<Castle.WalkingSoul>();
 
 	private float scroll = 0;
 
 	@SuppressWarnings("unchecked")
 	public Castle(float _width, float _height, Image _background,
 			Set<Sala> _sales, List<RoomSocket> _sockets,
-			List<Sala> _salesConstruides, ArrayList<ArrayList<Point>> _waypoints, ArrayList<ArrayList<Point>> _entryWaypoints) {
+			List<Sala> _salesConstruides,
+			ArrayList<ArrayList<Point>> _waypoints,
+			ArrayList<ArrayList<Point>> _entryWaypoints,ArrayList<Point> _dieWaypoints,ArrayList<Point> _enterWaypoints) {
 		width = _width;
 		height = _height;
 		background = _background;
@@ -41,35 +47,35 @@ public class Castle {
 		assert (_salesConstruides.size() == _sockets.size());
 		assert (_waypoints.size() == _sockets.size());
 		assert (_entryWaypoints.size() == _sockets.size());
-		salesConstruides = new ArrayList<Sala>(_salesConstruides).toArray(new Sala[_salesConstruides.size()]);
-		sockets = new ArrayList<RoomSocket>(_sockets).toArray(new RoomSocket[_sockets.size()]);
+		salesConstruides = new ArrayList<Sala>(_salesConstruides)
+				.toArray(new Sala[_salesConstruides.size()]);
+		sockets = new ArrayList<RoomSocket>(_sockets)
+				.toArray(new RoomSocket[_sockets.size()]);
 		waypoints = new ArrayList[_waypoints.size()];
 		int i = 0;
-		for(ArrayList<Point> waypointList : _waypoints) {
+		for (ArrayList<Point> waypointList : _waypoints) {
 			waypoints[i] = new ArrayList<Castle.Point>(waypointList);
 			i++;
 		}
-		
+
 		entryWaypoints = new ArrayList[_waypoints.size()];
 		i = 0;
-		for(ArrayList<Point> waypointList : _entryWaypoints) {
+		for (ArrayList<Point> waypointList : _entryWaypoints) {
 			entryWaypoints[i] = new ArrayList<Castle.Point>(waypointList);
 			i++;
 		}
-		
-		enteringSouls = new HashMap[_waypoints.size()];
-		for(i = 0; i < enteringSouls.length; i++) {
-			enteringSouls[i] = new HashMap<Soul, Float>();
-		}
+
+		dieWaypoints = new ArrayList<Castle.Point>(_dieWaypoints);
+		enterWaypoints = new ArrayList<Castle.Point>(_enterWaypoints);
 	}
-	
+
 	public void addWalingSoul(Soul soul) {
-		walkingSouls.add(new WalkingSoul(soul));
+		enteringSouls.add(new WalkingSoul(soul));
 	}
-	
+
 	public boolean hasBuildRoom(Sala sala) {
-		for(Sala s : salesConstruides) {
-			if(s == sala) {
+		for (Sala s : salesConstruides) {
+			if (s == sala) {
 				return true;
 			}
 		}
@@ -109,25 +115,34 @@ public class Castle {
 		}
 		throw new RuntimeException();
 	}
+	
+	public int getWalkingSouls(Soul kind) {
+		int cont = 0;
 
-	/*
-	public ArrayList<RoomResult> processRooms() {
-		ArrayList<RoomResult> results = new ArrayList<Castle.RoomResult>();
-		for (int i = 0; i < sockets.size(); i++) {
-			Sala sala = salesConstruides.get(i);
-			if (sala != null) {
-				int processed = sala.process();
-				if (processed > 0) {
-					RoomResult result = new RoomResult(sockets.get(i),
-							Resources.pointCombo(processed),
-							Resources.coinCombo(processed));
-					results.add(result);
-				}
+		for(WalkingSoul soul : walkingSouls) {
+			if(soul.kind == kind) {
+				cont++;
 			}
 		}
-		return results;
+		
+		for(WalkingSoul soul : enteringSouls) {
+			if(soul.kind == kind) {
+				cont++;
+			}
+		}
+		
+		return cont;
 	}
-	*/
+
+	/*
+	 * public ArrayList<RoomResult> processRooms() { ArrayList<RoomResult>
+	 * results = new ArrayList<Castle.RoomResult>(); for (int i = 0; i <
+	 * sockets.size(); i++) { Sala sala = salesConstruides.get(i); if (sala !=
+	 * null) { int processed = sala.process(); if (processed > 0) { RoomResult
+	 * result = new RoomResult(sockets.get(i), Resources.pointCombo(processed),
+	 * Resources.coinCombo(processed)); results.add(result); } } } return
+	 * results; }
+	 */
 
 	public void scroll(float dy) {
 		scroll += dy;
@@ -169,10 +184,10 @@ public class Castle {
 		}
 		return null;
 	}
-	
+
 	private boolean socketExists(RoomSocket socket) {
-		for(RoomSocket s : sockets) {
-			if(socket == s) {
+		for (RoomSocket s : sockets) {
+			if (socket == s) {
 				return true;
 			}
 		}
@@ -186,50 +201,98 @@ public class Castle {
 
 		for (int i = 0; i < sockets.length; i++) {
 			if (sockets[i] == socket) {
+				if(salesConstruides[i] != null) {
+					salesConstruides[i].reset();
+					if(salesConstruides[i].processingSouls()) {
+						LD25.getInstance().getCurrentLevel().breakCombo();
+					}
+				}
+				
 				salesConstruides[i] = room;
 				return;
 			}
 		}
 		assert (false);
 	}
-	
+
 	public void update(float ds) {
-		
-		for(Sala sala : salesConstruides) {
-			if(sala != null) {
+
+		for (Sala sala : salesConstruides) {
+			if (sala != null) {
 				sala.update(ds);
 			}
 		}
-		
-		
-		float addDelta = ds / Resources.TIME_BETWEN_SOCKETS;
-		
+
+		float addDelta = ds / Resources.TIME_PREPROCESS;
 		LinkedList<WalkingSoul> removableSouls = new LinkedList<Castle.WalkingSoul>();
-		
-		for(WalkingSoul walkingSoul : walkingSouls) {
+		for (WalkingSoul walkingSoul : preprocessingSouls) {
 			walkingSoul.delta += addDelta;
-			while(walkingSoul.delta > 1) {
+			if (walkingSoul.delta > 1) {
+				removableSouls.add(walkingSoul);
+			}
+		}
+		preprocessingSouls.removeAll(removableSouls);
+		
+		// ------
+
+		addDelta = ds / Resources.TIME_BETWEN_SOCKETS;
+		removableSouls.clear();
+
+		for (WalkingSoul walkingSoul : dyingSouls) {
+			walkingSoul.delta += addDelta;
+			if (walkingSoul.delta > 1) {
+				removableSouls.add(walkingSoul);
+			}
+		}
+		dyingSouls.removeAll(removableSouls);
+
+		// ------
+		//addDelta = ds / Resources.TIME_BETWEN_SOCKETS;
+		removableSouls.clear();
+
+		for (WalkingSoul walkingSoul : walkingSouls) {
+			walkingSoul.delta += addDelta;
+			while (walkingSoul.delta > 1) {
 				walkingSoul.delta -= 1;
-				
+
 				Sala sala = salesConstruides[walkingSoul.goingToSoket];
-				
-				if(sala != null && sala.availableSoulSpaces(walkingSoul.kind) > 0) {
+
+				if (sala != null
+						&& sala.availableSoulSpaces(walkingSoul.kind) > 0) {
 					sala.putSoul(walkingSoul.kind);
 					removableSouls.add(walkingSoul);
-					enteringSouls[walkingSoul.goingToSoket].put(walkingSoul.kind, 0.f);
+					walkingSoul.delta = 0;
+					preprocessingSouls.add(walkingSoul);
 				} else {
-				
+
 					walkingSoul.goingToSoket++;
-					
-					if(walkingSoul.goingToSoket >= sockets.length) {
+
+					if (walkingSoul.goingToSoket >= sockets.length) {
 						removableSouls.add(walkingSoul);
-						// TODO
+						walkingSoul.delta = 0;
+						dyingSouls.add(walkingSoul);
+						LD25.getInstance().getCurrentLevel()
+								.dropSoul(walkingSoul.kind);
 					}
 				}
 			}
 		}
-		
 		walkingSouls.removeAll(removableSouls);
+		
+		// ------
+
+		addDelta = ds / Resources.TIME_ENTER;
+		removableSouls.clear();
+
+		for (WalkingSoul walkingSoul : enteringSouls) {
+			walkingSoul.delta += addDelta;
+			if (walkingSoul.delta > 1) {
+				walkingSouls.add(walkingSoul);
+				walkingSoul.delta = 0; // TODO
+				removableSouls.add(walkingSoul);
+			}
+		}
+		enteringSouls.removeAll(removableSouls);
 	}
 
 	public void drawCastle(float x, float y, float w, float h) {
@@ -238,7 +301,7 @@ public class Castle {
 		for (int i = 0; i < sockets.length; i++) {
 			Sala sala = salesConstruides[i];
 			if (sala == null)
-				break;
+				continue;
 			RoomSocket socket = sockets[i];
 
 			float salaX = x + (socket.x * w / width);
@@ -250,15 +313,61 @@ public class Castle {
 		}
 
 		background.draw(x, y, w, h);
-		
+
 		float soulSize = w * 17.f / 540;
-		for(WalkingSoul walkingSoul : walkingSouls) {
+		for (WalkingSoul walkingSoul : walkingSouls) {
 			Point p = walkingSoul.getPoint();
 
 			float px = p.x * w / 540;
 			float py = p.y * h / 540;
 
-			im.getSoulImage(walkingSoul.kind).draw(px - soulSize / 2, py - soulSize / 2, soulSize, soulSize);
+			im.getSoulImage(walkingSoul.kind).draw(px - soulSize / 2,
+					py - soulSize / 2, soulSize, soulSize);
+		}
+		// private final HashMap<Soul, Float>[] enteringSouls;
+
+		final Color filter = new Color(1.f, 1.f, 1.f, 1.f);
+
+		for (WalkingSoul walkingSoul : preprocessingSouls) {
+			Point p = pointInPath(entryWaypoints[walkingSoul.goingToSoket],
+					walkingSoul.delta);
+
+			float px = p.x * w / 540;
+			float py = p.y * h / 540;
+			
+			filter.a = (float) Math.sqrt(1 - walkingSoul.delta);
+
+			im.getSoulImage(walkingSoul.kind).draw(px - soulSize / 2,
+					py - soulSize / 2, soulSize, soulSize, filter);
+
+		}
+		
+		for (WalkingSoul walkingSoul : dyingSouls) {
+			Point p = pointInPath(dieWaypoints,
+					walkingSoul.delta);
+
+			float px = p.x * w / 540;
+			float py = p.y * h / 540;
+			
+			filter.a = (float) Math.sqrt(1 - walkingSoul.delta);
+
+			im.getSoulImage(walkingSoul.kind).draw(px - soulSize / 2,
+					py - soulSize / 2, soulSize, soulSize, filter);
+
+		}
+		
+		for (WalkingSoul walkingSoul : enteringSouls) {
+			Point p = pointInPath(enterWaypoints,
+					walkingSoul.delta);
+
+			float px = p.x * w / 540;
+			float py = p.y * h / 540;
+			
+			filter.a = (float) Math.sqrt(walkingSoul.delta);
+
+			im.getSoulImage(walkingSoul.kind).draw(px - soulSize / 2,
+					py - soulSize / 2, soulSize, soulSize, filter);
+
 		}
 	}
 
@@ -292,7 +401,7 @@ public class Castle {
 
 		for (Sala sala : freeRooms) {
 			float currentY = y + currentDY - scroll;
-			im.getCoinImage().draw(x + coinDx, currentY + coinDy, coinSize,
+			im.coin.draw(x + coinDx, currentY + coinDy, coinSize,
 					coinSize);
 
 			sala.draw(im, x + roomDx, currentY + roomDy, roomW, roomH);
@@ -326,61 +435,67 @@ public class Castle {
 			coins = _coins;
 		}
 	}
-	
+
 	public static class Point {
 		public float x, y;
-		
+
 		public Point(float _x, float _y) {
 			x = _x;
 			y = _y;
 		}
 	}
-	
+
 	private class WalkingSoul {
 		Soul kind;
 		int goingToSoket;
 		float delta;
-		
+
 		WalkingSoul(Soul soul) {
 			kind = soul;
 			goingToSoket = 0;
 			delta = 0;
 		}
-		
+
 		Point getPoint() {
-			ArrayList<Point> path = waypoints[goingToSoket];
-			float length = 0;
-			for(int i = 1; i < path.size(); i++) {
-				Point p0 = path.get(i-1);
-				Point p1 = path.get(i);
-				
-				float l = (p0.x - p1.x) * (p0.x - p1.x) + (p0.y - p1.y) * (p0.y - p1.y);
-				length += (float)Math.sqrt(l);
-			}
-			float currentLength = 0;
-
-			for(int i = 1; i < path.size(); i++) {
-				Point p0 = path.get(i-1);
-				Point p1 = path.get(i);
-				
-				float l = (p0.x - p1.x) * (p0.x - p1.x) + (p0.y - p1.y) * (p0.y - p1.y);
-				
-				l = (float)Math.sqrt(l);
-				
-				if((currentLength + l) / length > delta) {
-					
-					float currentDelta = (delta - currentLength / length) / (l / length);
-
-					float x = p0.x * (1 - currentDelta) + p1.x * currentDelta;
-					float y = p0.y * (1 - currentDelta) + p1.y * currentDelta;
-					
-					return new Point(x, y);
-				}
-				
-				currentLength += l;
-			}
-			
-			return path.get(path.size() - 1);
+			return pointInPath(waypoints[goingToSoket], delta);
 		}
+	}
+
+	private static Point pointInPath(ArrayList<Point> path, float delta) {
+		float length = 0;
+		for (int i = 1; i < path.size(); i++) {
+			Point p0 = path.get(i - 1);
+			Point p1 = path.get(i);
+
+			float l = (p0.x - p1.x) * (p0.x - p1.x) + (p0.y - p1.y)
+					* (p0.y - p1.y);
+			length += (float) Math.sqrt(l);
+		}
+		float currentLength = 0;
+
+		for (int i = 1; i < path.size(); i++) {
+			Point p0 = path.get(i - 1);
+			Point p1 = path.get(i);
+
+			float l = (p0.x - p1.x) * (p0.x - p1.x) + (p0.y - p1.y)
+					* (p0.y - p1.y);
+
+			l = (float) Math.sqrt(l);
+
+			if ((currentLength + l) / length > delta) {
+
+				float currentDelta = (delta - currentLength / length)
+						/ (l / length);
+
+				float x = p0.x * (1 - currentDelta) + p1.x * currentDelta;
+				float y = p0.y * (1 - currentDelta) + p1.y * currentDelta;
+
+				return new Point(x, y);
+			}
+
+			currentLength += l;
+		}
+
+		return path.get(path.size() - 1);
 	}
 }
