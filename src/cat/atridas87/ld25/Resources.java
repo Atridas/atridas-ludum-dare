@@ -24,11 +24,14 @@ public abstract class Resources {
 	public static final float TIME_CONSUMPTION = 7f;
 	public static final float WAVE_TIME = 8f;
 	public static final float ENTER_TIME = 0.5f;
-	
+
 	public static final float SPEED = 1;
-	
+
 	public static final float SOULS_TO_LIVE = 50;
 	
+	public static final float FX_VOLUME = 0.25f;
+	
+	public static boolean soundsActivated = true;
 
 	public static Castle createLevel0Castle() throws SlickException {
 
@@ -36,22 +39,28 @@ public abstract class Resources {
 		ArrayList<RoomSocket> sockets = new ArrayList<Castle.RoomSocket>();
 		ArrayList<Sala> salesInicials = new ArrayList<Sala>();
 
-		Sala aa = new Sala(new Image("resources/images/rooms/electricitat-petit.png"), 75,
-				Soul.A, Soul.A);
-		Sala bb = new Sala(new Image("resources/images/rooms/infectades-petit.png"), 75,
-				Soul.B, Soul.B);
-		Sala cc = new Sala(new Image("resources/images/rooms/parrilla-petit.png"), 75,
-				Soul.C, Soul.C);
+		Sala aa = new Sala(new Image(
+				"resources/images/rooms/electricitat-petit.png").getSubImage(0,
+				0, 108, 81), 75, Soul.A, Soul.A);
+		Sala bb = new Sala(new Image(
+				"resources/images/rooms/infectades-petit.png").getSubImage(0,
+				0, 108, 81), 75, Soul.B, Soul.B);
+		Sala cc = new Sala(new Image(
+				"resources/images/rooms/parrilla-petit.png").getSubImage(0, 0,
+				108, 81), 75, Soul.C, Soul.C);
 		Sala ab = new Sala(new Image("resources/images/rooms/aa.png"), 70,
 				Soul.A, Soul.A);
 		Sala ac = new Sala(new Image("resources/images/rooms/bb.png"), 70,
 				Soul.B, Soul.B);
-		Sala bc = new Sala(new Image("resources/images/rooms/vampireses-petit.png"), 70,
-				Soul.C, Soul.C);
-		//Sala abc = new Sala(new Image("resources/images/rooms/vampireses-petit.png"), 100,
-		//		Soul.A, Soul.B, Soul.C);
-		Sala aabbcc = new Sala(new Image("resources/images/rooms/gel-petit.png"),
-				500, Soul.A, Soul.B, Soul.C);
+		Sala bc = new Sala(new Image(
+				"resources/images/rooms/gel-petit.png").getSubImage(0,
+				0, 108, 81), 70, Soul.C, Soul.C);
+		// Sala abc = new Sala(new
+		// Image("resources/images/rooms/vampireses-petit.png"), 100,
+		// Soul.A, Soul.B, Soul.C);
+		Sala aabbcc = new Sala(
+				new Image("resources/images/rooms/vampireses-petit.png").getSubImage(
+						0, 0, 108, 81), 300, Soul.A, Soul.B, Soul.C);
 
 		sales.add(aa);
 		sales.add(bb);
@@ -59,7 +68,7 @@ public abstract class Resources {
 		sales.add(ab);
 		sales.add(ac);
 		sales.add(bc);
-		//sales.add(abc);
+		// sales.add(abc);
 		sales.add(aabbcc);
 
 		salesInicials.add(aa);
@@ -128,7 +137,7 @@ public abstract class Resources {
 		waypoints.add(path2);
 		waypoints.add(path3);
 		waypoints.add(path4);
-		
+
 		// -----
 
 		ArrayList<ArrayList<Point>> entryWaypoints = new ArrayList<ArrayList<Point>>();
@@ -174,7 +183,8 @@ public abstract class Resources {
 		// -----
 
 		return new Castle(540, 540, new Image("resources/images/level_0.png"),
-				sales, sockets, salesInicials, waypoints, entryWaypoints, diePath, enterPath);
+				sales, sockets, salesInicials, waypoints, entryWaypoints,
+				diePath, enterPath);
 	}
 
 	public static ArrayList<Wave> createLevel0Waves() {
@@ -208,7 +218,7 @@ public abstract class Resources {
 		waves.add(new Wave(1, 3, 2));
 		waves.add(new Wave(2, 1, 3));
 		waves.add(new Wave(3, 2, 1));
-		
+
 		waves.add(new Wave(0, 0, 0));
 
 		waves.add(new Wave(4, 3, 2));
@@ -233,8 +243,6 @@ public abstract class Resources {
 
 		// ----------------------
 
-
-
 		waves.add(new Wave(0, 0, 0));
 		waves.add(new Wave(0, 0, 0));
 		waves.add(new Wave(5, 0, 5));
@@ -250,7 +258,6 @@ public abstract class Resources {
 		waves.add(new Wave(5, 0, 5));
 		waves.add(new Wave(5, 5, 0));
 		waves.add(new Wave(0, 5, 5));
-
 
 		// ----------------------
 		waves.add(new Wave(0, 0, 0));
@@ -260,24 +267,27 @@ public abstract class Resources {
 		waves.add(new Wave(2, 4, 4));
 		waves.add(new Wave(0, 0, 0));
 		waves.add(new Wave(4, 2, 4));
-		
+
 		waves.add(new Wave(0, 0, 0));
 		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(4, 4, 0));
+		waves.add(new Wave(4, 4, 2));
+		waves.add(new Wave(2, 4, 4));
+		waves.add(new Wave(4, 2, 4));
+
 		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(0, 4, 4));
-		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(4, 0, 4));
-		
+		waves.add(new Wave(5, 1, 5));
+		waves.add(new Wave(5, 5, 1));
+		waves.add(new Wave(1, 5, 5));
+
 		return waves;
 	}
 
 	public static int pointCombo(int numSouls) {
-		if(numSouls < 10) {
+		if (numSouls < 10) {
 			return 10;
-		} else if(numSouls < 20) {
+		} else if (numSouls < 20) {
 			return 15;
-		} else if(numSouls < 30) {
+		} else if (numSouls < 30) {
 			return 25;
 		} else {
 			return 40;
@@ -285,43 +295,40 @@ public abstract class Resources {
 	}
 
 	public static int coinCombo(int numSouls) {
-		return 10;
+		return 15;
 	}
 
 	public static float livesMult(int numLives) {
-		if(numLives <= 0) {
-			return 0.5f;
+		if (numLives <= 0) {
+			return 0.25f;
 		}
-		switch(numLives) {
+		switch (numLives) {
 		case 1:
-			return 2;
+			return 1;
 		case 2:
-			return 2.5f;
+			return 1.25f;
 		case 3:
-			return 3;
+			return 1.75f;
 		case 4:
-			return 3.5f;
+			return 2;
 		case 5:
-			return 4;
+			return 2.5f;
 		case 6:
-			return 4.5f;
+			return 3;
 		case 7:
-			return 5;
+			return 4;
 		case 8:
-			return 6;
+			return 5;
 		case 9:
-			return 8;
+			return 7;
 		case 10:
 			return 10;
 		default:
-			return numLives * 3 - 20;
+			return numLives * 4 - 30;
 		}
 	}
 
 	public static enum State {
-		PLAYER_TURN,
-		TITLE_SCREEN,
-		GAME_OVER,
-		TUTORIAL
+		PLAYER_TURN, TITLE_SCREEN, GAME_OVER, TUTORIAL
 	}
 }

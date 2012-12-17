@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Sound;
 
 import cat.atridas87.ld25.LD25;
 import cat.atridas87.ld25.Resources;
@@ -17,6 +18,8 @@ public class Sala implements Comparable<Sala> {
 
 	private final int price;
 
+	private static Sound entryRoomSound;
+
 	public Sala(Image _backgroundImage, int _price, Soul... _souls) {
 		backgroundImage = _backgroundImage;
 		price = _price;
@@ -25,6 +28,14 @@ public class Sala implements Comparable<Sala> {
 			espais.add(soul);
 			estatEspais.add(new EstatSala());
 		}
+
+		if (entryRoomSound == null) {
+			try {
+				entryRoomSound = new Sound("resources/music/enter_room.wav");
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
 	}
 
 	public int getPrice() {
@@ -32,20 +43,20 @@ public class Sala implements Comparable<Sala> {
 	}
 
 	public void reset() {
-		for(int i = 0; i < estatEspais.size(); i++) {
+		for (int i = 0; i < estatEspais.size(); i++) {
 			estatEspais.get(i).reset();
 		}
 	}
-	
+
 	public boolean processingSouls() {
 		for (int i = 0; i < espais.size(); i++) {
-			if(estatEspais.get(i).ocupat) {
+			if (estatEspais.get(i).ocupat) {
 				return true;
 			}
 		}
 		return false;
 	}
-		
+
 	public int availableSoulSpaces(Soul soul) {
 		int spaces = 0;
 		for (int i = 0; i < espais.size(); i++) {
@@ -55,14 +66,13 @@ public class Sala implements Comparable<Sala> {
 		}
 		return spaces;
 	}
-	
 
 	public void update(float ds) {
 		float addDelta = ds / Resources.TIME_CONSUMPTION;
-		for(EstatSala estat : estatEspais) {
-			if(estat.ocupat) {
+		for (EstatSala estat : estatEspais) {
+			if (estat.ocupat) {
 				estat.processant += addDelta;
-				if(estat.processant >= 1) {
+				if (estat.processant >= 1) {
 					estat.ocupat = false;
 					estat.processant = 0;
 					LD25.getInstance().getCurrentLevel().finishProcessingSoul();
@@ -80,6 +90,9 @@ public class Sala implements Comparable<Sala> {
 	 */
 
 	public void putSoul(Soul soul) {
+		if (Resources.soundsActivated) {
+			entryRoomSound.play(1, Resources.FX_VOLUME * .25f);
+		}
 		for (int i = 0; i < espais.size(); i++) {
 			if (espais.get(i) == soul && !estatEspais.get(i).ocupat) {
 				estatEspais.get(i).ocupar();
@@ -136,15 +149,19 @@ public class Sala implements Comparable<Sala> {
 			// estat.getImage(im).draw(soulX, soulY, soulSize, soulSize,
 			// filter);
 
-			if(estat.ocupat) {
-				
-				float enteringThreshold = Resources.TIME_PREPROCESS / Resources.TIME_CONSUMPTION;
-				
-				if(estat.processant < enteringThreshold) {
-					im.ocupiedCircle.draw(soulX, soulY, soulSize, soulSize, filter);
+			if (estat.ocupat) {
+
+				float enteringThreshold = Resources.TIME_PREPROCESS
+						/ Resources.TIME_CONSUMPTION;
+
+				if (estat.processant < enteringThreshold) {
+					im.ocupiedCircle.draw(soulX, soulY, soulSize, soulSize,
+							filter);
 				} else {
-					float d = (estat.processant - enteringThreshold) / (1 - enteringThreshold);
-					drawPercentage(im, d, soulX, soulY, soulSize, soulSize, filter);
+					float d = (estat.processant - enteringThreshold)
+							/ (1 - enteringThreshold);
+					drawPercentage(im, d, soulX, soulY, soulSize, soulSize,
+							filter);
 				}
 			} else {
 				im.emptyCircle.draw(soulX, soulY, soulSize, soulSize, filter);
@@ -163,7 +180,7 @@ public class Sala implements Comparable<Sala> {
 			ocupat = true;
 			processant = 0;
 		}
-		
+
 		private void reset() {
 			ocupat = false;
 			processant = 0;

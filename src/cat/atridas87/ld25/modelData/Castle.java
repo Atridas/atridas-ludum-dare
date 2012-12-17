@@ -8,6 +8,7 @@ import java.util.TreeSet;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.UnicodeFont;
 
 import cat.atridas87.ld25.LD25;
@@ -33,6 +34,8 @@ public class Castle {
 	private final ArrayList<WalkingSoul> dyingSouls = new ArrayList<Castle.WalkingSoul>();
 
 	private float scroll = 0;
+
+	private Sound entrySound;
 
 	@SuppressWarnings("unchecked")
 	public Castle(float _width, float _height, Image _background,
@@ -67,9 +70,18 @@ public class Castle {
 
 		dieWaypoints = new ArrayList<Castle.Point>(_dieWaypoints);
 		enterWaypoints = new ArrayList<Castle.Point>(_enterWaypoints);
+		
+		try {
+			entrySound = new Sound("resources/music/enter.wav");
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public void addWalingSoul(Soul soul) {
+		if(Resources.soundsActivated) {
+			entrySound.play(1, Resources.FX_VOLUME * .25f);
+		}
 		enteringSouls.add(new WalkingSoul(soul));
 	}
 
@@ -100,20 +112,6 @@ public class Castle {
 			}
 		}
 		return spaces;
-	}
-
-	public int putSoulInRoom(Soul soul) {
-		int i = 0;
-		for (Sala sala : salesConstruides) {
-			if (sala.availableSoulSpaces(soul) > 0) {
-
-				sala.putSoul(soul);
-
-				return i;
-			}
-			i++;
-		}
-		throw new RuntimeException();
 	}
 	
 	public int getWalkingSouls(Soul kind) {
@@ -211,10 +209,10 @@ public class Castle {
 		for (int i = 0; i < sockets.length; i++) {
 			if (sockets[i] == socket) {
 				if(salesConstruides[i] != null) {
-					salesConstruides[i].reset();
 					if(salesConstruides[i].processingSouls()) {
 						LD25.getInstance().getCurrentLevel().breakCombo();
 					}
+					salesConstruides[i].reset();
 				}
 				
 				salesConstruides[i] = room;
