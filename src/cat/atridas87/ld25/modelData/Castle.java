@@ -133,6 +133,15 @@ public class Castle {
 		
 		return cont;
 	}
+	
+	public boolean isProcessingSouls() {
+		for(Sala sala : salesConstruides) {
+			if(sala != null && sala.processingSouls()) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/*
 	 * public ArrayList<RoomResult> processRooms() { ArrayList<RoomResult>

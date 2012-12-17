@@ -25,7 +25,7 @@ public class FontManager {
 				// Instance
 				font.addAsciiGlyphs(); // Add Glyphs
 				font.addGlyphs(400, 600); // Add Glyphs
-				font.getEffects().add(new ColorEffect(java.awt.Color.BLACK)); // Add
+				font.getEffects().add(new ColorEffect(java.awt.Color.WHITE)); // Add
 				// Effects
 				font.loadGlyphs(); // Load Glyphs
 				
