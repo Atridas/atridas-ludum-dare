@@ -138,6 +138,10 @@ public final class Level {
 	public void scroll(float dy) {
 		castle.scroll(dy);
 	}
+
+	public boolean canScroll() {
+		return castle.getFreeRooms().size() > 2;
+	}
 	
 	/*
 	public void holdButton(boolean hold) {
@@ -247,9 +251,9 @@ public final class Level {
 		im.getSoulImage(Soul.B).draw(x + iconDx, bDy, uiSize, uiSize);
 		im.getSoulImage(Soul.C).draw(x + iconDx, cDy, uiSize, uiSize);
 		
-		font.drawString(x + stringDx, aDy, Integer.toString(getReserve(Soul.A)) );
-		font.drawString(x + stringDx, bDy, Integer.toString(getReserve(Soul.B)) );
-		font.drawString(x + stringDx, cDy, Integer.toString(getReserve(Soul.C)) );
+		font.drawString(x + stringDx, aDy, Integer.toString(getReserve(Soul.A) + castle.getWalkingSouls(Soul.A)) );
+		font.drawString(x + stringDx, bDy, Integer.toString(getReserve(Soul.B) + castle.getWalkingSouls(Soul.B)) );
+		font.drawString(x + stringDx, cDy, Integer.toString(getReserve(Soul.C) + castle.getWalkingSouls(Soul.C)) );
 		
 		float waveDx = 80.f * w / 180;
 		float nextWaveDx = 30.f * w / 180;

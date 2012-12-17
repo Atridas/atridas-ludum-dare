@@ -18,10 +18,11 @@ public abstract class Resources {
 	public static final String APP_NAME = "LD25";
 
 	public static final float DRAG_THRESHOLD = 10;
-	public static final float TIME_BETWEN_SOCKETS = 3;
-	public static final float TIME_ENTER = 2f;
-	public static final float TIME_CONSUMPTION = 10f;
-	public static final float WAVE_TIME = 4f;
+	public static final float TIME_ENTER = 10;
+	public static final float TIME_BETWEN_SOCKETS = 4;
+	public static final float TIME_PREPROCESS = 2f;
+	public static final float TIME_CONSUMPTION = 7f;
+	public static final float WAVE_TIME = 8f;
 	public static final float ENTER_TIME = 0.5f;
 	
 	public static final float SPEED = 1;
@@ -35,22 +36,22 @@ public abstract class Resources {
 		ArrayList<RoomSocket> sockets = new ArrayList<Castle.RoomSocket>();
 		ArrayList<Sala> salesInicials = new ArrayList<Sala>();
 
-		Sala aa = new Sala(new Image("resources/images/rooms/electricitat-petit.png"), 50,
+		Sala aa = new Sala(new Image("resources/images/rooms/electricitat-petit.png"), 75,
 				Soul.A, Soul.A);
-		Sala bb = new Sala(new Image("resources/images/rooms/infectades-petit.png"), 50,
+		Sala bb = new Sala(new Image("resources/images/rooms/infectades-petit.png"), 75,
 				Soul.B, Soul.B);
-		Sala cc = new Sala(new Image("resources/images/rooms/parrilla-petit.png"), 50,
+		Sala cc = new Sala(new Image("resources/images/rooms/parrilla-petit.png"), 75,
 				Soul.C, Soul.C);
-		Sala ab = new Sala(new Image("resources/images/rooms/ab.png"), 75,
-				Soul.A, Soul.B);
-		Sala ac = new Sala(new Image("resources/images/rooms/ac.png"), 75,
-				Soul.A, Soul.C);
-		Sala bc = new Sala(new Image("resources/images/rooms/bc.png"), 75,
-				Soul.B, Soul.C);
-		Sala abc = new Sala(new Image("resources/images/rooms/vampireses-petit.png"), 100,
-				Soul.A, Soul.B, Soul.C);
+		Sala ab = new Sala(new Image("resources/images/rooms/aa.png"), 100,
+				Soul.A, Soul.A);
+		Sala ac = new Sala(new Image("resources/images/rooms/bb.png"), 100,
+				Soul.B, Soul.B);
+		Sala bc = new Sala(new Image("resources/images/rooms/vampireses-petit.png"), 100,
+				Soul.C, Soul.C);
+		//Sala abc = new Sala(new Image("resources/images/rooms/vampireses-petit.png"), 100,
+		//		Soul.A, Soul.B, Soul.C);
 		Sala aabbcc = new Sala(new Image("resources/images/rooms/gel-petit.png"),
-				250, Soul.A, Soul.A, Soul.B, Soul.B, Soul.C, Soul.C);
+				500, Soul.A, Soul.B, Soul.C);
 
 		sales.add(aa);
 		sales.add(bb);
@@ -58,7 +59,7 @@ public abstract class Resources {
 		sales.add(ab);
 		sales.add(ac);
 		sales.add(bc);
-		sales.add(abc);
+		//sales.add(abc);
 		sales.add(aabbcc);
 
 		salesInicials.add(aa);
@@ -78,7 +79,10 @@ public abstract class Resources {
 
 		// -----
 
-		Point w0 = new Point(0, 500);
+		Point e0 = new Point(540, 530);
+		Point e1 = new Point(25, 530);
+
+		Point w0 = new Point(25, 500);
 		Point w1 = new Point(75, 500);
 		Point ew0 = new Point(75, 450);
 		Point w2 = new Point(275, 500);
@@ -156,6 +160,13 @@ public abstract class Resources {
 
 		// -----
 
+		ArrayList<Point> enterPath = new ArrayList<Castle.Point>();
+		enterPath.add(e0);
+		enterPath.add(e1);
+		enterPath.add(w0);
+
+		// -----
+
 		ArrayList<Point> diePath = new ArrayList<Castle.Point>();
 		diePath.add(w7);
 		diePath.add(dw);
@@ -163,53 +174,40 @@ public abstract class Resources {
 		// -----
 
 		return new Castle(540, 540, new Image("resources/images/level_0.png"),
-				sales, sockets, salesInicials, waypoints, entryWaypoints, diePath);
+				sales, sockets, salesInicials, waypoints, entryWaypoints, diePath, enterPath);
 	}
 
 	public static ArrayList<Wave> createLevel0Waves() {
 		ArrayList<Wave> waves = new ArrayList<Wave>();
 
-		waves.add(new Wave(0, 0, 0));
 		waves.add(new Wave(1, 0, 0));
-		waves.add(new Wave(0, 0, 0));
 		waves.add(new Wave(0, 1, 0));
-		waves.add(new Wave(0, 0, 0));
 		waves.add(new Wave(0, 0, 1));
 
 		waves.add(new Wave(0, 0, 0));
 		waves.add(new Wave(1, 1, 1));
 
-		waves.add(new Wave(0, 0, 0));
 		waves.add(new Wave(1, 0, 0));
 		waves.add(new Wave(0, 1, 0));
 		waves.add(new Wave(0, 0, 1));
 
-		waves.add(new Wave(0, 0, 0));
 		waves.add(new Wave(2, 0, 0));
 		waves.add(new Wave(0, 2, 0));
 		waves.add(new Wave(0, 0, 2));
 
-		waves.add(new Wave(0, 0, 0));
 		waves.add(new Wave(1, 1, 0));
 		waves.add(new Wave(0, 1, 1));
 		waves.add(new Wave(1, 0, 1));
 
-		waves.add(new Wave(0, 0, 0));
 		waves.add(new Wave(1, 1, 2));
 		waves.add(new Wave(2, 1, 1));
 		waves.add(new Wave(1, 2, 1));
 
 		// ----------------------
 
-		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(0, 0, 0));
-
 		waves.add(new Wave(3, 1, 2));
 		waves.add(new Wave(2, 3, 1));
 		waves.add(new Wave(1, 2, 3));
-		
-		waves.add(new Wave(0, 0, 0));
 
 		waves.add(new Wave(1, 3, 2));
 		waves.add(new Wave(2, 1, 3));
@@ -222,7 +220,6 @@ public abstract class Resources {
 		waves.add(new Wave(3, 4, 3));
 		// ----------------------
 
-		waves.add(new Wave(0, 0, 0));
 		waves.add(new Wave(2, 2, 2));
 		waves.add(new Wave(4, 1, 1));
 		waves.add(new Wave(1, 1, 4));
@@ -237,9 +234,10 @@ public abstract class Resources {
 		waves.add(new Wave(1, 0, 3));
 		waves.add(new Wave(1, 5, 1));
 		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(0, 0, 0));
 
 		// ----------------------
+		
+		/*
 
 		waves.add(new Wave(0, 0, 0));
 		waves.add(new Wave(0, 0, 0));
@@ -269,6 +267,8 @@ public abstract class Resources {
 		waves.add(new Wave(1, 1, 1));
 		waves.add(new Wave(0, 0, 0));
 
+		*/
+		
 		return waves;
 	}
 

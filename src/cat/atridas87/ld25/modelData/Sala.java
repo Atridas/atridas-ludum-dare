@@ -37,6 +37,15 @@ public class Sala implements Comparable<Sala> {
 		}
 	}
 	
+	public boolean processingSouls() {
+		for (int i = 0; i < espais.size(); i++) {
+			if(estatEspais.get(i).ocupat) {
+				return true;
+			}
+		}
+		return false;
+	}
+		
 	public int availableSoulSpaces(Soul soul) {
 		int spaces = 0;
 		for (int i = 0; i < espais.size(); i++) {
@@ -129,7 +138,7 @@ public class Sala implements Comparable<Sala> {
 
 			if(estat.ocupat) {
 				
-				float enteringThreshold = Resources.TIME_ENTER / Resources.TIME_CONSUMPTION;
+				float enteringThreshold = Resources.TIME_PREPROCESS / Resources.TIME_CONSUMPTION;
 				
 				if(estat.processant < enteringThreshold) {
 					im.getOcupiedCircleImage().draw(soulX, soulY, soulSize, soulSize, filter);
