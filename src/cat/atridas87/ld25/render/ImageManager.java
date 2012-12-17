@@ -14,7 +14,7 @@ public class ImageManager {
 	private final HashMap<Soul, Image> soulImages_4 = new HashMap<Soul, Image>();
 	private final HashMap<Soul, Image> soulImages_5 = new HashMap<Soul, Image>();
 	
-	private Image coin, points;
+	private Image coin, points, lives;
 	
 	private Image fullCircle, emptyCircle, ocupiedCircle;
 	
@@ -38,6 +38,7 @@ public class ImageManager {
 
 		coin = new Image("resources/images/icons/coin.png");
 		points = new Image("resources/images/icons/points.png");
+		lives = new Image("resources/images/icons/lives.png");
 		fullCircle = new Image("resources/images/icons/Full_circle.png");
 		emptyCircle = new Image("resources/images/icons/Empty_circle.png");
 		ocupiedCircle = new Image("resources/images/icons/Ocupied_circle.png");
@@ -72,6 +73,10 @@ public class ImageManager {
 	
 	public Image getPointsImage() {
 		return points;
+	}
+	
+	public Image getLivesImage() {
+		return lives;
 	}
 	
 	public Image getFullCircleImage() {

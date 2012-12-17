@@ -24,7 +24,9 @@ public abstract class Resources {
 	public static final float WAVE_TIME = 4f;
 	public static final float ENTER_TIME = 0.5f;
 	
-	public static final float SPEED = 4;
+	public static final float SPEED = 1;
+	
+	public static final float SOULS_TO_LIVE = 50;
 	
 
 	public static Castle createLevel0Castle() throws SlickException {
@@ -90,6 +92,7 @@ public abstract class Resources {
 		Point ew3 = new Point(360, 320);
 		Point w7 = new Point(175, 370);
 		Point ew4 = new Point(175, 320);
+		Point dw = new Point(50, 370);
 
 		ArrayList<ArrayList<Point>> waypoints = new ArrayList<ArrayList<Point>>();
 
@@ -153,8 +156,14 @@ public abstract class Resources {
 
 		// -----
 
+		ArrayList<Point> diePath = new ArrayList<Castle.Point>();
+		diePath.add(w7);
+		diePath.add(dw);
+
+		// -----
+
 		return new Castle(540, 540, new Image("resources/images/level_0.png"),
-				sales, sockets, salesInicials, waypoints, entryWaypoints);
+				sales, sockets, salesInicials, waypoints, entryWaypoints, diePath);
 	}
 
 	public static ArrayList<Wave> createLevel0Waves() {
@@ -276,7 +285,7 @@ public abstract class Resources {
 	}
 
 	public static int coinCombo(int numSouls) {
-		return 50;
+		return 10;
 	}
 
 	public static enum State {
