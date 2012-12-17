@@ -31,6 +31,12 @@ public class Sala implements Comparable<Sala> {
 		return price;
 	}
 
+	public void reset() {
+		for(int i = 0; i < estatEspais.size(); i++) {
+			estatEspais.get(i).reset();
+		}
+	}
+	
 	public int availableSoulSpaces(Soul soul) {
 		int spaces = 0;
 		for (int i = 0; i < espais.size(); i++) {
@@ -146,6 +152,11 @@ public class Sala implements Comparable<Sala> {
 		private void ocupar() {
 			assert (!ocupat);
 			ocupat = true;
+			processant = 0;
+		}
+		
+		private void reset() {
+			ocupat = false;
 			processant = 0;
 		}
 	}

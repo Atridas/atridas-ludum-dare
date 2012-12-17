@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.UnicodeFont;
 
@@ -23,9 +24,11 @@ public class Castle {
 	private final RoomSocket[] sockets;
 	private final ArrayList<Point>[] waypoints;
 	private final ArrayList<Point>[] entryWaypoints;
+	private final ArrayList<Point> dieWaypoints;
 
 	private final ArrayList<WalkingSoul> walkingSouls = new ArrayList<Castle.WalkingSoul>();
 	private final ArrayList<WalkingSoul> enteringSouls = new ArrayList<Castle.WalkingSoul>();
+	private final ArrayList<WalkingSoul> dyingSouls = new ArrayList<Castle.WalkingSoul>();
 
 	private float scroll = 0;
 
@@ -34,7 +37,7 @@ public class Castle {
 			Set<Sala> _sales, List<RoomSocket> _sockets,
 			List<Sala> _salesConstruides,
 			ArrayList<ArrayList<Point>> _waypoints,
-			ArrayList<ArrayList<Point>> _entryWaypoints) {
+			ArrayList<ArrayList<Point>> _entryWaypoints,ArrayList<Point> _dieWaypoints) {
 		width = _width;
 		height = _height;
 		background = _background;
@@ -59,6 +62,8 @@ public class Castle {
 			entryWaypoints[i] = new ArrayList<Castle.Point>(waypointList);
 			i++;
 		}
+		
+		dieWaypoints = new ArrayList<Castle.Point>(_dieWaypoints);
 	}
 
 	public void addWalingSoul(Soul soul) {
@@ -175,6 +180,10 @@ public class Castle {
 
 		for (int i = 0; i < sockets.length; i++) {
 			if (sockets[i] == socket) {
+				if(salesConstruides[i] != null) {
+					salesConstruides[i].reset();
+				}
+				
 				salesConstruides[i] = room;
 				return;
 			}
@@ -199,9 +208,22 @@ public class Castle {
 			}
 		}
 		enteringSouls.removeAll(removableSouls);
+		
+		// ------
 
 		addDelta = ds / Resources.TIME_BETWEN_SOCKETS;
+		removableSouls.clear();
 
+		for (WalkingSoul walkingSoul : dyingSouls) {
+			walkingSoul.delta += addDelta;
+			if (walkingSoul.delta > 1) {
+				removableSouls.add(walkingSoul);
+			}
+		}
+		dyingSouls.removeAll(removableSouls);
+
+		// ------
+		//addDelta = ds / Resources.TIME_BETWEN_SOCKETS;
 		removableSouls.clear();
 
 		for (WalkingSoul walkingSoul : walkingSouls) {
@@ -223,13 +245,14 @@ public class Castle {
 
 					if (walkingSoul.goingToSoket >= sockets.length) {
 						removableSouls.add(walkingSoul);
+						walkingSoul.delta = 0;
+						dyingSouls.add(walkingSoul);
 						LD25.getInstance().getCurrentLevel()
 								.dropSoul(walkingSoul.kind);
 					}
 				}
 			}
 		}
-
 		walkingSouls.removeAll(removableSouls);
 	}
 
@@ -264,15 +287,33 @@ public class Castle {
 		}
 		// private final HashMap<Soul, Float>[] enteringSouls;
 
+		final Color filter = new Color(1.f, 1.f, 1.f, 1.f);
+
 		for (WalkingSoul walkingSoul : enteringSouls) {
 			Point p = pointInPath(entryWaypoints[walkingSoul.goingToSoket],
 					walkingSoul.delta);
 
 			float px = p.x * w / 540;
 			float py = p.y * h / 540;
+			
+			filter.a = (float) Math.sqrt(1 - walkingSoul.delta);
 
 			im.getSoulImage(walkingSoul.kind).draw(px - soulSize / 2,
-					py - soulSize / 2, soulSize, soulSize);
+					py - soulSize / 2, soulSize, soulSize, filter);
+
+		}
+		
+		for (WalkingSoul walkingSoul : dyingSouls) {
+			Point p = pointInPath(dieWaypoints,
+					walkingSoul.delta);
+
+			float px = p.x * w / 540;
+			float py = p.y * h / 540;
+			
+			filter.a = (float) Math.sqrt(1 - walkingSoul.delta);
+
+			im.getSoulImage(walkingSoul.kind).draw(px - soulSize / 2,
+					py - soulSize / 2, soulSize, soulSize, filter);
 
 		}
 	}
