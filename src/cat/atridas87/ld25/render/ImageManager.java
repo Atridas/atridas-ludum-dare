@@ -22,6 +22,7 @@ public class ImageManager {
 
 	public Image fons;
 	public Image titleScreenBackground;
+	public Image gameoverBackground;
 
 	public Image newGameButtonPressed, newGameButtonNormal;
 	public Image tutorialButtonPressed, tutorialButtonNormal;
@@ -54,6 +55,7 @@ public class ImageManager {
 
 		fons = new Image("resources/images/fons.png");
 		titleScreenBackground = new Image("resources/images/title_screen.png");
+		gameoverBackground = titleScreenBackground;
 
 		newGameButtonPressed = new Image(
 				"resources/images/buttons/new_game_pressed.png");

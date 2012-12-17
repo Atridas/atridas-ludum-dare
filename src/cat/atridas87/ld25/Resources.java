@@ -25,7 +25,7 @@ public abstract class Resources {
 	public static final float WAVE_TIME = 8f;
 	public static final float ENTER_TIME = 0.5f;
 	
-	public static final float SPEED = 1;
+	public static final float SPEED = 10;
 	
 	public static final float SOULS_TO_LIVE = 50;
 	
