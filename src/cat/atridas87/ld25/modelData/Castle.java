@@ -1,6 +1,7 @@
 package cat.atridas87.ld25.modelData;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -153,14 +154,23 @@ public class Castle {
 	
 	public void update(float ds) {
 		float addDelta = ds / Resources.TIME_BETWEN_SOCKETS;
+		
+		LinkedList<WalkingSoul> removableSouls = new LinkedList<Castle.WalkingSoul>();
+		
 		for(WalkingSoul walkingSoul : walkingSouls) {
 			walkingSoul.delta += addDelta;
-			while(walkingSoul.delta > 0) {
+			while(walkingSoul.delta > 1) {
 				walkingSoul.delta -= 1;
 				walkingSoul.goingToSoket++;
 				// TODO
+				
+				if(walkingSoul.goingToSoket >= sockets.size()) {
+					removableSouls.add(walkingSoul);
+				}
 			}
 		}
+		
+		walkingSouls.removeAll(removableSouls);
 	}
 
 	public void drawCastle(float x, float y, float w, float h) {
@@ -186,7 +196,10 @@ public class Castle {
 		for(WalkingSoul walkingSoul : walkingSouls) {
 			Point p = walkingSoul.getPoint();
 
-			im.getSoulImage(walkingSoul.kind).draw(p.x - soulSize / 2, y - soulSize / 2, soulSize, soulSize);
+			float px = p.x * w / 540;
+			float py = p.y * h / 540;
+
+			im.getSoulImage(walkingSoul.kind).draw(px - soulSize / 2, py - soulSize / 2, soulSize, soulSize);
 		}
 	}
 
@@ -293,6 +306,8 @@ public class Castle {
 				
 				float l = (p0.x - p1.x) * (p0.x - p1.x) + (p0.y - p1.y) * (p0.y - p1.y);
 				
+				l = (float)Math.sqrt(l);
+				
 				if((currentLength + l) / length > delta) {
 					
 					float currentDelta = (delta - currentLength / length) / (l / length);
@@ -303,7 +318,7 @@ public class Castle {
 					return new Point(x, y);
 				}
 				
-				currentLength += (float)Math.sqrt(l);
+				currentLength += l;
 			}
 			
 			return path.get(path.size() - 1);
