@@ -63,40 +63,40 @@ public abstract class Resources {
 		sales.add(aabbcc);
 
 		salesInicials.add(aa);
-		sockets.add(new RoomSocket(42, 403, 144, 81));
+		sockets.add(new RoomSocket(32, 400, 134, 88));
 		salesInicials.add(bb);
-		sockets.add(new RoomSocket(221, 404, 144, 81));
+		sockets.add(new RoomSocket(196, 401, 139, 88));
 		salesInicials.add(cc);
-		sockets.add(new RoomSocket(378, 403, 144, 81));
+		sockets.add(new RoomSocket(366, 402, 134, 89));
 
 		salesInicials.add(null);
-		sockets.add(new RoomSocket(302, 257, 144, 81));
+		sockets.add(new RoomSocket(297, 279, 144, 87));
 		salesInicials.add(null);
-		sockets.add(new RoomSocket(107, 255, 144, 81));
+		sockets.add(new RoomSocket(123, 288, 144, 81));
 
 		// salesInicials.add(null);sockets.add(new RoomSocket(209, 132, 144,
 		// 81));
 
 		// -----
 
-		Point e0 = new Point(540, 530);
-		Point e1 = new Point(25, 530);
+		Point e0 = new Point(10, 0);
 
-		Point w0 = new Point(25, 500);
-		Point w1 = new Point(75, 500);
-		Point ew0 = new Point(75, 450);
-		Point w2 = new Point(275, 500);
-		Point ew1 = new Point(275, 450);
-		Point w3 = new Point(440, 500);
-		Point ew2 = new Point(440, 450);
-		Point w4 = new Point(510, 500);
+		Point w0 = new Point(10, 516);
+		Point w1 = new Point(146, 516);
+		Point ew0 = new Point(146, 423);
+		Point w2 = new Point(320, 516);
+		Point ew1 = new Point(320, 423);
+		Point w3 = new Point(483, 516);
+		Point ew2 = new Point(483, 423);
+		Point w4 = new Point(514, 516);
 
-		Point w5 = new Point(510, 370);
-		Point w6 = new Point(360, 370);
-		Point ew3 = new Point(360, 320);
-		Point w7 = new Point(175, 370);
-		Point ew4 = new Point(175, 320);
-		Point dw = new Point(50, 370);
+		Point w5 = new Point(514, 386);
+		Point w6 = new Point(422, 386);
+		Point ew3 = new Point(422, 320);
+		Point w7 = new Point(284, 386);
+		Point w8 = new Point(284, 324);
+		Point ew4 = new Point(250, 324);
+		Point dw = new Point(284, 280);
 
 		ArrayList<ArrayList<Point>> waypoints = new ArrayList<ArrayList<Point>>();
 
@@ -121,6 +121,7 @@ public abstract class Resources {
 		ArrayList<Point> path4 = new ArrayList<Castle.Point>();
 		path4.add(w6);
 		path4.add(w7);
+		path4.add(w8);
 
 		waypoints.add(path0);
 		waypoints.add(path1);
@@ -149,7 +150,7 @@ public abstract class Resources {
 		entryPath3.add(ew3);
 
 		ArrayList<Point> entryPath4 = new ArrayList<Castle.Point>();
-		entryPath4.add(w7);
+		entryPath4.add(w8);
 		entryPath4.add(ew4);
 
 		entryWaypoints.add(entryPath0);
@@ -162,13 +163,12 @@ public abstract class Resources {
 
 		ArrayList<Point> enterPath = new ArrayList<Castle.Point>();
 		enterPath.add(e0);
-		enterPath.add(e1);
 		enterPath.add(w0);
 
 		// -----
 
 		ArrayList<Point> diePath = new ArrayList<Castle.Point>();
-		diePath.add(w7);
+		diePath.add(w8);
 		diePath.add(dw);
 
 		// -----
