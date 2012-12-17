@@ -231,6 +231,8 @@ public final class Level {
 		// ------
 
 		
+		im.menuBot.draw(x, y + 160 * h / 540);
+		
 		castle.drawConstructibleRooms(
 				x,
 				y + 160 * h / 540,
