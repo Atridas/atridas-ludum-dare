@@ -15,10 +15,14 @@ public class ImageManager {
 	private final HashMap<Soul, Image> soulImages_5 = new HashMap<Soul, Image>();
 
 	public Image coin, points, lives;
+	public Image coinLarge, pointsLarge, livesLarge;
+	public Image soulLarge, soulCombo;
 
 	public Image fullCircle, emptyCircle, ocupiedCircle;
 
 	public Image roomBase, roomHighlight;
+
+	public Image menuTop;
 
 	public Image fons;
 	public Image titleScreenBackground;
@@ -53,9 +57,10 @@ public class ImageManager {
 		roomBase = new Image("resources/images/room_base.png");
 		roomHighlight = new Image("resources/images/room_highlight.png");
 
+		menuTop = new Image("resources/images/menu-sobre.png");
 		fons = new Image("resources/images/fons.png");
 		titleScreenBackground = new Image("resources/images/title_screen.png");
-		gameoverBackground = titleScreenBackground;
+		gameoverBackground = titleScreenBackground; // TODO
 
 		newGameButtonPressed = new Image(
 				"resources/images/buttons/new_game_pressed.png");
@@ -65,6 +70,12 @@ public class ImageManager {
 				"resources/images/buttons/tutorial_pressed.png");
 		tutorialButtonNormal = new Image(
 				"resources/images/buttons/tutorial_normal.png");
+		
+		coinLarge = coin;
+		pointsLarge = points;
+		livesLarge = lives;
+		soulLarge = soulImages.get(Soul.A);
+		soulCombo = soulImages_5.get(Soul.A);
 	}
 
 	public Image getSoulImage(Soul soul) {

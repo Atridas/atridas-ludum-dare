@@ -25,7 +25,7 @@ public abstract class Resources {
 	public static final float WAVE_TIME = 8f;
 	public static final float ENTER_TIME = 0.5f;
 	
-	public static final float SPEED = 10;
+	public static final float SPEED = 1;
 	
 	public static final float SOULS_TO_LIVE = 50;
 	
@@ -42,11 +42,11 @@ public abstract class Resources {
 				Soul.B, Soul.B);
 		Sala cc = new Sala(new Image("resources/images/rooms/parrilla-petit.png"), 75,
 				Soul.C, Soul.C);
-		Sala ab = new Sala(new Image("resources/images/rooms/aa.png"), 100,
+		Sala ab = new Sala(new Image("resources/images/rooms/aa.png"), 70,
 				Soul.A, Soul.A);
-		Sala ac = new Sala(new Image("resources/images/rooms/bb.png"), 100,
+		Sala ac = new Sala(new Image("resources/images/rooms/bb.png"), 70,
 				Soul.B, Soul.B);
-		Sala bc = new Sala(new Image("resources/images/rooms/vampireses-petit.png"), 100,
+		Sala bc = new Sala(new Image("resources/images/rooms/vampireses-petit.png"), 70,
 				Soul.C, Soul.C);
 		//Sala abc = new Sala(new Image("resources/images/rooms/vampireses-petit.png"), 100,
 		//		Soul.A, Soul.B, Soul.C);
@@ -187,10 +187,6 @@ public abstract class Resources {
 		waves.add(new Wave(0, 0, 0));
 		waves.add(new Wave(1, 1, 1));
 
-		waves.add(new Wave(1, 0, 0));
-		waves.add(new Wave(0, 1, 0));
-		waves.add(new Wave(0, 0, 1));
-
 		waves.add(new Wave(2, 0, 0));
 		waves.add(new Wave(0, 2, 0));
 		waves.add(new Wave(0, 0, 2));
@@ -236,38 +232,42 @@ public abstract class Resources {
 		waves.add(new Wave(0, 0, 0));
 
 		// ----------------------
+
+
+
+		waves.add(new Wave(0, 0, 0));
+		waves.add(new Wave(0, 0, 0));
+		waves.add(new Wave(5, 0, 5));
+		waves.add(new Wave(5, 0, 5));
+		waves.add(new Wave(0, 0, 0));
+		waves.add(new Wave(0, 5, 5));
+		waves.add(new Wave(0, 5, 5));
+		waves.add(new Wave(0, 0, 0));
+		waves.add(new Wave(5, 5, 0));
+		waves.add(new Wave(5, 5, 0));
+
+		waves.add(new Wave(0, 0, 0));
+		waves.add(new Wave(5, 0, 5));
+		waves.add(new Wave(5, 5, 0));
+		waves.add(new Wave(0, 5, 5));
+
+
+		// ----------------------
+		waves.add(new Wave(0, 0, 0));
+		waves.add(new Wave(0, 0, 0));
+		waves.add(new Wave(4, 4, 2));
+		waves.add(new Wave(0, 0, 0));
+		waves.add(new Wave(2, 4, 4));
+		waves.add(new Wave(0, 0, 0));
+		waves.add(new Wave(4, 2, 4));
 		
-		/*
-
 		waves.add(new Wave(0, 0, 0));
 		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(5, 1, 5));
-		waves.add(new Wave(1, 5, 5));
-		waves.add(new Wave(5, 5, 1));
-		waves.add(new Wave(2, 2, 2));
-		waves.add(new Wave(5, 5, 5));
-		waves.add(new Wave(1, 1, 1));
-		waves.add(new Wave(5, 1, 5));
-		waves.add(new Wave(1, 5, 5));
-		waves.add(new Wave(5, 5, 1));
-		waves.add(new Wave(2, 2, 2));
-		waves.add(new Wave(5, 5, 5));
-		waves.add(new Wave(1, 1, 1));
-		waves.add(new Wave(5, 1, 5));
-		waves.add(new Wave(1, 5, 5));
-		waves.add(new Wave(5, 5, 1));
-		waves.add(new Wave(2, 2, 2));
-		waves.add(new Wave(5, 5, 5));
-		waves.add(new Wave(1, 1, 1));
-		waves.add(new Wave(5, 1, 5));
-		waves.add(new Wave(1, 5, 5));
-		waves.add(new Wave(5, 5, 1));
-		waves.add(new Wave(2, 2, 2));
-		waves.add(new Wave(5, 5, 5));
-		waves.add(new Wave(1, 1, 1));
+		waves.add(new Wave(4, 4, 0));
 		waves.add(new Wave(0, 0, 0));
-
-		*/
+		waves.add(new Wave(0, 4, 4));
+		waves.add(new Wave(0, 0, 0));
+		waves.add(new Wave(4, 0, 4));
 		
 		return waves;
 	}
@@ -286,6 +286,36 @@ public abstract class Resources {
 
 	public static int coinCombo(int numSouls) {
 		return 10;
+	}
+
+	public static float livesMult(int numLives) {
+		if(numLives <= 0) {
+			return 0.5f;
+		}
+		switch(numLives) {
+		case 1:
+			return 2;
+		case 2:
+			return 2.5f;
+		case 3:
+			return 3;
+		case 4:
+			return 3.5f;
+		case 5:
+			return 4;
+		case 6:
+			return 4.5f;
+		case 7:
+			return 5;
+		case 8:
+			return 6;
+		case 9:
+			return 8;
+		case 10:
+			return 10;
+		default:
+			return numLives * 3 - 20;
+		}
 	}
 
 	public static enum State {
