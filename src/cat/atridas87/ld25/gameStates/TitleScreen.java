@@ -15,9 +15,11 @@ public class TitleScreen extends BasicGameState {
 
 	private boolean pressingNewGame = false;
 	private boolean pressingTutorial = false;
+	private boolean pressingCredits = false;
 
 	private boolean hoveringNewGame = false;
 	private boolean hoveringTutorial = false;
+	private boolean hoveringCredits = false;
 
 	@Override
 	public void init(GameContainer arg0, StateBasedGame arg1)
@@ -41,9 +43,14 @@ public class TitleScreen extends BasicGameState {
 				: im.newGameButtonNormal;
 		Image tutorialButton = hoveringTutorial ? im.tutorialButtonPressed
 				: im.tutorialButtonNormal;
+		Image creditsButton = hoveringCredits ? im.creditsButtonPressed
+				: im.creditsButtonNormal;
 
-		newGameButton.draw(210, 270);
-		tutorialButton.draw(210, 420);
+		im.title.draw(210, 70);
+		
+		newGameButton.draw(260, 270, 200, 37);
+		tutorialButton.draw(260, 340, 200, 37);
+		creditsButton.draw(260, 410, 200, 37);
 	}
 
 	@Override
@@ -57,14 +64,16 @@ public class TitleScreen extends BasicGameState {
 		super.mousePressed(button, x, y);
 
 		if (x > 210 && x < 510) {
-			if (y > 240 && y < 370) {
+			if (y > 270 && y < 340) {
 				hoveringNewGame = pressingNewGame = true;
 			}
-			if (y > 420 && y < 520) {
+			if (y > 340 && y < 410) {
 				hoveringTutorial = pressingTutorial = true;
 			}
+			if (y > 410 && y < 480) {
+				hoveringCredits = pressingCredits = true;
+			}
 		}
-
 	}
 
 	@Override
@@ -73,7 +82,7 @@ public class TitleScreen extends BasicGameState {
 			super.mouseReleased(button, x, y);
 
 			if (x > 210 && x < 510) {
-				if (pressingNewGame && y > 240 && y < 370) {
+				if (pressingNewGame && y > 240 && y < 340) {
 					LD25.getInstance().enterState(
 							Resources.State.PLAYER_TURN.ordinal());
 
@@ -82,20 +91,25 @@ public class TitleScreen extends BasicGameState {
 					((PlayerTurn) LD25.getInstance().getState(
 							Resources.State.PLAYER_TURN.ordinal())).reset();
 				}
-				if (pressingTutorial && y > 420 && y < 520) {
+				if (pressingTutorial && y > 340 && y < 410) {
 					LD25.getInstance().enterState(
 							Resources.State.TUTORIAL.ordinal());
 					((Tutorial) LD25.getInstance().getState(
 							Resources.State.TUTORIAL.ordinal())).reset();
 
 				}
+				if (pressingCredits && y > 410 && y < 480) {
+					// TODO
+				}
 			}
 
 			pressingNewGame = false;
 			pressingTutorial = false;
+			pressingCredits = false;
 
 			hoveringNewGame = false;
 			hoveringTutorial = false;
+			hoveringCredits = false;
 		} catch (SlickException e) {
 			throw new RuntimeException(e);
 		}
@@ -106,19 +120,25 @@ public class TitleScreen extends BasicGameState {
 		super.mouseDragged(oldx, oldy, newx, newy);
 
 		if (newx > 210 && newx < 510) {
-			if (pressingNewGame && newy > 240 && newy < 370) {
+			if (pressingNewGame && newy > 240 && newy < 340) {
 				hoveringNewGame = true;
 			} else {
 				hoveringNewGame = false;
 			}
-			if (pressingTutorial && newy > 420 && newy < 520) {
+			if (pressingTutorial && newy > 340 && newy < 410) {
 				hoveringTutorial = true;
 			} else {
 				hoveringTutorial = false;
 			}
+			if (pressingCredits && newy > 410 && newy < 480) {
+				hoveringCredits = true;
+			} else {
+				hoveringCredits = false;
+			}
 		} else {
 			hoveringNewGame = false;
 			hoveringTutorial = false;
+			hoveringCredits = false;
 		}
 
 	}

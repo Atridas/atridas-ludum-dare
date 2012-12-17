@@ -48,9 +48,9 @@ public abstract class Resources {
 		Sala cc = new Sala(new Image(
 				"resources/images/rooms/parrilla-petit.png").getSubImage(0, 0,
 				108, 81), 75, Soul.C, Soul.C);
-		Sala ab = new Sala(new Image("resources/images/rooms/aa.png"), 70,
+		Sala ab = new Sala(new Image("resources/images/rooms/olles.png"), 70,
 				Soul.A, Soul.A);
-		Sala ac = new Sala(new Image("resources/images/rooms/bb.png"), 70,
+		Sala ac = new Sala(new Image("resources/images/rooms/punyalades.png"), 70,
 				Soul.B, Soul.B);
 		Sala bc = new Sala(new Image(
 				"resources/images/rooms/gel-petit.png").getSubImage(0,
