@@ -187,10 +187,6 @@ public abstract class Resources {
 		waves.add(new Wave(0, 0, 0));
 		waves.add(new Wave(1, 1, 1));
 
-		waves.add(new Wave(1, 0, 0));
-		waves.add(new Wave(0, 1, 0));
-		waves.add(new Wave(0, 0, 1));
-
 		waves.add(new Wave(2, 0, 0));
 		waves.add(new Wave(0, 2, 0));
 		waves.add(new Wave(0, 0, 2));
@@ -236,38 +232,42 @@ public abstract class Resources {
 		waves.add(new Wave(0, 0, 0));
 
 		// ----------------------
+
+
+
+		waves.add(new Wave(0, 0, 0));
+		waves.add(new Wave(0, 0, 0));
+		waves.add(new Wave(5, 0, 5));
+		waves.add(new Wave(5, 0, 5));
+		waves.add(new Wave(0, 0, 0));
+		waves.add(new Wave(0, 5, 5));
+		waves.add(new Wave(0, 5, 5));
+		waves.add(new Wave(0, 0, 0));
+		waves.add(new Wave(5, 5, 0));
+		waves.add(new Wave(5, 5, 0));
+
+		waves.add(new Wave(0, 0, 0));
+		waves.add(new Wave(5, 0, 5));
+		waves.add(new Wave(5, 5, 0));
+		waves.add(new Wave(0, 5, 5));
+
+
+		// ----------------------
+		waves.add(new Wave(0, 0, 0));
+		waves.add(new Wave(0, 0, 0));
+		waves.add(new Wave(4, 4, 2));
+		waves.add(new Wave(0, 0, 0));
+		waves.add(new Wave(2, 4, 4));
+		waves.add(new Wave(0, 0, 0));
+		waves.add(new Wave(4, 2, 4));
 		
-		/*
-
 		waves.add(new Wave(0, 0, 0));
 		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(5, 1, 5));
-		waves.add(new Wave(1, 5, 5));
-		waves.add(new Wave(5, 5, 1));
-		waves.add(new Wave(2, 2, 2));
-		waves.add(new Wave(5, 5, 5));
-		waves.add(new Wave(1, 1, 1));
-		waves.add(new Wave(5, 1, 5));
-		waves.add(new Wave(1, 5, 5));
-		waves.add(new Wave(5, 5, 1));
-		waves.add(new Wave(2, 2, 2));
-		waves.add(new Wave(5, 5, 5));
-		waves.add(new Wave(1, 1, 1));
-		waves.add(new Wave(5, 1, 5));
-		waves.add(new Wave(1, 5, 5));
-		waves.add(new Wave(5, 5, 1));
-		waves.add(new Wave(2, 2, 2));
-		waves.add(new Wave(5, 5, 5));
-		waves.add(new Wave(1, 1, 1));
-		waves.add(new Wave(5, 1, 5));
-		waves.add(new Wave(1, 5, 5));
-		waves.add(new Wave(5, 5, 1));
-		waves.add(new Wave(2, 2, 2));
-		waves.add(new Wave(5, 5, 5));
-		waves.add(new Wave(1, 1, 1));
+		waves.add(new Wave(4, 4, 0));
 		waves.add(new Wave(0, 0, 0));
-
-		*/
+		waves.add(new Wave(0, 4, 4));
+		waves.add(new Wave(0, 0, 0));
+		waves.add(new Wave(4, 0, 4));
 		
 		return waves;
 	}
