@@ -93,7 +93,8 @@ public final class Level {
 				return false;
 			}
 		}
-		return true;
+		
+		return !castle.isProcessingSouls();
 	}
 	
 	public Castle getCastle() {
