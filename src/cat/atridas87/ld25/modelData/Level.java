@@ -222,8 +222,8 @@ public final class Level {
 		float stringDy = 5.f * w / 180;
 		UnicodeFont font = FontManager.getInstance().getFont((int)uiSize);
 
-		im.getCoinImage().draw(x + coinsDx, y + uiDy, uiSize, uiSize);
-		im.getPointsImage().draw(x + pointsDx, y + uiDy, uiSize, uiSize);
+		im.coin.draw(x + coinsDx, y + uiDy, uiSize, uiSize);
+		im.points.draw(x + pointsDx, y + uiDy, uiSize, uiSize);
 
 		font.drawString(x + stringCoinsDx, y + stringDy, Integer.toString(coins));
 		font.drawString(x + stringPointsDx, y + stringDy, Integer.toString(points));
@@ -232,8 +232,8 @@ public final class Level {
 		
 		float livesDy = 32.f * w / 180;
 		
-		im.getLivesImage().draw(x + coinsDx, y + livesDy, uiSize, uiSize);
-		im.getPointsImage().draw(x + pointsDx, y + livesDy, uiSize, uiSize);
+		im.lives.draw(x + coinsDx, y + livesDy, uiSize, uiSize);
+		im.points.draw(x + pointsDx, y + livesDy, uiSize, uiSize);
 
 		font.drawString(x + stringCoinsDx, y + livesDy, Integer.toString(lives));
 		font.drawString(x + stringPointsDx, y + livesDy, "x " + Integer.toString(Resources.pointCombo(soulsCombo)) + " (" + Integer.toString(soulsCombo) + ")");

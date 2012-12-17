@@ -95,7 +95,7 @@ public class Sala implements Comparable<Sala> {
 	public void draw(ImageManager im, float x, float y, float w, float h,
 			Color filter) {
 
-		im.getRoomBase().draw(x, y, w, h, filter);
+		im.roomBase.draw(x, y, w, h, filter);
 
 		float backgroundWidth = w * 108 / 144;
 		backgroundImage.draw(x, y, backgroundWidth, h, filter);
@@ -141,13 +141,13 @@ public class Sala implements Comparable<Sala> {
 				float enteringThreshold = Resources.TIME_PREPROCESS / Resources.TIME_CONSUMPTION;
 				
 				if(estat.processant < enteringThreshold) {
-					im.getOcupiedCircleImage().draw(soulX, soulY, soulSize, soulSize, filter);
+					im.ocupiedCircle.draw(soulX, soulY, soulSize, soulSize, filter);
 				} else {
 					float d = (estat.processant - enteringThreshold) / (1 - enteringThreshold);
 					drawPercentage(im, d, soulX, soulY, soulSize, soulSize, filter);
 				}
 			} else {
-				im.getEmptyCircleImage().draw(soulX, soulY, soulSize, soulSize, filter);
+				im.emptyCircle.draw(soulX, soulY, soulSize, soulSize, filter);
 			}
 			im.getSoulImage(soul)
 					.draw(soulX, soulY, soulSize, soulSize, filter);
@@ -173,8 +173,8 @@ public class Sala implements Comparable<Sala> {
 	private static void drawPercentage(ImageManager im, float percent, float x,
 			float y, float w, float h, Color filter) {
 
-		Image lliure = im.getOcupiedCircleImage();
-		Image ocupat = im.getFullCircleImage();
+		Image lliure = im.ocupiedCircle;
+		Image ocupat = im.fullCircle;
 
 		int baseHeight = lliure.getHeight();
 
