@@ -19,9 +19,12 @@ public abstract class Resources {
 
 	public static final float DRAG_THRESHOLD = 10;
 	public static final float TIME_BETWEN_SOCKETS = 3;
-	public static final float TIME_CONSUMPTION = 4f;
-	public static final float WAVE_TIME = 2f;
+	public static final float TIME_ENTER = 2f;
+	public static final float TIME_CONSUMPTION = 10f;
+	public static final float WAVE_TIME = 4f;
 	public static final float ENTER_TIME = 0.5f;
+	
+	public static final float SPEED = 4;
 	
 
 	public static Castle createLevel0Castle() throws SlickException {
@@ -84,9 +87,9 @@ public abstract class Resources {
 
 		Point w5 = new Point(510, 370);
 		Point w6 = new Point(360, 370);
-		Point ew3 = new Point(360, 370);
+		Point ew3 = new Point(360, 320);
 		Point w7 = new Point(175, 370);
-		Point ew4 = new Point(175, 370);
+		Point ew4 = new Point(175, 320);
 
 		ArrayList<ArrayList<Point>> waypoints = new ArrayList<ArrayList<Point>>();
 
@@ -168,71 +171,46 @@ public abstract class Resources {
 		waves.add(new Wave(1, 1, 1));
 
 		waves.add(new Wave(0, 0, 0));
+		waves.add(new Wave(1, 0, 0));
+		waves.add(new Wave(0, 1, 0));
+		waves.add(new Wave(0, 0, 1));
+
 		waves.add(new Wave(0, 0, 0));
 		waves.add(new Wave(2, 0, 0));
-		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(0, 0, 2));
-		waves.add(new Wave(0, 0, 0));
 		waves.add(new Wave(0, 2, 0));
+		waves.add(new Wave(0, 0, 2));
 
 		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(2, 1, 0));
-		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(1, 2, 0));
-		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(0, 1, 2));
+		waves.add(new Wave(1, 1, 0));
+		waves.add(new Wave(0, 1, 1));
+		waves.add(new Wave(1, 0, 1));
 
 		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(2, 1, 2));
-		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(1, 2, 2));
-		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(2, 1, 2));
-
-		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(2, 2, 2));
-		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(1, 2, 2));
-		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(2, 1, 2));
+		waves.add(new Wave(1, 1, 2));
+		waves.add(new Wave(2, 1, 1));
+		waves.add(new Wave(1, 2, 1));
 
 		// ----------------------
 
 		waves.add(new Wave(0, 0, 0));
 		waves.add(new Wave(0, 0, 0));
 		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(1, 0, 0));
-		waves.add(new Wave(0, 1, 0));
-		waves.add(new Wave(0, 0, 1));
 
+		waves.add(new Wave(3, 1, 2));
+		waves.add(new Wave(2, 3, 1));
+		waves.add(new Wave(1, 2, 3));
+		
 		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(1, 1, 1));
 
-		waves.add(new Wave(2, 0, 0));
-		waves.add(new Wave(0, 0, 2));
-		waves.add(new Wave(0, 2, 0));
-
+		waves.add(new Wave(1, 3, 2));
+		waves.add(new Wave(2, 1, 3));
+		waves.add(new Wave(3, 2, 1));
+		
 		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(2, 1, 0));
-		waves.add(new Wave(1, 2, 0));
-		waves.add(new Wave(0, 1, 2));
 
-		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(2, 1, 2));
-		waves.add(new Wave(1, 2, 2));
-		waves.add(new Wave(2, 1, 2));
-
-		waves.add(new Wave(2, 2, 2));
-		waves.add(new Wave(1, 2, 2));
-		waves.add(new Wave(2, 1, 2));
-		waves.add(new Wave(2, 2, 1));
-
-		waves.add(new Wave(2, 2, 2));
-		waves.add(new Wave(2, 2, 2));
-
+		waves.add(new Wave(4, 3, 2));
+		waves.add(new Wave(2, 4, 3));
+		waves.add(new Wave(3, 4, 3));
 		// ----------------------
 
 		waves.add(new Wave(0, 0, 0));
@@ -250,30 +228,55 @@ public abstract class Resources {
 		waves.add(new Wave(1, 0, 3));
 		waves.add(new Wave(1, 5, 1));
 		waves.add(new Wave(0, 0, 0));
+		waves.add(new Wave(0, 0, 0));
+
+		// ----------------------
+
+		waves.add(new Wave(0, 0, 0));
+		waves.add(new Wave(0, 0, 0));
+		waves.add(new Wave(5, 1, 5));
+		waves.add(new Wave(1, 5, 5));
+		waves.add(new Wave(5, 5, 1));
+		waves.add(new Wave(2, 2, 2));
+		waves.add(new Wave(5, 5, 5));
+		waves.add(new Wave(1, 1, 1));
+		waves.add(new Wave(5, 1, 5));
+		waves.add(new Wave(1, 5, 5));
+		waves.add(new Wave(5, 5, 1));
+		waves.add(new Wave(2, 2, 2));
+		waves.add(new Wave(5, 5, 5));
+		waves.add(new Wave(1, 1, 1));
+		waves.add(new Wave(5, 1, 5));
+		waves.add(new Wave(1, 5, 5));
+		waves.add(new Wave(5, 5, 1));
+		waves.add(new Wave(2, 2, 2));
+		waves.add(new Wave(5, 5, 5));
+		waves.add(new Wave(1, 1, 1));
+		waves.add(new Wave(5, 1, 5));
+		waves.add(new Wave(1, 5, 5));
+		waves.add(new Wave(5, 5, 1));
+		waves.add(new Wave(2, 2, 2));
+		waves.add(new Wave(5, 5, 5));
+		waves.add(new Wave(1, 1, 1));
+		waves.add(new Wave(0, 0, 0));
 
 		return waves;
 	}
 
 	public static int pointCombo(int numSouls) {
-		switch (numSouls) {
-		case 1:
+		if(numSouls < 10) {
 			return 10;
-		case 2:
+		} else if(numSouls < 20) {
+			return 15;
+		} else if(numSouls < 30) {
 			return 25;
-		case 3:
+		} else {
 			return 40;
-		case 4:
-			return 55;
-		case 5:
-			return 70;
-		case 6:
-			return 100;
 		}
-		throw new RuntimeException();
 	}
 
 	public static int coinCombo(int numSouls) {
-		return numSouls * 50;
+		return 50;
 	}
 
 	public static enum State {

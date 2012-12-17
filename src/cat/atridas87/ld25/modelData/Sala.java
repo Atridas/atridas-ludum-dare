@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 
+import cat.atridas87.ld25.LD25;
 import cat.atridas87.ld25.Resources;
 import cat.atridas87.ld25.render.ImageManager;
 
@@ -47,8 +48,9 @@ public class Sala implements Comparable<Sala> {
 			if(estat.ocupat) {
 				estat.processant += addDelta;
 				if(estat.processant >= 1) {
-					// TODO
 					estat.ocupat = false;
+					estat.processant = 0;
+					LD25.getInstance().getCurrentLevel().finishProcessingSoul();
 				}
 			}
 		}
@@ -120,7 +122,15 @@ public class Sala implements Comparable<Sala> {
 			// filter);
 
 			if(estat.ocupat) {
-				drawPercentage(im, estat.processant, soulX, soulY, soulSize, soulSize, filter);
+				
+				float enteringThreshold = Resources.TIME_ENTER / Resources.TIME_CONSUMPTION;
+				
+				if(estat.processant < enteringThreshold) {
+					im.getOcupiedCircleImage().draw(soulX, soulY, soulSize, soulSize, filter);
+				} else {
+					float d = (estat.processant - enteringThreshold) / (1 - enteringThreshold);
+					drawPercentage(im, d, soulX, soulY, soulSize, soulSize, filter);
+				}
 			} else {
 				im.getEmptyCircleImage().draw(soulX, soulY, soulSize, soulSize, filter);
 			}
@@ -143,7 +153,7 @@ public class Sala implements Comparable<Sala> {
 	private static void drawPercentage(ImageManager im, float percent, float x,
 			float y, float w, float h, Color filter) {
 
-		Image lliure = im.getEmptyCircleImage();
+		Image lliure = im.getOcupiedCircleImage();
 		Image ocupat = im.getFullCircleImage();
 
 		int baseHeight = lliure.getHeight();

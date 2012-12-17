@@ -21,6 +21,7 @@ public final class Level {
 	private float deltaToNextSoul = 0;
 	private Soul lastEnteringSoul = Soul.C;
 	
+	private int soulsCombo = 0;
 	private int coins, points;
 	
 	//private boolean holdingMouse = false;
@@ -101,12 +102,19 @@ public final class Level {
 		reserve.put(soul, res);
 	}
 	
+	public void breakCombo() {
+		soulsCombo = 0;
+	}
+	
 	public void finishProcessingSoul() {
-		// TODO
+		soulsCombo++;
+		addCoins(Resources.coinCombo(soulsCombo));
+		addPoints(Resources.pointCombo(soulsCombo));
 	}
 	
 	public void dropSoul(Soul soul) {
 		addSoulsToReserve(soul, 1);
+		breakCombo();
 	}
 	
 	private void levelComplete() {

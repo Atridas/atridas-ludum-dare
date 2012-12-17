@@ -74,7 +74,7 @@ public class PlayerTurn extends BasicGameState {
 			}
 		}
 		
-		float ds = 3 * ms / 1000.f;
+		float ds = Resources.SPEED * ms / 1000.f;
 		if(ds > 0.05) ds = 0.05f;
 
 		level.update(ds);
