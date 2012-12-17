@@ -263,11 +263,14 @@ public abstract class Resources {
 		
 		waves.add(new Wave(0, 0, 0));
 		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(4, 4, 0));
+		waves.add(new Wave(4, 4, 2));
+		waves.add(new Wave(2, 4, 4));
+		waves.add(new Wave(4, 2, 4));
+
 		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(0, 4, 4));
-		waves.add(new Wave(0, 0, 0));
-		waves.add(new Wave(4, 0, 4));
+		waves.add(new Wave(5, 1, 5));
+		waves.add(new Wave(5, 5, 1));
+		waves.add(new Wave(1, 5, 5));
 		
 		return waves;
 	}
@@ -290,31 +293,31 @@ public abstract class Resources {
 
 	public static float livesMult(int numLives) {
 		if(numLives <= 0) {
-			return 0.5f;
+			return 0.25f;
 		}
 		switch(numLives) {
 		case 1:
-			return 2;
+			return 1;
 		case 2:
-			return 2.5f;
+			return 1.25f;
 		case 3:
-			return 3;
+			return 1.75f;
 		case 4:
-			return 3.5f;
+			return 2;
 		case 5:
-			return 4;
+			return 2.5f;
 		case 6:
-			return 4.5f;
+			return 3;
 		case 7:
-			return 5;
+			return 4;
 		case 8:
-			return 6;
+			return 5;
 		case 9:
-			return 8;
+			return 7;
 		case 10:
 			return 10;
 		default:
-			return numLives * 3 - 20;
+			return numLives * 4 - 30;
 		}
 	}
 
