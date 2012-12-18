@@ -332,6 +332,6 @@ public abstract class Resources {
 	}
 
 	public static enum State {
-		PLAYER_TURN, TITLE_SCREEN, GAME_OVER, TUTORIAL
+		PLAYER_TURN, TITLE_SCREEN, GAME_OVER, TUTORIAL, CREDITS
 	}
 }

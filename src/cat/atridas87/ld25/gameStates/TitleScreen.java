@@ -99,7 +99,8 @@ public class TitleScreen extends BasicGameState {
 
 				}
 				if (pressingCredits && y > 410 && y < 480) {
-					// TODO
+					LD25.getInstance().enterState(
+							Resources.State.CREDITS.ordinal());
 				}
 			}
 
