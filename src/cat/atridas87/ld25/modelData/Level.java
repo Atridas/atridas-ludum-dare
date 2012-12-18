@@ -18,6 +18,8 @@ public final class Level {
 	
 	private HashMap<Soul, Integer> reserve = new HashMap<Soul, Integer>();
 	private LinkedList<Wave> waves;
+	
+	private LinkedList<Panel> panels = new LinkedList<Panel>();
 
 	private float deltaToNextWave = 0;
 	private float deltaToNextSoul = 0;
@@ -86,11 +88,22 @@ public final class Level {
 		
 		castle.update(ds);
 		
+		LinkedList<Panel> removablePanels = new LinkedList<Panel>();
+		for(Panel panel : panels) {
+			if(!panel.update(ds)) {
+				removablePanels.add(panel);
+			}
+		}
+		panels.removeAll(removablePanels);
+		
 		if(checkLevelComplete()) {
 			LD25.getInstance().enterState(Resources.State.GAME_OVER.ordinal());
 		}
 	}
 	
+	public void addPanel(Panel panel) {
+		panels.add(panel);
+	}
 	
 	private boolean checkLevelComplete() {
 		if(waves.size() != 0) {
@@ -133,11 +146,14 @@ public final class Level {
 		soulsCombo = 0;
 	}
 	
-	public void finishProcessingSoul() {
+	public void finishProcessingSoul(RoomSocket socket) {
 		soulsCombo++;
 		soulCounter++;
-		addCoins(Resources.coinCombo(soulsCombo));
-		addPoints(Resources.pointCombo(soulsCombo));
+
+		int coins = Resources.coinCombo(soulsCombo);
+		int points = Resources.pointCombo(soulsCombo);
+		addCoins(coins);
+		addPoints(points);
 
 		if(Resources.soundsActivated) {
 			pointsSound.play(1, Resources.FX_VOLUME * .25f);
@@ -150,6 +166,12 @@ public final class Level {
 		if(maxCombo < soulsCombo) {
 			maxCombo = soulsCombo;
 		}
+
+		float baseX = socket.x + socket.h / 2;
+		float y = socket.y + socket.w / 2;
+
+		addPanel(new Panel(ImageManager.getInstance().points, "+" + Integer.toString(points), baseX - 10, y));
+		addPanel(new Panel(ImageManager.getInstance().coin, "+" + Integer.toString(coins), baseX + 40, y));
 	}
 	
 	public void dropSoul(Soul soul) {
@@ -240,6 +262,10 @@ public final class Level {
 				180 * w / 720,
 				h);
 		
+		UnicodeFont font14 = FontManager.getInstance().getFont(14);
+		for(Panel panel : panels) {
+			panel.render(im, font14);
+		}
 	}
 	
 	private void drawRightUI(ImageManager im, float x, float y, float w, float h) {

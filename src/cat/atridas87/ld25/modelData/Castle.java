@@ -71,6 +71,14 @@ public class Castle {
 		dieWaypoints = new ArrayList<Castle.Point>(_dieWaypoints);
 		enterWaypoints = new ArrayList<Castle.Point>(_enterWaypoints);
 		
+		i = 0;
+		for(Sala room : salesConstruides) {
+			if(room != null) {
+				room.currentSocket = sockets[i];
+			}
+			i++;
+		}
+		
 		try {
 			entrySound = new Sound("resources/music/enter.wav");
 		} catch (Exception e) {
@@ -205,6 +213,8 @@ public class Castle {
 		assert (!hasBuildRoom(room));
 		assert (sales.contains(room));
 		assert (socketExists(socket));
+		
+		room.currentSocket = socket;
 
 		for (int i = 0; i < sockets.length; i++) {
 			if (sockets[i] == socket) {

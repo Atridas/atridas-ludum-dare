@@ -8,6 +8,7 @@ import org.newdawn.slick.Sound;
 
 import cat.atridas87.ld25.LD25;
 import cat.atridas87.ld25.Resources;
+import cat.atridas87.ld25.modelData.Castle.RoomSocket;
 import cat.atridas87.ld25.render.ImageManager;
 
 public class Sala implements Comparable<Sala> {
@@ -18,6 +19,8 @@ public class Sala implements Comparable<Sala> {
 
 	private final int price;
 
+	public RoomSocket currentSocket;
+	
 	private static Sound entryRoomSound;
 
 	public Sala(Image _backgroundImage, int _price, Soul... _souls) {
@@ -46,6 +49,7 @@ public class Sala implements Comparable<Sala> {
 		for (int i = 0; i < estatEspais.size(); i++) {
 			estatEspais.get(i).reset();
 		}
+		currentSocket = null;
 	}
 
 	public boolean processingSouls() {
@@ -75,7 +79,7 @@ public class Sala implements Comparable<Sala> {
 				if (estat.processant >= 1) {
 					estat.ocupat = false;
 					estat.processant = 0;
-					LD25.getInstance().getCurrentLevel().finishProcessingSoul();
+					LD25.getInstance().getCurrentLevel().finishProcessingSoul(currentSocket);
 				}
 			}
 		}

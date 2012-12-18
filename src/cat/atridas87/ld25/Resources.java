@@ -18,6 +18,7 @@ public abstract class Resources {
 	public static final String APP_NAME = "LD25";
 
 	public static final float DRAG_THRESHOLD = 10;
+	public static final float TIME_PANEL = 2;
 	public static final float TIME_ENTER = 10;
 	public static final float TIME_BETWEN_SOCKETS = 4;
 	public static final float TIME_PREPROCESS = 2f;
@@ -30,6 +31,8 @@ public abstract class Resources {
 	public static final float SOULS_TO_LIVE = 50;
 	
 	public static final float FX_VOLUME = 0.25f;
+	
+	public static final float PANEL_TOTAL_Y = -50; 
 	
 	public static boolean soundsActivated = true;
 
