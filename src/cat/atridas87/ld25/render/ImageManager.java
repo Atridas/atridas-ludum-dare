@@ -25,6 +25,7 @@ public class ImageManager {
 	public Image menuTop, menuBot;
 
 	public Image fons;
+	public Image panel;
 	public Image titleScreenBackground;
 	public Image gameoverBackground;
 
@@ -62,6 +63,7 @@ public class ImageManager {
 		menuTop = new Image("resources/images/menu-sobre.png");
 		menuBot = new Image("resources/images/menu-sota.png");
 		fons = new Image("resources/images/fons.png");
+		panel = new Image("resources/images/icons/panel.png");
 		titleScreenBackground = new Image("resources/images/title_screen.png");
 		gameoverBackground = titleScreenBackground; // TODO
 
