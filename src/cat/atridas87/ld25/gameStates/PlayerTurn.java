@@ -5,7 +5,6 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.Sound;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -138,7 +137,7 @@ public class PlayerTurn extends BasicGameState {
 
 		if (!scrolling && grabedRoom == null) {
 			float dy = Math.abs(newy - mouseFirstY);
-			if (dy > Resources.DRAG_THRESHOLD
+			if (dy > Resources.DRAG_THRESHOLD * 3
 					&& pointIsInScrollableZone(mouseFirstX, mouseFirstY) && level.canScroll()) {
 				scrolling = true;
 

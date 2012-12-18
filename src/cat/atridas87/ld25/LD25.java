@@ -32,6 +32,8 @@ public class LD25 extends StateBasedGame {
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {
 		ImageManager.getInstance().init();
+		
+		container.setShowFPS(false);
 
 		//this.getState(Resources.State.PLAYER_TURN.ordinal()).init(container, this);
 		startNewGame();

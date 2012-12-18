@@ -12,7 +12,7 @@ import cat.atridas87.ld25.Resources;
 
 public class Tutorial extends BasicGameState {
 	
-	public final int NUM_TUTORIALS = 3;
+	public final int NUM_TUTORIALS = 5;
 	
 	private int currentTutorial;
 	private Image currentTutorialImage;
