@@ -3,6 +3,7 @@ package cat.atridas87.ld26.gameobjects;
 import org.lwjgl.opengl.GL11;
 
 import cat.atridas87.ld26.render.Model;
+import cat.atridas87.ld26.render.ShaderManager;
 
 public class Battleground {
 	private Model model;
@@ -24,6 +25,7 @@ public class Battleground {
 	}
 	
 	public void render() {
+		ShaderManager.instance.setPosition(0, 0);
 		model.draw();
 	}
 	

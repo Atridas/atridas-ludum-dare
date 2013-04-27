@@ -25,16 +25,20 @@ public class ShaderManager {
 	public ShaderManager() {
 		int orthoShader  = compileShader("resources/shaders/ortho.vsh", GL20.GL_VERTEX_SHADER);
 		int vertexShader = compileShader("resources/shaders/shader.vsh", GL20.GL_VERTEX_SHADER);
+
 		int colorShader  = compileShader("resources/shaders/color.fsh", GL20.GL_FRAGMENT_SHADER);
+		int colorFromUniformShader  = compileShader("resources/shaders/colorFromUniform.fsh", GL20.GL_FRAGMENT_SHADER);
 		
 		programs = new Program[ProgramType.values().length];
 
 		programs[ProgramType.COLORED_ORTHO.ordinal()] = linkProgram(orthoShader, colorShader);
+		programs[ProgramType.COLORED_FROM_UNIFORM_ORTHO.ordinal()] = linkProgram(orthoShader, colorFromUniformShader);
 		programs[ProgramType.TEXTURED.ordinal()] = linkProgram(vertexShader, colorShader);
 		
 		
 
 		GL20.glDeleteShader(orthoShader);
+		GL20.glDeleteShader(colorFromUniformShader);
 		GL20.glDeleteShader(vertexShader);
 		GL20.glDeleteShader(colorShader);
 	}
@@ -96,6 +100,8 @@ public class ShaderManager {
 		p.modelUniform = GL20.glGetUniformLocation(p.program, "uModel");
 		p.textureUniform = GL20.glGetUniformLocation(p.program, "uTexture");
 		p.screenSize    = GL20.glGetUniformLocation(p.program, "uScreenSize");
+		p.color    = GL20.glGetUniformLocation(p.program, "uColor");
+		p.position    = GL20.glGetUniformLocation(p.program, "uPosition");
 		
 		return p;
 	}
@@ -189,6 +195,16 @@ public class ShaderManager {
 		GL20.glUniform2f(currentProgram.screenSize, width, height);
 	}
 	
+	public void setColor(float r, float g, float b, float a)
+	{
+		GL20.glUniform4f(currentProgram.color, r, g, b, a);
+	}
+	
+	public void setPosition(float x, float y)
+	{
+		GL20.glUniform2f(currentProgram.position, x, y);
+	}
+	
 	
 	private static class Program {
 		int program;
@@ -198,11 +214,14 @@ public class ShaderManager {
 		int modelUniform;
 		int textureUniform;
 		int screenSize;
+		int color;
+		int position;
 	}
 	
 	
 	public enum ProgramType {
 		COLORED_ORTHO,
+		COLORED_FROM_UNIFORM_ORTHO,
 		TEXTURED
 	}
 }
