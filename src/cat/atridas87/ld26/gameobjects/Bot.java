@@ -12,16 +12,16 @@ import cat.atridas87.ld26.render.ShaderManager;
 public class Bot {
 
 	public static final float BOT_WIDTH = 5;
-	
+
 	private static final float DISTANCE_CHANGE_CONTROL_POINT = 25;
-	private static final float EVADE_TOWERS_AT = 20;
-	private static final float EVADE_BOTS_AT = 20;
+	private static final float EVADE_TOWERS_AT = 25;
+	private static final float EVADE_BOTS_AT = 10;
 
 	private static final Model models[];
-	
+
 	private static Random rnd = new Random();
 
-	private final boolean player;
+	public final boolean player;
 	private final Type type;
 	private final Lane lane;
 
@@ -47,9 +47,14 @@ public class Bot {
 		lives = type.lives;
 
 		controlPoint += _player ? 1 : -1;
-		
+
 		rangeToTower = type.range + Tower.TOWER_WIDTH / 2;
-		rangeToBot   = type.range + BOT_WIDTH / 2;
+		rangeToBot = type.range + BOT_WIDTH / 2;
+
+		velocity.x = lane.controlPoints[controlPoint].x - position.x;
+		velocity.y = lane.controlPoints[controlPoint].y - position.y;
+		velocity.normalize();
+		velocity.scale(type.maxSpeed / 4);
 	}
 
 	public void render() {
@@ -58,21 +63,26 @@ public class Bot {
 		float g = player ? 0 : 1;
 		float b = player ? 1 : 0;
 
-		// TODO pintar vida
+
+		float vida = ((float) lives) / ((float) type.lives);
+
+		r = r * vida + (1 - vida);
+		g *= vida;
+		b *= vida;
 
 		ShaderManager.instance.setColor(r, g, b, 1);
 		ShaderManager.instance.setPosition(position.x, position.y);
 
 		models[type.ordinal()].draw();
 	}
-	
+
 	private Vector2f calcSteeringSeek(Vector2f targetPos) {
 
 		Vector2f desiredVelocity = new Vector2f();
 		desiredVelocity.x = targetPos.x - position.x;
 		desiredVelocity.y = targetPos.y - position.y;
-		
-		if(desiredVelocity.x == 0 && desiredVelocity.y == 0) {
+
+		if (desiredVelocity.x == 0 && desiredVelocity.y == 0) {
 			return desiredVelocity;
 		}
 
@@ -81,22 +91,22 @@ public class Bot {
 
 		return desiredVelocity;
 	}
-	
+
 	private Vector2f calcSteeringArrive(Vector2f targetPos) {
 
 		Vector2f desiredVelocity = new Vector2f();
 		desiredVelocity.x = targetPos.x - position.x;
 		desiredVelocity.y = targetPos.y - position.y;
-		
+
 		float dist = desiredVelocity.length();
-		
-		if(dist > 0) {
+
+		if (dist > 0) {
 			float magicNumber = 1f;
-			
+
 			float speed = dist / magicNumber;
-			
-			//speed = (speed > type.maxSpeed) ? type.maxSpeed : speed;
-			
+
+			// speed = (speed > type.maxSpeed) ? type.maxSpeed : speed;
+
 			desiredVelocity.scale(speed / dist);
 
 			desiredVelocity.x -= velocity.x;
@@ -111,54 +121,53 @@ public class Bot {
 		return desiredVelocity;
 	}
 
-	private Vector2f calcSteeringEvade(Vector2f evadePoint, float evadeDistance, float evadeCosAngle) {
-		
+	private Vector2f calcSteeringEvade(Vector2f evadePoint,
+			float evadeDistance, float evadeCosAngle) {
+
 		Vector2f desiredVelocity = new Vector2f();
 		desiredVelocity.x = evadePoint.x - position.x;
 		desiredVelocity.y = evadePoint.y - position.y;
-		
-		if(desiredVelocity.lengthSquared() > evadeDistance * evadeDistance)
-		{
-			return new Vector2f(0,0);
+
+		if (desiredVelocity.lengthSquared() > evadeDistance * evadeDistance) {
+			return new Vector2f(0, 0);
 		}
-		
+
 		float dist = desiredVelocity.length();
-		if(dist == 0) {
-			return calcSteeringWander();
+		if (dist == 0) {
+			Vector2f w = calcSteeringWander();
+			w.scale(type.maxSpeed * 5);
+			return w;
 		}
-		
-		desiredVelocity.scale( 1 / dist );
-		
+
+		desiredVelocity.scale(1 / dist);
+
 		Vector2f velocityVector = new Vector2f(velocity);
 		velocityVector.normalize();
-		
+
 		float dot = velocityVector.dot(desiredVelocity);
-		
-		if(dot < evadeCosAngle) {
-			return new Vector2f(0,0);
+
+		if (dot < evadeCosAngle) {
+			return new Vector2f(0, 0);
 		}
-		
+
 		desiredVelocity.scale(type.maxSpeed * -5);
-		
-		
+
 		return desiredVelocity;
 	}
 
 	private Vector2f calcSteeringWander() {
 
 		Vector2f targetPos = new Vector2f(velocity);
-		if(targetPos.x != 0 || targetPos.y != 0)
+		if (targetPos.x != 0 || targetPos.y != 0)
 			targetPos.normalize();
-		
+
 		float a = rnd.nextFloat() * 3.14159f * 2;
-		
+
 		targetPos.x += Math.sin(a);
 		targetPos.y += Math.cos(a);
 
 		return targetPos;
 	}
-	
-
 
 	private Vector2f calcSteeringLane() {
 
@@ -180,8 +189,9 @@ public class Bot {
 
 		return calcSteeringSeek(targetPoint);
 	}
-	
-	private Vector2f calcSteeringArriveToDistance(Vector2f center, float distance) {
+
+	private Vector2f calcSteeringArriveToDistance(Vector2f center,
+			float distance) {
 		Vector2f arrivePoint = new Vector2f();
 		arrivePoint.x = position.x - center.x;
 		arrivePoint.y = position.y - center.y;
@@ -189,31 +199,31 @@ public class Bot {
 		arrivePoint.scale(distance);
 		arrivePoint.x += center.x;
 		arrivePoint.y += center.y;
-		
+
 		return calcSteeringArrive(arrivePoint);
 	}
-	
+
 	private static final class Steering {
 		Vector2f steering;
 		boolean force;
 	}
-	
-	
+
 	private Steering calcSteeringTower(Tower closestTower) {
 		Steering steering = new Steering();
-		
+
 		Vector2f steeringTower;
-		steeringTower = calcSteeringEvade(closestTower.position, EVADE_TOWERS_AT, 0.5f);
-		if(closestTower.player != player && closestTower.live > 0) {
+		steeringTower = calcSteeringEvade(closestTower.position,
+				EVADE_TOWERS_AT, 0.5f);
+		if (closestTower.player != player && closestTower.live > 0) {
 			Vector2f distToTower = new Vector2f();
 			distToTower.x = closestTower.position.x - position.x;
 			distToTower.y = closestTower.position.y - position.y;
-			
+
 			float range = (rangeToTower < 50) ? 50 : rangeToTower;
-			
-			if(distToTower.lengthSquared() < range * range)
-			{
-				Vector2f steeringTowerArrive = calcSteeringArriveToDistance(closestTower.position, rangeToTower / 2);
+
+			if (distToTower.lengthSquared() < range * range) {
+				Vector2f steeringTowerArrive = calcSteeringArriveToDistance(
+						closestTower.position, rangeToTower / 2);
 				steeringTowerArrive.add(steeringTower);
 				steering.steering = steeringTowerArrive;
 				steering.force = true;
@@ -222,28 +232,28 @@ public class Bot {
 				steeringTower = new Vector2f();
 			}
 		}
-		
+
 		steering.steering = steeringTower;
 		steering.force = false;
 		return steering;
 	}
-	
-	
+
 	private Steering calcSteeringBot(Bot closestBot) {
 		Steering steering = new Steering();
-		
+
 		Vector2f steeringBot;
-		steeringBot = calcSteeringEvade(closestBot.position, EVADE_BOTS_AT, 0.5f);
-		if(closestBot.player != player && closestBot.lives > 0) {
-			Vector2f distToTower = new Vector2f();
-			distToTower.x = closestBot.position.x - position.x;
-			distToTower.y = closestBot.position.y - position.y;
-			
+		steeringBot = calcSteeringEvade(closestBot.position, EVADE_BOTS_AT,
+				0.5f);
+		if (closestBot.player != player && closestBot.lives > 0) {
+			Vector2f distToBot = new Vector2f();
+			distToBot.x = closestBot.position.x - position.x;
+			distToBot.y = closestBot.position.y - position.y;
+
 			float range = (rangeToBot < 50) ? 50 : rangeToBot;
-			
-			if(distToTower.lengthSquared() < range * range)
-			{
-				Vector2f steeringBotArrive = calcSteeringArriveToDistance(closestBot.position, rangeToBot / 2);
+
+			if (distToBot.lengthSquared() < range * range) {
+				Vector2f steeringBotArrive = calcSteeringArriveToDistance(
+						closestBot.position, rangeToBot / 2);
 				steeringBotArrive.add(steeringBot);
 				steering.steering = steeringBotArrive;
 				steering.force = true;
@@ -252,7 +262,7 @@ public class Bot {
 				steeringBot = new Vector2f();
 			}
 		}
-		
+
 		steering.steering = steeringBot;
 		steering.force = false;
 		return steering;
@@ -260,43 +270,47 @@ public class Bot {
 
 	private Steering calcSteeringBots(Bot closestBots[]) {
 		Steering steering = new Steering();
-		steering.steering = new Vector2f(0,0);
+		steering.steering = new Vector2f(0, 0);
 		steering.force = false;
-		
-		for(int i = 0; i < closestBots.length; i++) {
+
+		for (int i = 0; i < closestBots.length; i++) {
 			Steering steering2 = calcSteeringBot(closestBots[i]);
-			if(steering2.force) {
-				steering.force = true;
+			if (steering2.force) {
+				return steering2;
 			}
 			steering.steering.add(steering2.steering);
 		}
-		
+
 		return steering;
 	}
-	
 
 	private Vector2f calcSteering(Tower closestTower, Bot closestBots[]) {
 
+		Vector2f directionToField = Battleground.instance
+				.vectorToField(position);
+		if (directionToField.lengthSquared() > 0) {
+			directionToField.scale(type.maxSpeed * 5);
+			return directionToField;
+		}
+
 		Steering steeringTower = calcSteeringTower(closestTower);
 		Steering steeringBots = calcSteeringBots(closestBots);
-		
+
 		Vector2f steeringElements = new Vector2f();
 		steeringElements.x = steeringTower.steering.x + steeringBots.steering.x;
 		steeringElements.y = steeringTower.steering.y + steeringBots.steering.y;
-		
-		if(steeringTower.force || steeringBots.force) {
+
+		if (steeringTower.force || steeringBots.force) {
 			return steeringElements;
 		}
-		
-		
-		
+
 		Vector2f lane = calcSteeringLane();
 		Vector2f wander = calcSteeringWander();
-		
+
 		Vector2f result = new Vector2f(lane);
 		result.add(steeringElements);
 		result.add(wander);
-		
+
 		return result;
 	}
 
@@ -328,21 +342,65 @@ public class Bot {
 		position.x += velocity.x * _dt;
 		position.y += velocity.y * _dt;
 	}
-	
-	private void calcShoot(Tower closestTower, float _dt) {
-		if(timeSinceLastShot < type.attTime) {
+
+	private void calcShoot(Tower closestTower, Bot closestBots[], float _dt) {
+		if (timeSinceLastShot < type.attTime) {
 			timeSinceLastShot += _dt;
-		} else if(closestTower.player != player && closestTower.live > 0) {
+		} else if (closestTower.player != player && closestTower.live > 0) {
 			Vector2f distToTower = new Vector2f();
 			distToTower.x = closestTower.position.x - position.x;
 			distToTower.y = closestTower.position.y - position.y;
-			
-			if(distToTower.lengthSquared() < rangeToTower * rangeToTower) {
-				Shot shot = new Shot(player, type.range, type.attack, position, closestTower.position);
+
+			if (distToTower.lengthSquared() < rangeToTower * rangeToTower) {
+				Shot shot = new Shot(player, type.range, type.attack, position,
+						closestTower.position);
 				timeSinceLastShot = 0;
 				Battleground.instance.addShot(shot);
 				return;
 			}
+		} else {
+
+			int enemyBotsAtRange = 0;
+			for (int i = 0; i < closestBots.length; i++) {
+				if (closestBots[i].player != player) {
+
+					Vector2f distToBot = new Vector2f();
+					distToBot.x = closestBots[i].position.x - position.x;
+					distToBot.y = closestBots[i].position.y - position.y;
+
+					if (distToBot.lengthSquared() < rangeToBot * rangeToBot) {
+						enemyBotsAtRange++;
+					}
+				}
+			}
+
+			if (enemyBotsAtRange > 0) {
+				int shootAt = rnd.nextInt(enemyBotsAtRange);
+
+				for (int i = 0; i < closestBots.length; i++) {
+					if (closestBots[i].player != player) {
+
+						Vector2f distToBot = new Vector2f();
+						distToBot.x = closestBots[i].position.x - position.x;
+						distToBot.y = closestBots[i].position.y - position.y;
+
+						if (distToBot.lengthSquared() < rangeToBot * rangeToBot) {
+							if (shootAt == 0) {
+								Shot shot = new Shot(player, type.range,
+										type.attack, position,
+										closestBots[i].position);
+								timeSinceLastShot = 0;
+								Battleground.instance.addShot(shot);
+								return;
+							} else {
+								shootAt--;
+							}
+						}
+					}
+				}
+
+			}
+
 		}
 	}
 
@@ -350,9 +408,12 @@ public class Bot {
 		Tower closestTower = Battleground.instance.getClosestTower(position);
 		Bot[] cosestBots = Battleground.instance.getClosestBots(this);
 		calcPosition(closestTower, cosestBots, _dt);
-		
-		
-		calcShoot(closestTower, _dt);
+
+		calcShoot(closestTower, cosestBots, _dt);
+	}
+
+	public String toString() {
+		return "bot x:" + position.x + " y: " + position.y;
 	}
 
 	static {
@@ -390,8 +451,8 @@ public class Bot {
 	}
 
 	public static enum Type {
-		BASIC(5, 25, 1.f, 1, 20, 500, 25), TANK(2, 50, 5.f, 3, 15f, 500, 10), SUPER(15,
-				40, 0.75f, 2, 20, 500, 50);
+		BASIC(25, 5, 1.f, 1, 10, 500, 25), TANK(50, 2, 5.f, 3, 7.5f, 500, 10), SUPER(
+				40, 10, 0.75f, 2, 10, 500, 50);
 
 		private final int lives, attack;
 		private final float attTime, mass, maxSpeed, maxForce, range;

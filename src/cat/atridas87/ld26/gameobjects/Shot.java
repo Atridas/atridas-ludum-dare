@@ -9,29 +9,27 @@ import cat.atridas87.ld26.render.ShaderManager;
 
 public class Shot {
 
-
 	private static final Model model;
-
 
 	private static final float MAX_FORCE = 500;
 	private static final float MAX_SPEED = 500;
 	private static final float MASS = 1;
-	
-	private final Vector2f velocity = new Vector2f(0,0);
-	
+
+	private final Vector2f velocity = new Vector2f(0, 0);
 
 	private final boolean player;
 	private final float range;
 	private final float attack;
-	
+
 	private boolean alive = true;
-	
+
 	private float distanciaFeta = 0;
 
 	private final Vector2f position;
 	private final Vector2f destination;
-	
-	public Shot(boolean _player, float _range, float _attack, Vector2f _position, Vector2f _destination) {
+
+	public Shot(boolean _player, float _range, float _attack,
+			Vector2f _position, Vector2f _destination) {
 
 		player = _player;
 		range = _range;
@@ -40,9 +38,7 @@ public class Shot {
 		position = new Vector2f(_position);
 		destination = new Vector2f(_destination);
 	}
-	
 
-	
 	private Vector2f calcSteeringSeek(Vector2f targetPos) {
 
 		Vector2f desiredVelocity = new Vector2f();
@@ -54,7 +50,7 @@ public class Shot {
 
 		return desiredVelocity;
 	}
-	
+
 	private void calcPosition(float _dt) {
 		Vector2f force = calcSteeringSeek(destination);
 
@@ -63,8 +59,7 @@ public class Shot {
 			force.scale(MAX_FORCE / len);
 		}
 
-		Vector2f acceleration = new Vector2f(force.x / MASS, force.y
-				/ MASS);
+		Vector2f acceleration = new Vector2f(force.x / MASS, force.y / MASS);
 
 		// if(type == Type.BASIC)
 		// System.out.println("x: " + acceleration.x + " y: " + acceleration.y);
@@ -82,32 +77,52 @@ public class Shot {
 
 		position.x += velocity.x * _dt;
 		position.y += velocity.y * _dt;
-		
+
 		distanciaFeta += velocity.length() * _dt;
 	}
 
 	public void update(float _dt) {
-		if(!alive) return;
+		if (!alive)
+			return;
 		calcPosition(_dt);
-		
-		if(distanciaFeta > range) {
+
+		if (distanciaFeta > range) {
 			alive = false;
 		}
-		
-		
-		Tower tower = Battleground.instance.getClosestTower(position);
-		if(tower.player != player) {
 
-			Vector2f distToTower = new Vector2f();
-			distToTower.x = tower.position.x - position.x;
-			distToTower.y = tower.position.y - position.y;
-			
-			if(distToTower.lengthSquared() < Tower.TOWER_WIDTH * Tower.TOWER_WIDTH / 4) {
-				tower.live -= attack;
-				alive = false;
+		{
+			Tower tower = Battleground.instance.getClosestTower(position);
+			if (tower.player != player) {
+
+				Vector2f distToTower = new Vector2f();
+				distToTower.x = tower.position.x - position.x;
+				distToTower.y = tower.position.y - position.y;
+
+				if (distToTower.lengthSquared() < Tower.TOWER_WIDTH
+						* Tower.TOWER_WIDTH / 4) {
+					tower.live -= attack;
+					alive = false;
+					return;
+				}
+			}
+
+		}
+		{
+			Bot bot = Battleground.instance.getClosestBot(position);
+			if (bot != null && bot.player != player) {
+
+				Vector2f distToBot = new Vector2f();
+				distToBot.x = bot.position.x - position.x;
+				distToBot.y = bot.position.y - position.y;
+
+				if (distToBot.lengthSquared() < Bot.BOT_WIDTH * Bot.BOT_WIDTH
+						/ 4) {
+					bot.lives -= attack;
+					alive = false;
+					return;
+				}
 			}
 		}
-		
 	}
 
 	public boolean alive() {
@@ -115,7 +130,8 @@ public class Shot {
 	}
 
 	public void render() {
-		if(!alive) return;
+		if (!alive)
+			return;
 
 		float r = player ? 1 : 0;
 		float g = player ? 0 : 1;
@@ -126,17 +142,12 @@ public class Shot {
 
 		model.draw();
 	}
-	
-	
-	
+
 	static {
 		float positions[] = { 0, 0, 0 };
 		short indexs[] = { 0 };
 
-		model = new Model(positions, indexs,
-				GL11.GL_POINTS);
+		model = new Model(positions, indexs, GL11.GL_POINTS);
 	}
-	
-	
-	
+
 }

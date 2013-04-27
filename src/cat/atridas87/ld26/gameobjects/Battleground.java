@@ -43,27 +43,27 @@ public class Battleground {
 		towers = new Tower[22];
 		towers[0] = new Tower(true, 125, 25);
 		towers[1] = new Tower(true, 325, 25);
-		towers[2] = new Tower(false, 425, 25);
+		towers[2] = new Tower(true, 425, 25);
 		towers[3] = new Tower(true, 500, 100);
 		towers[4] = new Tower(true, 575, 175);
 		towers[5] = new Tower(true, 575, 275);
 		towers[6] = new Tower(true, 575, 475);
 		towers[7] = new Tower(true, 425, 175);
 		towers[8] = new Tower(true, 375, 225);
-		towers[9] = new Tower(true, 525, 50);
-		towers[10] = new Tower(true, 550, 75);
+		towers[9] = new Tower(true, 515, 40);
+		towers[10] = new Tower(true, 560, 85);
 
 		towers[11] = new Tower(false, 600 - 125, 600 - 25);
 		towers[12] = new Tower(false, 600 - 325, 600 - 25);
 		towers[13] = new Tower(false, 600 - 425, 600 - 25);
-		towers[14] = new Tower(true, 600 - 500, 600 - 100);
+		towers[14] = new Tower(false, 600 - 500, 600 - 100);
 		towers[15] = new Tower(false, 600 - 575, 600 - 175);
 		towers[16] = new Tower(false, 600 - 575, 600 - 275);
 		towers[17] = new Tower(false, 600 - 575, 600 - 475);
 		towers[18] = new Tower(false, 600 - 425, 600 - 175);
 		towers[19] = new Tower(false, 600 - 375, 600 - 225);
-		towers[20] = new Tower(false, 600 - 525, 600 - 50);
-		towers[21] = new Tower(false, 600 - 550, 600 - 75);
+		towers[20] = new Tower(false, 600 - 500, 600 - 50);
+		towers[21] = new Tower(false, 600 - 550, 600 - 100);
 
 		bots = new Vector<Bot>();
 
@@ -81,6 +81,9 @@ public class Battleground {
 		bots.add(new Bot(true, Bot.Type.BASIC, Lane.MIDDLE));
 
 		bots.add(new Bot(false, Bot.Type.TANK, Lane.MIDDLE));
+		bots.add(new Bot(false, Bot.Type.BASIC, Lane.MIDDLE));
+		bots.add(new Bot(false, Bot.Type.BASIC, Lane.MIDDLE));
+		bots.add(new Bot(false, Bot.Type.BASIC, Lane.MIDDLE));
 
 		homePlayer = new Home(true, 575, 25);
 		homeBot = new Home(false, 25, 575);
@@ -105,6 +108,30 @@ public class Battleground {
 		}
 
 		return t;
+	}
+
+	public Bot getClosestBot(Vector2f position) {
+		if (bots.size() == 0) {
+			return null;
+		}
+		Bot b = bots.get(0);
+		Vector2f dist = new Vector2f();
+		dist.x = position.x - b.position.x;
+		dist.y = position.y - b.position.y;
+		float dist2 = dist.lengthSquared();
+		for (int i = 1; i < bots.size(); i++) {
+			Bot b2 = bots.get(i);
+			dist.x = position.x - b2.position.x;
+			dist.y = position.y - b2.position.y;
+			float dist2New = dist.lengthSquared();
+
+			if (dist2New < dist2) {
+				b = b2;
+				dist2 = dist2New;
+			}
+		}
+
+		return b;
 	}
 
 	public Bot[] getClosestBots(Bot bot) {
@@ -141,10 +168,11 @@ public class Battleground {
 					if (targets[j] == null) {
 						targets[j] = b;
 						dists[j] = dist2;
+						break;
 					} else if (dist2 < dists[j]) {
 						Bot oldTarget = targets[j];
-						targets[j] = bot;
-						bot = oldTarget;
+						targets[j] = b;
+						b = oldTarget;
 
 						float oldDistTarget = dists[j];
 						dists[j] = dist2;
@@ -158,6 +186,74 @@ public class Battleground {
 		return targets;
 	}
 
+	public Bot[] getClosestBots(Vector2f position) {
+
+		if (bots.size() == 0) {
+			return new Bot[0];
+		} else if (bots.size() < 5) {
+			Bot[] targets = new Bot[bots.size()];
+
+			int aux = 0;
+			for (int i = 0; i < bots.size(); i++) {
+				Bot b = bots.get(i);
+				targets[aux] = b;
+				aux++;
+			}
+
+			return targets;
+		}
+
+		Bot[] targets = new Bot[5];
+		float dists[] = new float[5];
+		for (int i = 0; i < bots.size(); i++) {
+			Bot b = bots.get(i);
+
+			Vector2f dist = new Vector2f();
+			dist.x = position.x - b.position.x;
+			dist.y = position.y - b.position.y;
+			float dist2 = dist.lengthSquared();
+
+			for (int j = 0; j < 5; j++) {
+				if (targets[j] == null) {
+					targets[j] = b;
+					dists[j] = dist2;
+					break;
+				} else if (dist2 < dists[j]) {
+					Bot oldTarget = targets[j];
+					targets[j] = b;
+					b = oldTarget;
+
+					float oldDistTarget = dists[j];
+					dists[j] = dist2;
+					dist2 = oldDistTarget;
+
+				}
+			}
+
+		}
+
+		return targets;
+	}
+
+	public Vector2f vectorToField(Vector2f position) {
+		if (position.x < 0) {
+			return new Vector2f(1, 0);
+		} else if (position.y < 0) {
+			return new Vector2f(0, 1);
+		} else if (position.x > 600) {
+			return new Vector2f(-1, 0);
+		} else if (position.y > 600) {
+			return new Vector2f(0, -1);
+		}
+
+		if (position.x < 50 || position.y < 50 || position.x > 550
+				|| position.y > 550) {
+			return new Vector2f(0, 0);
+		}
+
+		return new Vector2f(0, 0); // TODO
+	}
+
 	public void addShot(Shot shot) {
 		shots.add(shot);
 	}
@@ -166,8 +262,18 @@ public class Battleground {
 
 		// TODO update towers
 
+		for (int i = 0; i < towers.length; i++) {
+			if (towers[i].live > 0) {
+				towers[i].update(_dt);
+			}
+		}
+
 		for (int i = 0; i < bots.size(); i++) {
 			bots.get(i).update(_dt);
+			if (bots.get(i).lives <= 0) {
+				bots.remove(i);
+				i--;
+			}
 		}
 
 		for (int i = 0; i < shots.size(); i++) {
