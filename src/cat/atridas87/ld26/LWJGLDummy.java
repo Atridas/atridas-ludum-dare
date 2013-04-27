@@ -31,9 +31,19 @@
  */
 package cat.atridas87.ld26;
 
+import java.nio.FloatBuffer;
+
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
+
+import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
+
+import cat.atridas87.ld26.render.Model;
+import cat.atridas87.ld26.render.ShaderManager;
+import cat.atridas87.ld26.render.ShaderManager.ProgramType;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -52,6 +62,12 @@ public class LWJGLDummy extends BaseGame {
 	/** A rotating square! */
 	private float angle;
 
+	private Model m;
+
+	private Matrix4f projection = new Matrix4f();
+	private Matrix4f view = new Matrix4f();
+	private Matrix4f model = new Matrix4f();
+
 	/**
 	 * No constructor needed - this class is static
 	 */
@@ -65,6 +81,16 @@ public class LWJGLDummy extends BaseGame {
 		AL.create();
 
 		// TODO: Load in your textures etc here
+		ShaderManager.instance = new ShaderManager();
+
+		float ps[] = { -0.5f, -0.5f, 0, 0.5f, -0.5f, 0, 0.5f, 0.5f, 0, -0.5f, 0.5f, 0, };
+		float cs[] = {1,0,0,1, 0,1,0,1, 0,0,1,0, 1,1,1,1};
+		
+		short ix[] = {0,1,2, 0,2,3};
+		
+		m = new Model(ps, cs, ix);
+
+		FloatBuffer fbAux = BufferUtils.createFloatBuffer(16);
 
 		// Put the window into orthographic projection mode with 1:1 pixel
 		// ratio.
@@ -74,11 +100,31 @@ public class LWJGLDummy extends BaseGame {
 		glLoadIdentity();
 		glOrtho(0.0, Display.getDisplayMode().getWidth(), 0.0, Display
 				.getDisplayMode().getHeight(), -1.0, 1.0);
+		//fbAux.reset();
+		glGetFloat(GL_PROJECTION_MATRIX, fbAux);
+		projection.m00 = fbAux.get();
+		projection.m01 = fbAux.get();
+		projection.m02 = fbAux.get();
+		projection.m03 = fbAux.get();
+		projection.m10 = fbAux.get();
+		projection.m11 = fbAux.get();
+		projection.m12 = fbAux.get();
+		projection.m13 = fbAux.get();
+		projection.m20 = fbAux.get();
+		projection.m21 = fbAux.get();
+		projection.m22 = fbAux.get();
+		projection.m23 = fbAux.get();
+		projection.m30 = fbAux.get();
+		projection.m31 = fbAux.get();
+		projection.m32 = fbAux.get();
+		projection.m33 = fbAux.get();
+		
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		glViewport(0, 0, Display.getDisplayMode().getWidth(), Display
-				.getDisplayMode().getHeight());
+		glViewport(0, 0, width, height);
 
+		view.setIdentity();
+		model.setIdentity();
 	}
 
 	/**
@@ -112,10 +158,24 @@ public class LWJGLDummy extends BaseGame {
 	 * Render the current frame
 	 */
 	public void render() {
-		glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
-		// TODO: all your rendering goes here
 		glClear(GL_COLOR_BUFFER_BIT);
+		
+		model.setIdentity();
+		model.setTranslation(new Vector3f(-0.5f, 0, -5));
+		
+		ShaderManager.instance.setCurrentProgram(ProgramType.TEXTURED);
+
+		
+
+		
+		ShaderManager.instance.setProjectionMatrix(projection);
+		ShaderManager.instance.setViewMatrix(view);
+		ShaderManager.instance.setModelMatrix(model);
+		
+		
+		m.draw();
+		
+		/*
 		glPushMatrix();
 		glTranslatef(Display.getDisplayMode().getWidth() / 2, Display
 				.getDisplayMode().getHeight() / 2, 0.0f);
@@ -127,6 +187,7 @@ public class LWJGLDummy extends BaseGame {
 		glVertex2i(-50, 50);
 		glEnd();
 		glPopMatrix();
+		*/
 	}
 
 	@Override
