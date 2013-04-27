@@ -7,7 +7,7 @@ import cat.atridas87.ld26.render.ShaderManager;
 
 public class Tower {
 
-	public static final int LIVES = 100;
+	public static final int LIVES = 200;
 	
 	
 	public final boolean player;
@@ -18,11 +18,10 @@ public class Tower {
 	
 	static {
 		float positions[] = {0,0,0};
-		float colors[] = {0.5f,0.5f,0.5f,1 };
 		
 		short indexs[] = {0};
 		
-		model = new Model(positions, colors, indexs, GL11.GL_POINTS);
+		model = new Model(positions, indexs, GL11.GL_POINTS);
 	}
 	
 	public Tower(boolean player, float x, float y) {

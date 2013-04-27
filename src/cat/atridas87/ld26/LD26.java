@@ -7,6 +7,7 @@ import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 
 import cat.atridas87.ld26.gameobjects.Battleground;
+import cat.atridas87.ld26.gameobjects.Bot;
 import cat.atridas87.ld26.gameobjects.Tower;
 import cat.atridas87.ld26.render.ShaderManager;
 import cat.atridas87.ld26.render.ShaderManager.ProgramType;
@@ -20,6 +21,8 @@ public class LD26 extends BaseGame {
 
 	private Tower playerTowers[];
 	private Tower aiTowers[];
+	
+	private Bot testBot1, testBot2, testBot3;
 
 	/**
 	 * No constructor needed - this class is static
@@ -64,8 +67,14 @@ public class LD26 extends BaseGame {
 		aiTowers[9] = new Tower(false, 600 - 525, 600 - 50);
 		aiTowers[10] = new Tower(false, 600 - 550, 600 - 75);
 
+		
+
+		testBot1 = new Bot(true, Bot.Type.BASIC, 550, 50);
+		testBot2 = new Bot(false, Bot.Type.TANK, 50, 550);
+		testBot3 = new Bot(true, Bot.Type.SUPER, 300, 300);
+		
+		
 		GL11.glClearColor(1, 1, 1, 1);
-		GL11.glLineWidth(5);
 		GL11.glEnable(GL11.GL_LINE_SMOOTH);
 		GL11.glEnable(GL11.GL_POINT_SMOOTH);
 		GL11.glHint( GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST );
@@ -108,6 +117,7 @@ public class LD26 extends BaseGame {
 		ShaderManager.instance.setCurrentProgram(ProgramType.COLORED_ORTHO);
 		ShaderManager.instance.setScreenSize(600, 600);
 
+		GL11.glLineWidth(5);
 		battleground.render();
 
 		ShaderManager.instance
@@ -119,6 +129,14 @@ public class LD26 extends BaseGame {
 			playerTowers[i].render();
 			aiTowers[i].render();
 		}
+		
+
+		GL11.glLineWidth(1);
+		GL11.glPointSize(5);
+
+		testBot1.draw();
+		testBot2.draw();
+		testBot3.draw();
 	}
 
 	@Override

@@ -75,6 +75,54 @@ public class Model {
 		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 	
+	public Model(float positions[], short indexes[], int _mode) {
+		mode = _mode;
+		
+		numIndexes = indexes.length;
+		
+		FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(positions.length * (3));
+		
+		for(int i = 0; i < positions.length / 3; i++) {
+			float x = positions[i * 3 + 0];
+			float y = positions[i * 3 + 1];
+			float z = positions[i * 3 + 2];
+
+			vertexBuffer.put(x);
+			vertexBuffer.put(y);
+			vertexBuffer.put(z);
+		}
+		
+		ShortBuffer indexBuffer = BufferUtils.createShortBuffer(indexes.length);
+		
+		indexBuffer.put(indexes);
+
+		vertexBuffer.flip();
+		indexBuffer.flip();
+
+		int vb = GL15.glGenBuffers();
+		int ib = GL15.glGenBuffers();
+		
+		
+		vao = ARBVertexArrayObject.glGenVertexArrays();
+		ARBVertexArrayObject.glBindVertexArray(vao);
+		
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vb);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertexBuffer, GL15.GL_STATIC_DRAW);
+
+		
+		GL20.glEnableVertexAttribArray(ShaderManager.POSITION_ATTRIBUTE);
+		GL20.glVertexAttribPointer(ShaderManager.POSITION_ATTRIBUTE, 3, GL11.GL_FLOAT, false, 3 * 4, 0);
+		
+		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, ib);
+		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL15.GL_STATIC_DRAW);
+
+		ARBVertexArrayObject.glBindVertexArray(0);
+		
+
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
+	}
+	
 	
 	public void draw() {
 		ARBVertexArrayObject.glBindVertexArray(vao);
