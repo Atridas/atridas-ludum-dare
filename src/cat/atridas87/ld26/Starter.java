@@ -10,7 +10,7 @@ public class Starter {
 	private static final int FRAMERATE = 60;
 
 	private static BaseGame createGame(int w, int h) {
-		return new LWJGLDummy(w, h);
+		return new LD26(w, h);
 	}
 
 	/**

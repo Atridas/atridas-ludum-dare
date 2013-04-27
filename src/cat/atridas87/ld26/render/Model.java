@@ -12,8 +12,10 @@ import org.lwjgl.opengl.GL20;
 public class Model {
 	private int vao;
 	private int numIndexes;
+	private int mode;
 	
-	public Model(float positions[], float colors[], short indexes[]) {
+	public Model(float positions[], float colors[], short indexes[], int _mode) {
+		mode = _mode;
 		
 		numIndexes = indexes.length;
 		
@@ -77,7 +79,7 @@ public class Model {
 	public void draw() {
 		ARBVertexArrayObject.glBindVertexArray(vao);
 		
-		GL11.glDrawElements(GL11.GL_TRIANGLES, numIndexes, GL11.GL_UNSIGNED_SHORT, 0);
+		GL11.glDrawElements(mode, numIndexes, GL11.GL_UNSIGNED_SHORT, 0);
 
 		ARBVertexArrayObject.glBindVertexArray(0);
 	}

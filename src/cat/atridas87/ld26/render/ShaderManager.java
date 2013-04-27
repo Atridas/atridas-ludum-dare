@@ -1,6 +1,5 @@
 package cat.atridas87.ld26.render;
 
-import java.io.InputStream;
 import java.nio.FloatBuffer;
 
 import javax.vecmath.Matrix4f;
@@ -24,15 +23,18 @@ public class ShaderManager {
 	public static final int TEX_COORD_ATTRIBUTE = 2;
 	
 	public ShaderManager() {
+		int orthoShader  = compileShader("resources/shaders/ortho.vsh", GL20.GL_VERTEX_SHADER);
 		int vertexShader = compileShader("resources/shaders/shader.vsh", GL20.GL_VERTEX_SHADER);
 		int colorShader  = compileShader("resources/shaders/color.fsh", GL20.GL_FRAGMENT_SHADER);
 		
 		programs = new Program[ProgramType.values().length];
-		
+
+		programs[ProgramType.COLORED_ORTHO.ordinal()] = linkProgram(orthoShader, colorShader);
 		programs[ProgramType.TEXTURED.ordinal()] = linkProgram(vertexShader, colorShader);
 		
 		
 
+		GL20.glDeleteShader(orthoShader);
 		GL20.glDeleteShader(vertexShader);
 		GL20.glDeleteShader(colorShader);
 	}
@@ -93,6 +95,7 @@ public class ShaderManager {
 		p.viewUniform = GL20.glGetUniformLocation(p.program, "uView");
 		p.modelUniform = GL20.glGetUniformLocation(p.program, "uModel");
 		p.textureUniform = GL20.glGetUniformLocation(p.program, "uTexture");
+		p.screenSize    = GL20.glGetUniformLocation(p.program, "uScreenSize");
 		
 		return p;
 	}
@@ -181,6 +184,11 @@ public class ShaderManager {
 		GL20.glUniform1i(currentProgram.textureUniform, position);
 	}
 	
+	public void setScreenSize(float width, float height)
+	{
+		GL20.glUniform2f(currentProgram.screenSize, width, height);
+	}
+	
 	
 	private static class Program {
 		int program;
@@ -189,10 +197,12 @@ public class ShaderManager {
 		int viewUniform;
 		int modelUniform;
 		int textureUniform;
+		int screenSize;
 	}
 	
 	
 	public enum ProgramType {
+		COLORED_ORTHO,
 		TEXTURED
 	}
 }

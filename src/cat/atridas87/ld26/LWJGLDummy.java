@@ -40,6 +40,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
 
 import cat.atridas87.ld26.render.Model;
 import cat.atridas87.ld26.render.ShaderManager;
@@ -88,7 +89,7 @@ public class LWJGLDummy extends BaseGame {
 		
 		short ix[] = {0,1,2, 0,2,3};
 		
-		m = new Model(ps, cs, ix);
+		m = new Model(ps, cs, ix, GL11.GL_TRIANGLES);
 
 		FloatBuffer fbAux = BufferUtils.createFloatBuffer(16);
 
