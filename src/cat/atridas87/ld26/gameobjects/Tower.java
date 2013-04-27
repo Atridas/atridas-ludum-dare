@@ -1,5 +1,7 @@
 package cat.atridas87.ld26.gameobjects;
 
+import javax.vecmath.Vector2f;
+
 import org.lwjgl.opengl.GL11;
 
 import cat.atridas87.ld26.render.Model;
@@ -11,7 +13,7 @@ public class Tower {
 	
 	
 	public final boolean player;
-	public final float x, y;
+	public final Vector2f position;
 	public int live;
 	
 	private static final Model model;
@@ -26,8 +28,7 @@ public class Tower {
 	
 	public Tower(boolean player, float x, float y) {
 		this.player = player;
-		this.x = x;
-		this.y = y;
+		this.position = new Vector2f(x,y);
 		this.live = LIVES;
 	}
 	
@@ -40,10 +41,9 @@ public class Tower {
 		// TODO pintar vida
 		
 		ShaderManager.instance.setColor(r, g, b, 1);
-		ShaderManager.instance.setPosition(x, y);
+		ShaderManager.instance.setPosition(position.x, position.y);
 		
 		model.draw();
 	}
-	
 	
 }

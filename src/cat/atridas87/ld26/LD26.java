@@ -23,13 +23,6 @@ public class LD26 extends BaseGame {
 
 	private Battleground battleground;
 
-	private Tower playerTowers[];
-	private Tower aiTowers[];
-	
-	private Vector<Bot> playerBots, aiBots;
-	
-	private Home homePlayer, homeBot;
-
 	/**
 	 * No constructor needed - this class is static
 	 */
@@ -46,45 +39,6 @@ public class LD26 extends BaseGame {
 		ShaderManager.instance = new ShaderManager();
 
 		battleground = new Battleground();
-
-		playerTowers = new Tower[11];
-		playerTowers[0] = new Tower(true, 125, 25);
-		playerTowers[1] = new Tower(true, 325, 25);
-		playerTowers[2] = new Tower(true, 425, 25);
-		playerTowers[3] = new Tower(true, 500, 100);
-		playerTowers[4] = new Tower(true, 575, 175);
-		playerTowers[5] = new Tower(true, 575, 275);
-		playerTowers[6] = new Tower(true, 575, 475);
-		playerTowers[7] = new Tower(true, 425, 175);
-		playerTowers[8] = new Tower(true, 375, 225);
-		playerTowers[9] = new Tower(true, 525, 50);
-		playerTowers[10] = new Tower(true, 550, 75);
-
-		aiTowers = new Tower[11];
-		aiTowers[0] = new Tower(false, 600 - 125, 600 - 25);
-		aiTowers[1] = new Tower(false, 600 - 325, 600 - 25);
-		aiTowers[2] = new Tower(false, 600 - 425, 600 - 25);
-		aiTowers[3] = new Tower(false, 600 - 500, 600 - 100);
-		aiTowers[4] = new Tower(false, 600 - 575, 600 - 175);
-		aiTowers[5] = new Tower(false, 600 - 575, 600 - 275);
-		aiTowers[6] = new Tower(false, 600 - 575, 600 - 475);
-		aiTowers[7] = new Tower(false, 600 - 425, 600 - 175);
-		aiTowers[8] = new Tower(false, 600 - 375, 600 - 225);
-		aiTowers[9] = new Tower(false, 600 - 525, 600 - 50);
-		aiTowers[10] = new Tower(false, 600 - 550, 600 - 75);
-
-		
-
-		playerBots = new Vector<Bot>();
-		aiBots = new Vector<Bot>();
-
-		playerBots.add(new Bot(true, Bot.Type.BASIC, Lane.UP));
-		playerBots.add(new Bot(true, Bot.Type.SUPER, Lane.BOT));
-		
-		aiBots.add(new Bot(false, Bot.Type.TANK, Lane.MIDDLE));
-		
-		homePlayer = new Home(true, 575, 25);
-		homeBot = new Home(false, 25, 575);
 		
 		GL11.glClearColor(1, 1, 1, 1);
 		GL11.glEnable(GL11.GL_LINE_SMOOTH);
@@ -118,12 +72,7 @@ public class LD26 extends BaseGame {
 		
 		// TODO update towers
 
-		for(int i = 0; i < playerBots.size(); i++) {
-			playerBots.get(i).update(_dt);
-		}
-		for(int i = 0; i < aiBots.size(); i++) {
-			aiBots.get(i).update(_dt);
-		}
+		battleground.update(_dt);
 		
 		// TODO update homes
 	}
@@ -137,35 +86,9 @@ public class LD26 extends BaseGame {
 
 		GL11.glViewport(0, 0, height, height);
 
-		ShaderManager.instance.setCurrentProgram(ProgramType.COLORED_ORTHO);
-		ShaderManager.instance.setScreenSize(600, 600);
-
-		GL11.glLineWidth(5);
 		battleground.render();
 
-		ShaderManager.instance
-				.setCurrentProgram(ProgramType.COLORED_FROM_UNIFORM_ORTHO);
-		ShaderManager.instance.setScreenSize(600, 600);
-
-		GL11.glPointSize(15);
-		for (int i = 0; i < playerTowers.length; i++) {
-			playerTowers[i].render();
-			aiTowers[i].render();
-		}
 		
-
-		GL11.glLineWidth(1);
-		GL11.glPointSize(5);
-
-		for(int i = 0; i < playerBots.size(); i++) {
-			playerBots.get(i).render();
-		}
-		for(int i = 0; i < aiBots.size(); i++) {
-			aiBots.get(i).render();
-		}
-
-		homePlayer.render();
-		homeBot.render();
 	}
 
 	@Override
