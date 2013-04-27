@@ -1,0 +1,425 @@
+package cat.atridas87.ld26.gameobjects;
+
+import java.nio.FloatBuffer;
+import java.util.Vector;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.ARBVertexArrayObject;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL20;
+
+import cat.atridas87.ld26.render.ShaderManager;
+import cat.atridas87.ld26.render.ShaderManager.ProgramType;
+
+public class HUD {
+
+	public static final int COINS_PER_SECOND_PER_LEVEL[] = { 5, 10, 15, 20, 25, 30, 35 };
+	public static final int MAX_COINS_PER_LEVEL[] = { 50, 150, 300, 500, 750, 1050, 1400 };
+	public static final int COST_LEVEL[] = { 25, 100, 200, 400, 700, 900, 1200 };
+
+	public static final int NUM_LEVELS = COINS_PER_SECOND_PER_LEVEL.length;
+	
+	private static final float LANE_BUTTONS_Y = 460;
+	
+	private int level = 0;
+	private int numCoins;
+	private float lastUpdateCoins;
+	
+	private Lane sendTo = Lane.MIDDLE;
+
+	public void update(float _dt) {
+
+		if (numCoins < MAX_COINS_PER_LEVEL[level]) {
+			lastUpdateCoins += _dt;
+			while (lastUpdateCoins > 1.f / COINS_PER_SECOND_PER_LEVEL[level]) {
+				lastUpdateCoins -= 1.f / COINS_PER_SECOND_PER_LEVEL[level];
+				numCoins++;
+			}
+			if (numCoins > MAX_COINS_PER_LEVEL[level]) {
+				numCoins = MAX_COINS_PER_LEVEL[level];
+			}
+		}
+	}
+
+	private static void renderText(String text, float x, float y) {
+		ShaderManager.instance.setPosition(x, y);
+
+		Vector<Float> vvb = textToVertexs(text);
+
+		FloatBuffer fb = BufferUtils.createFloatBuffer(vvb.size());
+
+		for (int i = 0; i < vvb.size(); i++) {
+			fb.put(vvb.get(i));
+		}
+
+		fb.flip();
+
+		GL20.glEnableVertexAttribArray(ShaderManager.POSITION_ATTRIBUTE);
+		GL20.glVertexAttribPointer(ShaderManager.POSITION_ATTRIBUTE, 2, false,
+				2 * 4, fb);
+
+		GL11.glDrawArrays(GL11.GL_LINES, 0, vvb.size() / 2);
+	}
+
+	private static void renderPlus(float x, float y) {
+		ShaderManager.instance.setPosition(x, y);
+
+		float vvb[] = { 5, 5, 5, 10, 2.5f, 7.5f, 7.5f, 7.5f, 1.75f, 3.25f,
+				1.75f, 11.75f, 1.75f, 11.75f, 8.25f, 11.75f, 8.25f, 11.75f,
+				8.25f, 3.35f, 8.25f, 3.35f, 1.75f, 3.35f, };
+
+		FloatBuffer fb = BufferUtils.createFloatBuffer(vvb.length);
+
+		for (int i = 0; i < vvb.length; i++) {
+			fb.put(vvb[i]);
+		}
+
+		fb.flip();
+
+		GL20.glEnableVertexAttribArray(ShaderManager.POSITION_ATTRIBUTE);
+		GL20.glVertexAttribPointer(ShaderManager.POSITION_ATTRIBUTE, 2, false,
+				2 * 4, fb);
+
+		GL11.glDrawArrays(GL11.GL_LINES, 0, vvb.length / 2);
+	}
+
+	private void renderLaneButtons(float x, float y) {
+		ShaderManager.instance.setPosition(x, y);
+
+		float vvb1[] = { 25,25, 50,25, 25,25, 31.25f,31.25f, 25,25, 31.25f,18.75f ,
+				12.5f,0, 62.5f,0, 
+				62.5f,0, 62.5f,50, 
+				62.5f,50, 12.5f,50,
+				12.5f,50, 12.5f,0};
+
+		float vvb2[] = { 87.5f,37.5f, 112.5f,12.5f, 87.5f,37.5f, 87.5f,25f, 87.5f,37.5f, 100f,37.5f, 
+				75f,0, 125f,0, 
+				125f,0, 125f,50, 
+				125f,50, 75f,50,
+				75f,50, 75f,0};
+
+		float vvb3[] = { 162.5f,37.5f, 162.5f,12.5f, 162.5f,37.5f, 157.5f,31.25f, 162.5f,37.5f, 168.75f,31.25f, 
+				137.5f,0, 187.5f,0, 
+				187.5f,0, 187.5f,50, 
+				187.5f,50, 137.5f,50,
+				137.5f,50, 137.5f,0};
+
+		FloatBuffer fb1 = BufferUtils.createFloatBuffer(vvb1.length);
+		FloatBuffer fb2 = BufferUtils.createFloatBuffer(vvb2.length);
+		FloatBuffer fb3 = BufferUtils.createFloatBuffer(vvb3.length);
+
+		for (int i = 0; i < vvb1.length; i++) {
+			fb1.put(vvb1[i]);
+		}
+		for (int i = 0; i < vvb2.length; i++) {
+			fb2.put(vvb2[i]);
+		}
+		for (int i = 0; i < vvb3.length; i++) {
+			fb3.put(vvb3[i]);
+		}
+
+		fb1.flip();
+		fb2.flip();
+		fb3.flip();
+
+		GL20.glEnableVertexAttribArray(ShaderManager.POSITION_ATTRIBUTE);
+		GL20.glVertexAttribPointer(ShaderManager.POSITION_ATTRIBUTE, 2, false,
+				2 * 4, fb1);
+
+		if(sendTo == Lane.BOT) ShaderManager.instance.setColor(0, 1, 0, 1);
+		else ShaderManager.instance.setColor(0, 0, 0, 1);
+		GL11.glDrawArrays(GL11.GL_LINES, 0, vvb1.length / 2);
+
+		//----
+		GL20.glEnableVertexAttribArray(ShaderManager.POSITION_ATTRIBUTE);
+		GL20.glVertexAttribPointer(ShaderManager.POSITION_ATTRIBUTE, 2, false,
+				2 * 4, fb2);
+
+		if(sendTo == Lane.MIDDLE) ShaderManager.instance.setColor(0, 1, 0, 1);
+		else ShaderManager.instance.setColor(0, 0, 0, 1);
+		GL11.glDrawArrays(GL11.GL_LINES, 0, vvb2.length / 2);
+
+		//----
+		GL20.glEnableVertexAttribArray(ShaderManager.POSITION_ATTRIBUTE);
+		GL20.glVertexAttribPointer(ShaderManager.POSITION_ATTRIBUTE, 2, false,
+				2 * 4, fb3);
+
+		if(sendTo == Lane.UP) ShaderManager.instance.setColor(0, 1, 0, 1);
+		else ShaderManager.instance.setColor(0, 0, 0, 1);
+		GL11.glDrawArrays(GL11.GL_LINES, 0, vvb3.length / 2);
+	}
+	
+	public void mouseClick(float x, float y) {
+		
+		// check level +
+		if(x > 120 && y > 520 && x < 130 && y < 535) {
+			if(numCoins >= COST_LEVEL[level] && level < NUM_LEVELS - 1) {
+				numCoins -= COST_LEVEL[level];
+				level++;
+			}
+		}
+		
+		if(y > LANE_BUTTONS_Y  && y < LANE_BUTTONS_Y + 50) {
+			if(x > 12.5f && x < 62.5f) {
+				sendTo = Lane.BOT;
+			} else if(x > 75f && x < 125f) {
+				sendTo = Lane.MIDDLE;
+			} else if(x > 137.5f && x < 187.5f) {
+				sendTo = Lane.UP;
+			}
+		}
+		
+	}
+
+	public void render() {
+
+		ShaderManager.instance
+				.setCurrentProgram(ProgramType.COLORED_FROM_UNIFORM_ORTHO);
+		ShaderManager.instance.setScreenSize(200, 600);
+		ShaderManager.instance.setColor(0, 0, 0, 1);
+
+		ARBVertexArrayObject.glBindVertexArray(0);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
+
+		renderText(numToRoman(numCoins), 10, 570);
+		renderText(numToRoman(MAX_COINS_PER_LEVEL[level]), 140, 570);
+
+		renderText("LEVEL", 10, 520);
+		ShaderManager.instance.setColor(0.5f, 0.5f, 0.5f, 1);
+		renderText(numToRoman(level + 1), 75, 520);
+		if (level < NUM_LEVELS - 1) {
+			if(numCoins >= COST_LEVEL[level]) {
+				ShaderManager.instance.setColor(0, 1, 0, 1);
+			} else {
+				ShaderManager.instance.setColor(0, 0, 1, 1);
+			}
+			renderPlus(120, 520);
+			ShaderManager.instance.setColor(0, 0, 0, 1);
+			renderText(numToRoman(COST_LEVEL[level]), 150, 520);
+		} else {
+			ShaderManager.instance.setColor(1, 0, 0, 1);
+			renderPlus(120, 520);
+		}
+		
+		
+		renderLaneButtons(0, LANE_BUTTONS_Y);
+	}
+
+	public static Vector<Float> textToVertexs(String roman) {
+		Vector<Float> vb = new Vector<Float>();
+		int x = 0;
+		for (int i = 0; i < roman.length(); i++) {
+			char c = roman.charAt(i);
+			switch (c) {
+			case 'M':
+				vb.add(2.5f + x);
+				vb.add(0.f);
+				vb.add(2.5f + x);
+				vb.add(15.f);
+
+				vb.add(2.5f + x);
+				vb.add(15.f);
+				vb.add(5f + x);
+				vb.add(7.5f);
+
+				vb.add(5f + x);
+				vb.add(7.5f);
+				vb.add(7.5f + x);
+				vb.add(15f);
+
+				vb.add(7.5f + x);
+				vb.add(15f);
+				vb.add(7.5f + x);
+				vb.add(0f);
+
+				x += 10;
+				break;
+
+			case 'V':
+				vb.add(5f + x);
+				vb.add(0.f);
+				vb.add(2.5f + x);
+				vb.add(15.f);
+
+				vb.add(5f + x);
+				vb.add(0.f);
+				vb.add(7.5f + x);
+				vb.add(15.f);
+
+				x += 10;
+				break;
+
+			case 'C':
+				vb.add(7.5f + x);
+				vb.add(0.f);
+				vb.add(2.5f + x);
+				vb.add(5.f);
+
+				vb.add(2.5f + x);
+				vb.add(5.f);
+				vb.add(2.5f + x);
+				vb.add(10.f);
+
+				vb.add(2.5f + x);
+				vb.add(10.f);
+				vb.add(7.5f + x);
+				vb.add(15.f);
+
+				x += 10;
+				break;
+
+			case 'D':
+				vb.add(2.5f + x);
+				vb.add(0.f);
+				vb.add(2.5f + x);
+				vb.add(15.f);
+
+				vb.add(2.5f + x);
+				vb.add(15.f);
+				vb.add(7.5f + x);
+				vb.add(10.f);
+
+				vb.add(7.5f + x);
+				vb.add(10.f);
+				vb.add(7.5f + x);
+				vb.add(5.f);
+
+				vb.add(7.5f + x);
+				vb.add(5.f);
+				vb.add(2.5f + x);
+				vb.add(0.f);
+
+				x += 10;
+				break;
+
+			case 'X':
+				vb.add(2.5f + x);
+				vb.add(0.f);
+				vb.add(7.5f + x);
+				vb.add(15.f);
+
+				vb.add(7.5f + x);
+				vb.add(0.f);
+				vb.add(2.5f + x);
+				vb.add(15.f);
+
+				x += 10;
+				break;
+
+			case 'L':
+				vb.add(2.5f + x);
+				vb.add(0.f);
+				vb.add(7.5f + x);
+				vb.add(0.f);
+
+				vb.add(2.5f + x);
+				vb.add(0.f);
+				vb.add(2.5f + x);
+				vb.add(15.f);
+
+				x += 10;
+				break;
+
+			case 'I':
+				vb.add(5f + x);
+				vb.add(0.f);
+				vb.add(5f + x);
+				vb.add(15.f);
+
+				vb.add(2.5f + x);
+				vb.add(0.f);
+				vb.add(7.5f + x);
+				vb.add(0.f);
+
+				vb.add(2.5f + x);
+				vb.add(15.f);
+				vb.add(7.5f + x);
+				vb.add(15.f);
+
+				x += 10;
+				break;
+
+			case 'E':
+				vb.add(2.5f + x);
+				vb.add(0.f);
+				vb.add(2.5f + x);
+				vb.add(15.f);
+
+				vb.add(2.5f + x);
+				vb.add(0.f);
+				vb.add(7.5f + x);
+				vb.add(0.f);
+
+				vb.add(2.5f + x);
+				vb.add(15.f);
+				vb.add(7.5f + x);
+				vb.add(15.f);
+
+				vb.add(2.5f + x);
+				vb.add(10.f);
+				vb.add(5f + x);
+				vb.add(10.f);
+
+				x += 10;
+				break;
+			}
+		}
+		return vb;
+	}
+
+	public static String numToRoman(int num) {
+		String roman = "";
+		while (num >= 1000) {
+			roman += 'M';
+			num -= 1000;
+		}
+		if (num >= 900) {
+			roman += "CM";
+			num -= 900;
+		}
+		if (num >= 500) {
+			roman += 'D';
+			num -= 500;
+		}
+
+		while (num >= 100) {
+			roman += 'C';
+			num -= 100;
+		}
+		if (num >= 90) {
+			roman += "XC";
+			num -= 90;
+		}
+		if (num >= 50) {
+			roman += 'L';
+			num -= 50;
+		}
+
+		while (num >= 10) {
+			roman += 'X';
+			num -= 10;
+		}
+		if (num == 9) {
+			roman += "IX";
+			num -= 9;
+		}
+		if (num >= 5) {
+			roman += 'V';
+			num -= 5;
+		}
+		if (num == 4) {
+			roman += "IV";
+			num -= 4;
+		}
+
+		while (num >= 1) {
+			roman += 'I';
+			num -= 1;
+		}
+
+		return roman;
+	}
+
+}

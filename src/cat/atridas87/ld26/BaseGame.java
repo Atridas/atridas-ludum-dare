@@ -22,4 +22,6 @@ public abstract class BaseGame {
 	public abstract void update(float _dt);
 	public abstract void cleanup();
 	
+	public abstract void mouseClick(float x, float y);
+	
 }

@@ -1,7 +1,5 @@
 package cat.atridas87.ld26;
 
-import java.util.Vector;
-
 import org.lwjgl.opengl.GL11;
 
 import org.lwjgl.input.Keyboard;
@@ -9,12 +7,8 @@ import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 
 import cat.atridas87.ld26.gameobjects.Battleground;
-import cat.atridas87.ld26.gameobjects.Bot;
-import cat.atridas87.ld26.gameobjects.Home;
-import cat.atridas87.ld26.gameobjects.Lane;
-import cat.atridas87.ld26.gameobjects.Tower;
+import cat.atridas87.ld26.gameobjects.HUD;
 import cat.atridas87.ld26.render.ShaderManager;
-import cat.atridas87.ld26.render.ShaderManager.ProgramType;
 
 public class LD26 extends BaseGame {
 
@@ -22,6 +16,7 @@ public class LD26 extends BaseGame {
 	public static final String GAME_TITLE = "GeoBattle";
 
 	private Battleground battleground;
+	private HUD hud;
 
 	/**
 	 * No constructor needed - this class is static
@@ -39,8 +34,11 @@ public class LD26 extends BaseGame {
 		ShaderManager.instance = new ShaderManager();
 
 		battleground = new Battleground();
+		hud = new HUD();
 		
 		GL11.glClearColor(1, 1, 1, 1);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glDisable(GL11.GL_CULL_FACE);
 		GL11.glEnable(GL11.GL_LINE_SMOOTH);
 		GL11.glEnable(GL11.GL_POINT_SMOOTH);
 		GL11.glHint( GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST );
@@ -74,6 +72,8 @@ public class LD26 extends BaseGame {
 
 		battleground.update(_dt);
 		
+		hud.update(_dt);
+		
 		// TODO update homes
 	}
 
@@ -88,13 +88,22 @@ public class LD26 extends BaseGame {
 
 		battleground.render();
 
+		GL11.glViewport(height, 0, width - height, height);
+
+
+		//battleground.render();
 		
+		hud.render();
 	}
 
 	@Override
 	public String getWindowName() {
-		// TODO Auto-generated method stub
-		return null;
+		return GAME_TITLE;
+	}
+
+	@Override
+	public void mouseClick(float x, float y) {
+		hud.mouseClick(x - 600, y);
 	}
 
 }

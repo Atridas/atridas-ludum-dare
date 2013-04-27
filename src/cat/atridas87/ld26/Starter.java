@@ -1,6 +1,7 @@
 package cat.atridas87.ld26;
 
 import org.lwjgl.Sys;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
@@ -65,6 +66,12 @@ public class Starter {
 				game.setFinished(true);
 			} else if (Display.isActive()) {
 				// The window is in the foreground, so we should play the game
+				
+				while(Mouse.next()) {
+					if(Mouse.getEventButton() == 0 && Mouse.getEventButtonState()) {
+						game.mouseClick(Mouse.getX(), Mouse.getY());
+					}
+				}
 				
 				game.update((float)ticks);
 				game.render();
