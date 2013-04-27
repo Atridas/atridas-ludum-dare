@@ -46,16 +46,27 @@ public class Starter {
 	 * Runs the game (the "main loop")
 	 */
 	private static void runDisplay(BaseGame game) {
+		long currentTick = Sys.getTime();
+		long lastTick = currentTick - Sys.getTimerResolution() / 60;
 		while (!game.isFinished()) {
 			// Always call Window.update(), all the time
 			Display.update();
+			
+			currentTick = Sys.getTime();
+			double ticks = currentTick - lastTick;
+			ticks /= Sys.getTimerResolution();
+			
+			if(ticks > 1.f/30.f) {
+				ticks =  1.f/30.f;
+			}
 
 			if (Display.isCloseRequested()) {
 				// Check for O/S close requests
 				game.setFinished(true);
 			} else if (Display.isActive()) {
 				// The window is in the foreground, so we should play the game
-				game.update();
+				
+				game.update((float)ticks);
 				game.render();
 				Display.sync(FRAMERATE);
 			} else {
@@ -66,12 +77,14 @@ public class Starter {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
 				}
-				game.update();
+				game.update((float)ticks);
 				if (Display.isVisible() || Display.isDirty()) {
 					// Only bother rendering if the window is visible or dirty
 					game.render();
 				}
 			}
+			
+			lastTick = currentTick;
 		}
 	}
 

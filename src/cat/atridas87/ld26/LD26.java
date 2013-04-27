@@ -1,5 +1,7 @@
 package cat.atridas87.ld26;
 
+import java.util.Vector;
+
 import org.lwjgl.opengl.GL11;
 
 import org.lwjgl.input.Keyboard;
@@ -9,6 +11,7 @@ import org.lwjgl.opengl.Display;
 import cat.atridas87.ld26.gameobjects.Battleground;
 import cat.atridas87.ld26.gameobjects.Bot;
 import cat.atridas87.ld26.gameobjects.Home;
+import cat.atridas87.ld26.gameobjects.Lane;
 import cat.atridas87.ld26.gameobjects.Tower;
 import cat.atridas87.ld26.render.ShaderManager;
 import cat.atridas87.ld26.render.ShaderManager.ProgramType;
@@ -23,7 +26,7 @@ public class LD26 extends BaseGame {
 	private Tower playerTowers[];
 	private Tower aiTowers[];
 	
-	private Bot testBot1, testBot2, testBot3;
+	private Vector<Bot> playerBots, aiBots;
 	
 	private Home homePlayer, homeBot;
 
@@ -72,10 +75,13 @@ public class LD26 extends BaseGame {
 
 		
 
-		testBot1 = new Bot(true, Bot.Type.BASIC, 550, 50);
-		testBot2 = new Bot(false, Bot.Type.TANK, 50, 550);
-		testBot3 = new Bot(true, Bot.Type.SUPER, 300, 300);
+		playerBots = new Vector<Bot>();
+		aiBots = new Vector<Bot>();
+
+		playerBots.add(new Bot(true, Bot.Type.BASIC, Lane.UP));
+		playerBots.add(new Bot(true, Bot.Type.SUPER, Lane.BOT));
 		
+		aiBots.add(new Bot(false, Bot.Type.TANK, Lane.MIDDLE));
 		
 		homePlayer = new Home(true, 575, 25);
 		homeBot = new Home(false, 25, 575);
@@ -103,12 +109,23 @@ public class LD26 extends BaseGame {
 	/**
 	 * Do all calculations, handle input, etc.
 	 */
-	public void update() {
+	public void update(float _dt) {
 		// Example input handler: we'll check for the ESC key and finish the
 		// game instantly when it's pressed
 		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 			finished = true;
 		}
+		
+		// TODO update towers
+
+		for(int i = 0; i < playerBots.size(); i++) {
+			playerBots.get(i).update(_dt);
+		}
+		for(int i = 0; i < aiBots.size(); i++) {
+			aiBots.get(i).update(_dt);
+		}
+		
+		// TODO update homes
 	}
 
 	/**
@@ -140,9 +157,12 @@ public class LD26 extends BaseGame {
 		GL11.glLineWidth(1);
 		GL11.glPointSize(5);
 
-		testBot1.render();
-		testBot2.render();
-		testBot3.render();
+		for(int i = 0; i < playerBots.size(); i++) {
+			playerBots.get(i).render();
+		}
+		for(int i = 0; i < aiBots.size(); i++) {
+			aiBots.get(i).render();
+		}
 
 		homePlayer.render();
 		homeBot.render();

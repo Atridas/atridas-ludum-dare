@@ -19,7 +19,7 @@ public abstract class BaseGame {
 	
 	public abstract void init() throws Exception;
 	public abstract void render();
-	public abstract void update();
+	public abstract void update(float _dt);
 	public abstract void cleanup();
 	
 }
