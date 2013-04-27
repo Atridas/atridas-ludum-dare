@@ -23,7 +23,7 @@ public class Bot {
 		lives = type.lives;
 	}
 	
-	public void draw() {
+	public void render() {
 
 		float r = player? 1 : 0;
 		float g = player? 0 : 1;
