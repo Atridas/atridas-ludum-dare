@@ -16,7 +16,7 @@ import cat.atridas87.ld26.render.ShaderManager.ProgramType;
 
 public class HUD {
 
-	public static final int COINS_PER_SECOND_PER_LEVEL[] = { 100, 150, 200, 250, 300, 350, 400 };
+	public static final int COINS_PER_SECOND_PER_LEVEL[] = { 10, 15, 20, 25, 30, 35, 40 };
 	public static final int MAX_COINS_PER_LEVEL[] = { 500, 875, 1250, 1625, 2000, 2750, 3500 };
 	public static final int COST_LEVEL[] = { 250, 550, 850, 1200, 1600, 2000, 2500 };
 
@@ -27,8 +27,10 @@ public class HUD {
 	
 	private static final float LANE_BUTTONS_Y = 460;
 	
-	private int level = 0;
-	private int numCoins;
+	public static HUD instance;
+	
+	public int level = 0;
+	public int numCoins;
 	private float lastUpdateCoins;
 	
 	private Lane sendTo = Lane.MIDDLE;
@@ -44,6 +46,8 @@ public class HUD {
 		formations[5] = new Formation(NUM_BOTS[5], COST_FORMATION[5], new Vector2f(110,120));
 		formations[6] = new Formation(NUM_BOTS[6], COST_FORMATION[6], new Vector2f( 10, 20));
 		formations[7] = new Formation(NUM_BOTS[7], COST_FORMATION[7], new Vector2f(110, 20));
+		
+		instance = this;
 	}
 
 	public void update(float _dt) {

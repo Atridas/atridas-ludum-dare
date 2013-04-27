@@ -65,7 +65,6 @@ public class Bot {
 		float g = player ? 0 : 1;
 		float b = player ? 1 : 0;
 
-
 		float vida = ((float) lives) / ((float) type.lives);
 
 		r = r * vida + (1 - vida);
@@ -290,9 +289,9 @@ public class Bot {
 		Steering steering = new Steering();
 		steering.steering = new Vector2f(0, 0);
 		steering.force = false;
-		
-		Vector2f enemyHomePosition = player? Home.AI_HOME : Home.PLAYER_HOME;
-		
+
+		Vector2f enemyHomePosition = player ? Home.AI_HOME : Home.PLAYER_HOME;
+
 		Vector2f distToHome = new Vector2f();
 		distToHome.x = enemyHomePosition.x - position.x;
 		distToHome.y = enemyHomePosition.y - position.y;
@@ -324,8 +323,10 @@ public class Bot {
 		Steering steeringHome = calcSteeringHome();
 
 		Vector2f steeringElements = new Vector2f();
-		steeringElements.x = steeringTower.steering.x + steeringBots.steering.x + steeringHome.steering.x;
-		steeringElements.y = steeringTower.steering.y + steeringBots.steering.y + steeringHome.steering.y;
+		steeringElements.x = steeringTower.steering.x + steeringBots.steering.x
+				+ steeringHome.steering.x;
+		steeringElements.y = steeringTower.steering.y + steeringBots.steering.y
+				+ steeringHome.steering.y;
 
 		if (steeringTower.force || steeringBots.force || steeringHome.force) {
 			return steeringElements;
@@ -428,7 +429,8 @@ public class Bot {
 
 			}
 
-			Vector2f enemyHomePosition = player? Home.AI_HOME : Home.PLAYER_HOME;
+			Vector2f enemyHomePosition = player ? Home.AI_HOME
+					: Home.PLAYER_HOME;
 			Vector2f distToHome = new Vector2f();
 			distToHome.x = enemyHomePosition.x - position.x;
 			distToHome.y = enemyHomePosition.y - position.y;
@@ -448,7 +450,9 @@ public class Bot {
 		Bot[] cosestBots = Battleground.instance.getClosestBots(this);
 		calcPosition(closestTower, cosestBots, _dt);
 
-		calcShoot(closestTower, cosestBots, _dt);
+		calcShoot(closestTower,
+				Battleground.instance.getClosestEnemyBotsInRange(position,
+						player, rangeToBot), _dt);
 	}
 
 	public String toString() {
@@ -490,14 +494,17 @@ public class Bot {
 	}
 
 	public static enum Type {
-		BASIC(25, 5, 1.f, 1, 10, 500, 25), TANK(100, 2, 5.f, 3, 7.5f, 500, 10), SUPER(
-				40, 10, 0.75f, 2, 10, 500, 50);
+		BASIC(25, 5, 1.f, 1, 10, 500, 25, 5, 10), TANK(100, 2, 5.f, 3, 7.5f,
+				500, 10, 2, 15), SUPER(40, 10, 0.75f, 2, 10, 500, 50, 1, 60);
 
 		private final int lives, attack;
 		private final float attTime, mass, maxSpeed, maxForce, range;
+		public final float aiWeight;
+		public final int value;
 
 		private Type(int _lives, int _attack, float _attTime, float _mass,
-				float _maxSpeed, float _maxForce, float _range) {
+				float _maxSpeed, float _maxForce, float _range,
+				float _aiWeight, int _value) {
 			lives = _lives;
 			attack = _attack;
 			attTime = _attTime;
@@ -505,6 +512,8 @@ public class Bot {
 			maxSpeed = _maxSpeed;
 			maxForce = _maxForce;
 			range = _range;
+			aiWeight = _aiWeight;
+			value = _value;
 		}
 	}
 }

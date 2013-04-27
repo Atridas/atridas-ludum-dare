@@ -6,15 +6,18 @@ import javax.vecmath.Vector2f;
 
 import org.lwjgl.opengl.GL11;
 
+import cat.atridas87.ld26.ai.AI;
 import cat.atridas87.ld26.render.Model;
 import cat.atridas87.ld26.render.ShaderManager;
 import cat.atridas87.ld26.render.ShaderManager.ProgramType;
 
 public class Battleground {
 
-	public static final float TIME_BETWEEN_BOTS = 1.5f;
-	
+	public static final float TIME_BETWEEN_BOTS = 1f;
+
 	public static Battleground instance;
+
+	private final AI ai = new AI();
 
 	private Model model;
 
@@ -77,35 +80,26 @@ public class Battleground {
 
 		homePlayer = new Home(true, Home.PLAYER_HOME.x, Home.PLAYER_HOME.y);
 		homeAI = new Home(false, Home.AI_HOME.x, Home.AI_HOME.y);
-		
 
 		botsInQueuePlayer = new Vector[Lane.values().length];
 		botsInQueueAI = new Vector[Lane.values().length];
 		timeSinceLastBotPlayer = new float[Lane.values().length];
 		timeSinceLastBotAI = new float[Lane.values().length];
-		
-		for(int i = 0; i < Lane.values().length; i++) {
+
+		for (int i = 0; i < Lane.values().length; i++) {
 			botsInQueuePlayer[i] = new Vector<Bot>();
 			botsInQueueAI[i] = new Vector<Bot>();
 		}
 
-		addBot(new Bot(true, Bot.Type.BASIC, Lane.UP));
-		addBot(new Bot(true, Bot.Type.BASIC, Lane.UP));
-		addBot(new Bot(true, Bot.Type.BASIC, Lane.UP));
-		addBot(new Bot(true, Bot.Type.BASIC, Lane.UP));
+		for (int i = 0; i < 5; i++) {
+			addBot(new Bot(true, Bot.Type.BASIC, Lane.UP));
+			addBot(new Bot(true, Bot.Type.BASIC, Lane.BOT));
+			addBot(new Bot(true, Bot.Type.BASIC, Lane.MIDDLE));
 
-		addBot(new Bot(true, Bot.Type.SUPER, Lane.BOT));
-		addBot(new Bot(true, Bot.Type.BASIC, Lane.BOT));
-		addBot(new Bot(true, Bot.Type.BASIC, Lane.BOT));
-
-		addBot(new Bot(true, Bot.Type.BASIC, Lane.MIDDLE));
-		addBot(new Bot(true, Bot.Type.BASIC, Lane.MIDDLE));
-		addBot(new Bot(true, Bot.Type.BASIC, Lane.MIDDLE));
-
-		addBot(new Bot(false, Bot.Type.TANK, Lane.MIDDLE));
-		addBot(new Bot(false, Bot.Type.BASIC, Lane.MIDDLE));
-		addBot(new Bot(false, Bot.Type.BASIC, Lane.MIDDLE));
-		addBot(new Bot(false, Bot.Type.BASIC, Lane.MIDDLE));
+			addBot(new Bot(false, Bot.Type.BASIC, Lane.UP));
+			addBot(new Bot(false, Bot.Type.BASIC, Lane.BOT));
+			addBot(new Bot(false, Bot.Type.BASIC, Lane.MIDDLE));
+		}
 	}
 
 	public Tower getClosestTower(Vector2f position) {
@@ -253,9 +247,36 @@ public class Battleground {
 
 		return targets;
 	}
-	
+
+	public Bot[] getClosestEnemyBotsInRange(Vector2f position, boolean player,
+			float range) {
+
+		Vector<Bot> enemyBots = new Vector<Bot>();
+
+		for (int i = 0; i < bots.size(); i++) {
+			Bot b = bots.get(i);
+
+			if (player != b.player) {
+				Vector2f dist = new Vector2f();
+				dist.x = position.x - b.position.x;
+				dist.y = position.y - b.position.y;
+
+				if (dist.lengthSquared() < range * range) {
+					enemyBots.add(b);
+
+					if (enemyBots.size() >= 5) {
+						break;
+					}
+				}
+			}
+
+		}
+
+		return enemyBots.toArray(new Bot[enemyBots.size()]);
+	}
+
 	public Home getHome(boolean player) {
-		return player? homePlayer : homeAI;
+		return player ? homePlayer : homeAI;
 	}
 
 	public Vector2f vectorToField(Vector2f position) {
@@ -276,9 +297,10 @@ public class Battleground {
 
 		return new Vector2f(0, 0); // TODO
 	}
-	
+
 	public void addBot(Bot bot) {
-		Vector<Bot>[] arrayBots = (bot.player) ? botsInQueuePlayer : botsInQueueAI;
+		Vector<Bot>[] arrayBots = (bot.player) ? botsInQueuePlayer
+				: botsInQueueAI;
 		Vector<Bot> arrayBotsLane = arrayBots[bot.lane.ordinal()];
 		arrayBotsLane.add(bot);
 	}
@@ -298,8 +320,13 @@ public class Battleground {
 		for (int i = 0; i < bots.size(); i++) {
 			bots.get(i).update(_dt);
 			if (bots.get(i).lives <= 0) {
-				bots.remove(i);
+				Bot removedBot = bots.remove(i);
 				i--;
+				
+				if(!removedBot.player) {
+					HUD.instance.numCoins += removedBot.type.value;
+				}
+				
 			}
 		}
 
@@ -312,9 +339,9 @@ public class Battleground {
 		}
 
 		// new bots
-		for(int i = 0; i < Lane.values().length; i++) {
-			if(timeSinceLastBotPlayer[i] > TIME_BETWEEN_BOTS) {
-				if(botsInQueuePlayer[i].size() > 0) {
+		for (int i = 0; i < Lane.values().length; i++) {
+			if (timeSinceLastBotPlayer[i] > TIME_BETWEEN_BOTS) {
+				if (botsInQueuePlayer[i].size() > 0) {
 					Bot b = botsInQueuePlayer[i].remove(0);
 					bots.add(b);
 					timeSinceLastBotPlayer[i] = 0;
@@ -322,9 +349,9 @@ public class Battleground {
 			} else {
 				timeSinceLastBotPlayer[i] += _dt;
 			}
-			
-			if(timeSinceLastBotAI[i] > TIME_BETWEEN_BOTS) {
-				if(botsInQueueAI[i].size() > 0) {
+
+			if (timeSinceLastBotAI[i] > TIME_BETWEEN_BOTS) {
+				if (botsInQueueAI[i].size() > 0) {
 					Bot b = botsInQueueAI[i].remove(0);
 					bots.add(b);
 					timeSinceLastBotAI[i] = 0;
@@ -333,6 +360,8 @@ public class Battleground {
 				timeSinceLastBotAI[i] += _dt;
 			}
 		}
+
+		ai.update(_dt);
 
 		// TODO update homes <- check finish game
 	}
