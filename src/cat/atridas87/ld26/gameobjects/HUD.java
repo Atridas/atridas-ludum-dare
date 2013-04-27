@@ -3,6 +3,8 @@ package cat.atridas87.ld26.gameobjects;
 import java.nio.FloatBuffer;
 import java.util.Vector;
 
+import javax.vecmath.Vector2f;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.ARBVertexArrayObject;
 import org.lwjgl.opengl.GL11;
@@ -27,6 +29,20 @@ public class HUD {
 	private float lastUpdateCoins;
 	
 	private Lane sendTo = Lane.MIDDLE;
+	
+	private final Formation formations[] = new Formation[8];
+	
+	{
+		int bots1[] = {1,0,0};
+		formations[0] = new Formation(bots1, 50, new Vector2f( 10,320));
+		formations[1] = new Formation(bots1, 50, new Vector2f(110,320));
+		formations[2] = new Formation(bots1, 50, new Vector2f( 10,220));
+		formations[3] = new Formation(bots1, 50, new Vector2f(110,220));
+		formations[4] = new Formation(bots1, 50, new Vector2f( 10,120));
+		formations[5] = new Formation(bots1, 50, new Vector2f(110,120));
+		formations[6] = new Formation(bots1, 50, new Vector2f( 10, 20));
+		formations[7] = new Formation(bots1, 50, new Vector2f(110, 20));
+	}
 
 	public void update(float _dt) {
 
@@ -42,7 +58,7 @@ public class HUD {
 		}
 	}
 
-	private static void renderText(String text, float x, float y) {
+	public static void renderText(String text, float x, float y) {
 		ShaderManager.instance.setPosition(x, y);
 
 		Vector<Float> vvb = textToVertexs(text);
@@ -205,6 +221,10 @@ public class HUD {
 		
 		
 		renderLaneButtons(0, LANE_BUTTONS_Y);
+		
+		for(int i = 0; i < formations.length; i++) {
+			formations[i].render(numCoins);
+		}
 	}
 
 	public static Vector<Float> textToVertexs(String roman) {
