@@ -11,8 +11,11 @@ import cat.atridas87.ld26.render.ShaderManager;
 
 public class Bot {
 
+	public static final float BOT_WIDTH = 5;
+	
 	private static final float DISTANCE_CHANGE_CONTROL_POINT = 25;
 	private static final float EVADE_TOWERS_AT = 20;
+	private static final float EVADE_BOTS_AT = 20;
 
 	private static final Model models[];
 	
@@ -23,8 +26,9 @@ public class Bot {
 	private final Lane lane;
 
 	private final float rangeToTower;
+	private final float rangeToBot;
 
-	private final Vector2f position;
+	public final Vector2f position;
 	public int lives;
 
 	private final Vector2f velocity = new Vector2f(0, 0);
@@ -45,6 +49,7 @@ public class Bot {
 		controlPoint += _player ? 1 : -1;
 		
 		rangeToTower = type.range + Tower.TOWER_WIDTH / 2;
+		rangeToBot   = type.range + BOT_WIDTH / 2;
 	}
 
 	public void render() {
@@ -66,6 +71,10 @@ public class Bot {
 		Vector2f desiredVelocity = new Vector2f();
 		desiredVelocity.x = targetPos.x - position.x;
 		desiredVelocity.y = targetPos.y - position.y;
+		
+		if(desiredVelocity.x == 0 && desiredVelocity.y == 0) {
+			return desiredVelocity;
+		}
 
 		desiredVelocity.normalize();
 		desiredVelocity.scale(type.maxSpeed);
@@ -114,6 +123,9 @@ public class Bot {
 		}
 		
 		float dist = desiredVelocity.length();
+		if(dist == 0) {
+			return calcSteeringWander();
+		}
 		
 		desiredVelocity.scale( 1 / dist );
 		
@@ -169,19 +181,26 @@ public class Bot {
 		return calcSteeringSeek(targetPoint);
 	}
 	
-	private Vector2f calcSteeringArriveToTower(Tower tower) {
+	private Vector2f calcSteeringArriveToDistance(Vector2f center, float distance) {
 		Vector2f arrivePoint = new Vector2f();
-		arrivePoint.x = position.x - tower.position.x;
-		arrivePoint.y = position.y - tower.position.y;
+		arrivePoint.x = position.x - center.x;
+		arrivePoint.y = position.y - center.y;
 		arrivePoint.normalize();
-		arrivePoint.scale(rangeToTower / 2);
-		arrivePoint.x += tower.position.x;
-		arrivePoint.y += tower.position.y;
+		arrivePoint.scale(distance);
+		arrivePoint.x += center.x;
+		arrivePoint.y += center.y;
 		
 		return calcSteeringArrive(arrivePoint);
 	}
-
-	private Vector2f calcSteering(Tower closestTower) {
+	
+	private static final class Steering {
+		Vector2f steering;
+		boolean force;
+	}
+	
+	
+	private Steering calcSteeringTower(Tower closestTower) {
+		Steering steering = new Steering();
 		
 		Vector2f steeringTower;
 		steeringTower = calcSteeringEvade(closestTower.position, EVADE_TOWERS_AT, 0.5f);
@@ -194,26 +213,95 @@ public class Bot {
 			
 			if(distToTower.lengthSquared() < range * range)
 			{
-				Vector2f steeringTowerArrive = calcSteeringArriveToTower(closestTower);
+				Vector2f steeringTowerArrive = calcSteeringArriveToDistance(closestTower.position, rangeToTower / 2);
 				steeringTowerArrive.add(steeringTower);
-				return steeringTowerArrive;
+				steering.steering = steeringTowerArrive;
+				steering.force = true;
+				return steering;
 			} else {
 				steeringTower = new Vector2f();
 			}
 		}
 		
+		steering.steering = steeringTower;
+		steering.force = false;
+		return steering;
+	}
+	
+	
+	private Steering calcSteeringBot(Bot closestBot) {
+		Steering steering = new Steering();
+		
+		Vector2f steeringBot;
+		steeringBot = calcSteeringEvade(closestBot.position, EVADE_BOTS_AT, 0.5f);
+		if(closestBot.player != player && closestBot.lives > 0) {
+			Vector2f distToTower = new Vector2f();
+			distToTower.x = closestBot.position.x - position.x;
+			distToTower.y = closestBot.position.y - position.y;
+			
+			float range = (rangeToBot < 50) ? 50 : rangeToBot;
+			
+			if(distToTower.lengthSquared() < range * range)
+			{
+				Vector2f steeringBotArrive = calcSteeringArriveToDistance(closestBot.position, rangeToBot / 2);
+				steeringBotArrive.add(steeringBot);
+				steering.steering = steeringBotArrive;
+				steering.force = true;
+				return steering;
+			} else {
+				steeringBot = new Vector2f();
+			}
+		}
+		
+		steering.steering = steeringBot;
+		steering.force = false;
+		return steering;
+	}
+
+	private Steering calcSteeringBots(Bot closestBots[]) {
+		Steering steering = new Steering();
+		steering.steering = new Vector2f(0,0);
+		steering.force = false;
+		
+		for(int i = 0; i < closestBots.length; i++) {
+			Steering steering2 = calcSteeringBot(closestBots[i]);
+			if(steering2.force) {
+				steering.force = true;
+			}
+			steering.steering.add(steering2.steering);
+		}
+		
+		return steering;
+	}
+	
+
+	private Vector2f calcSteering(Tower closestTower, Bot closestBots[]) {
+
+		Steering steeringTower = calcSteeringTower(closestTower);
+		Steering steeringBots = calcSteeringBots(closestBots);
+		
+		Vector2f steeringElements = new Vector2f();
+		steeringElements.x = steeringTower.steering.x + steeringBots.steering.x;
+		steeringElements.y = steeringTower.steering.y + steeringBots.steering.y;
+		
+		if(steeringTower.force || steeringBots.force) {
+			return steeringElements;
+		}
+		
+		
+		
 		Vector2f lane = calcSteeringLane();
 		Vector2f wander = calcSteeringWander();
 		
 		Vector2f result = new Vector2f(lane);
-		result.add(steeringTower);
+		result.add(steeringElements);
 		result.add(wander);
 		
 		return result;
 	}
 
-	private void calcPosition(Tower closestTower, float _dt) {
-		Vector2f force = calcSteering(closestTower);
+	private void calcPosition(Tower closestTower, Bot closestBots[], float _dt) {
+		Vector2f force = calcSteering(closestTower, closestBots);
 
 		if (force.lengthSquared() > type.maxForce * type.maxForce) {
 			float len = force.length();
@@ -260,7 +348,8 @@ public class Bot {
 
 	public void update(float _dt) {
 		Tower closestTower = Battleground.instance.getClosestTower(position);
-		calcPosition(closestTower, _dt);
+		Bot[] cosestBots = Battleground.instance.getClosestBots(this);
+		calcPosition(closestTower, cosestBots, _dt);
 		
 		
 		calcShoot(closestTower, _dt);
