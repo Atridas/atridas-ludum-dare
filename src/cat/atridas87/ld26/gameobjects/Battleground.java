@@ -22,6 +22,8 @@ public class Battleground {
 	private Vector<Bot> playerBots, aiBots;
 
 	private Home homePlayer, homeBot;
+	
+	private Vector<Shot> shots = new Vector<Shot>();
 
 	public Battleground() {
 		instance = this;
@@ -42,7 +44,7 @@ public class Battleground {
 		playerTowers = new Tower[11];
 		playerTowers[0] = new Tower(true, 125, 25);
 		playerTowers[1] = new Tower(true, 325, 25);
-		playerTowers[2] = new Tower(true, 425, 25);
+		playerTowers[2] = new Tower(false, 425, 25);
 		playerTowers[3] = new Tower(true, 500, 100);
 		playerTowers[4] = new Tower(true, 575, 175);
 		playerTowers[5] = new Tower(true, 575, 275);
@@ -56,7 +58,7 @@ public class Battleground {
 		aiTowers[0] = new Tower(false, 600 - 125, 600 - 25);
 		aiTowers[1] = new Tower(false, 600 - 325, 600 - 25);
 		aiTowers[2] = new Tower(false, 600 - 425, 600 - 25);
-		aiTowers[3] = new Tower(false, 600 - 500, 600 - 100);
+		aiTowers[3] = new Tower(true, 600 - 500, 600 - 100);
 		aiTowers[4] = new Tower(false, 600 - 575, 600 - 175);
 		aiTowers[5] = new Tower(false, 600 - 575, 600 - 275);
 		aiTowers[6] = new Tower(false, 600 - 575, 600 - 475);
@@ -69,7 +71,17 @@ public class Battleground {
 		aiBots = new Vector<Bot>();
 
 		playerBots.add(new Bot(true, Bot.Type.BASIC, Lane.UP));
+		playerBots.add(new Bot(true, Bot.Type.BASIC, Lane.UP));
+		playerBots.add(new Bot(true, Bot.Type.BASIC, Lane.UP));
+		playerBots.add(new Bot(true, Bot.Type.BASIC, Lane.UP));
+		
 		playerBots.add(new Bot(true, Bot.Type.SUPER, Lane.BOT));
+		playerBots.add(new Bot(true, Bot.Type.BASIC, Lane.BOT));
+		playerBots.add(new Bot(true, Bot.Type.BASIC, Lane.BOT));
+
+		playerBots.add(new Bot(true, Bot.Type.BASIC, Lane.MIDDLE));
+		playerBots.add(new Bot(true, Bot.Type.BASIC, Lane.MIDDLE));
+		playerBots.add(new Bot(true, Bot.Type.BASIC, Lane.MIDDLE));
 
 		aiBots.add(new Bot(false, Bot.Type.TANK, Lane.MIDDLE));
 
@@ -109,6 +121,10 @@ public class Battleground {
 		return t;
 	}
 
+	public void addShot(Shot shot) {
+		shots.add(shot);
+	}
+	
 	public void update(float _dt) {
 
 		// TODO update towers
@@ -118,6 +134,13 @@ public class Battleground {
 		}
 		for (int i = 0; i < aiBots.size(); i++) {
 			aiBots.get(i).update(_dt);
+		}
+		for (int i = 0; i < shots.size(); i++) {
+			shots.get(i).update(_dt);
+			if(!shots.get(i).alive()) {
+				shots.remove(i);
+				i--;
+			}
 		}
 
 		// TODO update homes
@@ -149,6 +172,12 @@ public class Battleground {
 		}
 		for (int i = 0; i < aiBots.size(); i++) {
 			aiBots.get(i).render();
+		}
+		
+
+		GL11.glPointSize(1);
+		for (int i = 0; i < shots.size(); i++) {
+			shots.get(i).render();
 		}
 
 		homePlayer.render();

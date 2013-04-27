@@ -30,6 +30,7 @@ public class Bot {
 	private final Vector2f velocity = new Vector2f(0, 0);
 
 	private int controlPoint;
+	private float timeSinceLastShot = 0;
 
 	public Bot(boolean _player, Type _type, Lane _lane) {
 		lane = _lane;
@@ -43,7 +44,7 @@ public class Bot {
 
 		controlPoint += _player ? 1 : -1;
 		
-		rangeToTower = type.range + 7.5f;
+		rangeToTower = type.range + Tower.TOWER_WIDTH / 2;
 	}
 
 	public void render() {
@@ -180,22 +181,22 @@ public class Bot {
 		return calcSteeringArrive(arrivePoint);
 	}
 
-	private Vector2f calcSteering() {
-		Tower targetTower = Battleground.instance.getClosestTower(position);
+	private Vector2f calcSteering(Tower closestTower) {
 		
 		Vector2f steeringTower;
-		if(targetTower.player == player) {
-			steeringTower = calcSteeringEvade(targetTower.position, EVADE_TOWERS_AT, 0.5f);
-		} else {
+		steeringTower = calcSteeringEvade(closestTower.position, EVADE_TOWERS_AT, 0.5f);
+		if(closestTower.player != player && closestTower.live > 0) {
 			Vector2f distToTower = new Vector2f();
-			distToTower.x = targetTower.position.x - position.x;
-			distToTower.y = targetTower.position.y - position.y;
+			distToTower.x = closestTower.position.x - position.x;
+			distToTower.y = closestTower.position.y - position.y;
 			
 			float range = (rangeToTower < 50) ? 50 : rangeToTower;
 			
 			if(distToTower.lengthSquared() < range * range)
 			{
-				return calcSteeringArriveToTower(targetTower);
+				Vector2f steeringTowerArrive = calcSteeringArriveToTower(closestTower);
+				steeringTowerArrive.add(steeringTower);
+				return steeringTowerArrive;
 			} else {
 				steeringTower = new Vector2f();
 			}
@@ -211,8 +212,8 @@ public class Bot {
 		return result;
 	}
 
-	private void calcPosition(float _dt) {
-		Vector2f force = calcSteering();
+	private void calcPosition(Tower closestTower, float _dt) {
+		Vector2f force = calcSteering(closestTower);
 
 		if (force.lengthSquared() > type.maxForce * type.maxForce) {
 			float len = force.length();
@@ -239,9 +240,30 @@ public class Bot {
 		position.x += velocity.x * _dt;
 		position.y += velocity.y * _dt;
 	}
+	
+	private void calcShoot(Tower closestTower, float _dt) {
+		if(timeSinceLastShot < type.attTime) {
+			timeSinceLastShot += _dt;
+		} else if(closestTower.player != player && closestTower.live > 0) {
+			Vector2f distToTower = new Vector2f();
+			distToTower.x = closestTower.position.x - position.x;
+			distToTower.y = closestTower.position.y - position.y;
+			
+			if(distToTower.lengthSquared() < rangeToTower * rangeToTower) {
+				Shot shot = new Shot(player, type.range, type.attack, position, closestTower.position);
+				timeSinceLastShot = 0;
+				Battleground.instance.addShot(shot);
+				return;
+			}
+		}
+	}
 
 	public void update(float _dt) {
-		calcPosition(_dt);
+		Tower closestTower = Battleground.instance.getClosestTower(position);
+		calcPosition(closestTower, _dt);
+		
+		
+		calcShoot(closestTower, _dt);
 	}
 
 	static {
