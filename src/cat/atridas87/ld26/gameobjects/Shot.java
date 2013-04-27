@@ -123,6 +123,21 @@ public class Shot {
 				}
 			}
 		}
+		{
+			Vector2f enemyHomePosition = player ? Home.AI_HOME
+					: Home.PLAYER_HOME;
+			Vector2f distToHome = new Vector2f();
+			distToHome.x = enemyHomePosition.x - position.x;
+			distToHome.y = enemyHomePosition.y - position.y;
+
+			if (distToHome.lengthSquared() < Home.HOME_WIDTH * Home.HOME_WIDTH
+					/ 4) {
+				Battleground.instance.getHome(!player).lives -= attack;
+				alive = false;
+				return;
+			}
+
+		}
 	}
 
 	public boolean alive() {

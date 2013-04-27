@@ -16,9 +16,12 @@ import cat.atridas87.ld26.render.ShaderManager.ProgramType;
 
 public class HUD {
 
-	public static final int COINS_PER_SECOND_PER_LEVEL[] = { 5, 10, 15, 20, 25, 30, 35 };
-	public static final int MAX_COINS_PER_LEVEL[] = { 50, 150, 300, 500, 750, 1050, 1400 };
-	public static final int COST_LEVEL[] = { 25, 100, 200, 400, 700, 900, 1200 };
+	public static final int COINS_PER_SECOND_PER_LEVEL[] = { 100, 150, 200, 250, 300, 350, 400 };
+	public static final int MAX_COINS_PER_LEVEL[] = { 500, 875, 1250, 1625, 2000, 2750, 3500 };
+	public static final int COST_LEVEL[] = { 250, 550, 850, 1200, 1600, 2000, 2500 };
+
+	public static final int NUM_BOTS[][] = {{3,0,0}, {0,3,0}, {0,0,3}, {0,9,0}, {15,0,0}, {12,6,0}, {12,0,3}, {15,9,3}};
+	public static final int COST_FORMATION[] = {50, 75, 150, 200, 240, 300, 320, 550};
 
 	public static final int NUM_LEVELS = COINS_PER_SECOND_PER_LEVEL.length;
 	
@@ -33,15 +36,14 @@ public class HUD {
 	private final Formation formations[] = new Formation[8];
 	
 	{
-		int bots1[] = {1,0,0};
-		formations[0] = new Formation(bots1, 50, new Vector2f( 10,320));
-		formations[1] = new Formation(bots1, 50, new Vector2f(110,320));
-		formations[2] = new Formation(bots1, 50, new Vector2f( 10,220));
-		formations[3] = new Formation(bots1, 50, new Vector2f(110,220));
-		formations[4] = new Formation(bots1, 50, new Vector2f( 10,120));
-		formations[5] = new Formation(bots1, 50, new Vector2f(110,120));
-		formations[6] = new Formation(bots1, 50, new Vector2f( 10, 20));
-		formations[7] = new Formation(bots1, 50, new Vector2f(110, 20));
+		formations[0] = new Formation(NUM_BOTS[0], COST_FORMATION[0], new Vector2f( 10,320));
+		formations[1] = new Formation(NUM_BOTS[1], COST_FORMATION[1], new Vector2f(110,320));
+		formations[2] = new Formation(NUM_BOTS[2], COST_FORMATION[2], new Vector2f( 10,220));
+		formations[3] = new Formation(NUM_BOTS[3], COST_FORMATION[3], new Vector2f(110,220));
+		formations[4] = new Formation(NUM_BOTS[4], COST_FORMATION[4], new Vector2f( 10,120));
+		formations[5] = new Formation(NUM_BOTS[5], COST_FORMATION[5], new Vector2f(110,120));
+		formations[6] = new Formation(NUM_BOTS[6], COST_FORMATION[6], new Vector2f( 10, 20));
+		formations[7] = new Formation(NUM_BOTS[7], COST_FORMATION[7], new Vector2f(110, 20));
 	}
 
 	public void update(float _dt) {
@@ -183,6 +185,21 @@ public class HUD {
 				sendTo = Lane.MIDDLE;
 			} else if(x > 137.5f && x < 187.5f) {
 				sendTo = Lane.UP;
+			}
+		}
+		
+		for(int i = 0; i < formations.length; i++) {
+			if(x > formations[i].position.x && x < formations[i].position.x + 80 &&
+					y > formations[i].position.y && y < formations[i].position.y + 80 &&
+					numCoins >= formations[i].price)
+			{
+				for(int t = 0; t < Bot.Type.values().length; t++) {
+					for(int j = 0; j < formations[i].numBots[t]; j++) {
+						Battleground.instance.addBot(new Bot(true, Bot.Type.values()[t], sendTo));
+					}
+				}
+				
+				numCoins -= formations[i].price;
 			}
 		}
 		
@@ -403,6 +420,10 @@ public class HUD {
 			roman += 'D';
 			num -= 500;
 		}
+		if (num >= 400) {
+			roman += "CD";
+			num -= 400;
+		}
 
 		while (num >= 100) {
 			roman += 'C';
@@ -415,6 +436,10 @@ public class HUD {
 		if (num >= 50) {
 			roman += 'L';
 			num -= 50;
+		}
+		if (num >= 40) {
+			roman += "XL";
+			num -= 40;
 		}
 
 		while (num >= 10) {

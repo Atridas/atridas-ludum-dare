@@ -15,7 +15,7 @@ public class Formation {
 	final int numBots[];
 	final int price;
 	
-	private final Vector2f position;
+	final Vector2f position;
 	
 	private static final FloatBuffer fb;
 	private static final Bot bots[];
@@ -72,6 +72,8 @@ public class Formation {
 		int botPosX = 10;
 		int botPosY = 70;
 
+		GL11.glLineWidth(1);
+		GL11.glPointSize(5);
 		for(int t = 0; t < Bot.Type.values().length; t++) {
 			for(int i = 0; i < numBots[t]; i++) {
 				bots[t].position.x = botPosX + position.x;
@@ -80,8 +82,8 @@ public class Formation {
 				
 				botPosX += 10;
 				while(botPosX > 70) {
-					botPosX -= 60;
-					botPosY += 10;
+					botPosX -= 70;
+					botPosY -= 10;
 				}
 			}
 		}

@@ -11,12 +11,12 @@ import cat.atridas87.ld26.render.ShaderManager;
 
 public class Tower {
 
-	public static final int LIVES = 200;
+	public static final int LIVES = 500;
 	public static final float TOWER_WIDTH = 15;
-	public static final float COOL_DOWN = 2.f;
+	public static final float COOL_DOWN = 10.5f;
 
-	public static final float RANGE = 50;
-	public static final float ATTACK = 10;
+	public static final float RANGE = 75;
+	public static final float ATTACK = 25;
 
 	public final boolean player;
 	public final Vector2f position;

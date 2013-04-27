@@ -22,11 +22,12 @@ public class Bot {
 	private static Random rnd = new Random();
 
 	public final boolean player;
-	private final Type type;
-	private final Lane lane;
+	public final Type type;
+	public final Lane lane;
 
 	private final float rangeToTower;
 	private final float rangeToBot;
+	private final float rangeToHome;
 
 	public final Vector2f position;
 	public int lives;
@@ -50,6 +51,7 @@ public class Bot {
 
 		rangeToTower = type.range + Tower.TOWER_WIDTH / 2;
 		rangeToBot = type.range + BOT_WIDTH / 2;
+		rangeToHome = type.range + Home.HOME_WIDTH / 2;
 
 		velocity.x = lane.controlPoints[controlPoint].x - position.x;
 		velocity.y = lane.controlPoints[controlPoint].y - position.y;
@@ -284,6 +286,30 @@ public class Bot {
 		return steering;
 	}
 
+	private Steering calcSteeringHome() {
+		Steering steering = new Steering();
+		steering.steering = new Vector2f(0, 0);
+		steering.force = false;
+		
+		Vector2f enemyHomePosition = player? Home.AI_HOME : Home.PLAYER_HOME;
+		
+		Vector2f distToHome = new Vector2f();
+		distToHome.x = enemyHomePosition.x - position.x;
+		distToHome.y = enemyHomePosition.y - position.y;
+
+		float range = (rangeToBot < 50) ? 50 : rangeToBot;
+
+		if (distToHome.lengthSquared() < range * range) {
+			Vector2f steeringBotArrive = calcSteeringArriveToDistance(
+					enemyHomePosition, rangeToHome / 2);
+			steering.steering = steeringBotArrive;
+			steering.force = true;
+			return steering;
+		}
+
+		return steering;
+	}
+
 	private Vector2f calcSteering(Tower closestTower, Bot closestBots[]) {
 
 		Vector2f directionToField = Battleground.instance
@@ -295,12 +321,13 @@ public class Bot {
 
 		Steering steeringTower = calcSteeringTower(closestTower);
 		Steering steeringBots = calcSteeringBots(closestBots);
+		Steering steeringHome = calcSteeringHome();
 
 		Vector2f steeringElements = new Vector2f();
-		steeringElements.x = steeringTower.steering.x + steeringBots.steering.x;
-		steeringElements.y = steeringTower.steering.y + steeringBots.steering.y;
+		steeringElements.x = steeringTower.steering.x + steeringBots.steering.x + steeringHome.steering.x;
+		steeringElements.y = steeringTower.steering.y + steeringBots.steering.y + steeringHome.steering.y;
 
-		if (steeringTower.force || steeringBots.force) {
+		if (steeringTower.force || steeringBots.force || steeringHome.force) {
 			return steeringElements;
 		}
 
@@ -401,6 +428,18 @@ public class Bot {
 
 			}
 
+			Vector2f enemyHomePosition = player? Home.AI_HOME : Home.PLAYER_HOME;
+			Vector2f distToHome = new Vector2f();
+			distToHome.x = enemyHomePosition.x - position.x;
+			distToHome.y = enemyHomePosition.y - position.y;
+
+			if (distToHome.lengthSquared() < rangeToHome * rangeToHome) {
+				Shot shot = new Shot(player, type.range, type.attack, position,
+						enemyHomePosition);
+				timeSinceLastShot = 0;
+				Battleground.instance.addShot(shot);
+				return;
+			}
 		}
 	}
 
@@ -451,7 +490,7 @@ public class Bot {
 	}
 
 	public static enum Type {
-		BASIC(25, 5, 1.f, 1, 10, 500, 25), TANK(50, 2, 5.f, 3, 7.5f, 500, 10), SUPER(
+		BASIC(25, 5, 1.f, 1, 10, 500, 25), TANK(100, 2, 5.f, 3, 7.5f, 500, 10), SUPER(
 				40, 10, 0.75f, 2, 10, 500, 50);
 
 		private final int lives, attack;
