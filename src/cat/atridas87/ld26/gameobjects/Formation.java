@@ -8,14 +8,15 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
+import cat.atridas87.ld26.HUD;
 import cat.atridas87.ld26.render.ShaderManager;
 
 public class Formation {
 
-	final int numBots[];
-	final int price;
+	public final int numBots[];
+	public final int price;
 	
-	final Vector2f position;
+	public final Vector2f position;
 	
 	private static final FloatBuffer fb;
 	private static final Bot bots[];
@@ -67,7 +68,7 @@ public class Formation {
 		
 		GL11.glDrawArrays(GL11.GL_LINES, 0, fb.capacity() / 2);
 		
-		HUD.renderText(HUD.numToRoman(price), position.x + 10, position.y + 10);
+		HUD.renderText(Integer.toString(price), position.x + 10, position.y + 10);
 
 		int botPosX = 10;
 		int botPosY = 70;

@@ -6,6 +6,8 @@ import javax.vecmath.Vector2f;
 
 import org.lwjgl.opengl.GL11;
 
+import cat.atridas87.ld26.GameInfo;
+import cat.atridas87.ld26.HUD;
 import cat.atridas87.ld26.ai.AI;
 import cat.atridas87.ld26.render.Model;
 import cat.atridas87.ld26.render.ShaderManager;
@@ -325,6 +327,10 @@ public class Battleground {
 				
 				if(!removedBot.player) {
 					HUD.instance.numCoins += removedBot.type.value;
+					GameInfo.instance.addKill();
+					GameInfo.instance.addPoints(HUD.instance.numCoins);
+				} else {
+					GameInfo.instance.addLose();
 				}
 				
 			}

@@ -7,7 +7,6 @@ import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 
 import cat.atridas87.ld26.gameobjects.Battleground;
-import cat.atridas87.ld26.gameobjects.HUD;
 import cat.atridas87.ld26.render.ShaderManager;
 
 public class LD26 extends BaseGame {
@@ -17,6 +16,7 @@ public class LD26 extends BaseGame {
 
 	private Battleground battleground;
 	private HUD hud;
+	private GameInfo gameInfo;
 
 	/**
 	 * No constructor needed - this class is static
@@ -35,8 +35,8 @@ public class LD26 extends BaseGame {
 
 		battleground = new Battleground();
 		hud = new HUD();
+		gameInfo = new GameInfo();
 		
-		GL11.glClearColor(1, 1, 1, 1);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		GL11.glEnable(GL11.GL_LINE_SMOOTH);
@@ -67,26 +67,27 @@ public class LD26 extends BaseGame {
 		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 			finished = true;
 		}
-		
-		// TODO update towers
 
 		battleground.update(_dt);
 		
 		hud.update(_dt);
 		
-		// TODO update homes
+		gameInfo.update(_dt);
 	}
 
 	/**
 	 * Render the current frame
 	 */
 	public void render() {
+		GL11.glClearColor(0.3f, 0.3f, 0.3f, 1);
 		GL11.glViewport(0, 0, width, height);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
 		GL11.glViewport(0, 0, height, height);
 
 		battleground.render();
+		
+		gameInfo.render();
 
 		GL11.glViewport(height, 0, width - height, height);
 

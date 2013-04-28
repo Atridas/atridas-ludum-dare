@@ -9,7 +9,7 @@ import cat.atridas87.ld26.gameobjects.Lane;
 public class AI {
 
 	public static final float AI_TIME_BTWN_LEVELS[] =  {  30,   45,   60,   75,   90,  105,  120};
-	public static final float AI_LEVEL_TIME_TO_ADD[] = {   5,    4,    3, 2.5f,    2, 1.5f,    1, 0.75f};
+	public static final float AI_LEVEL_TIME_TO_ADD[] = {  10,    8,    7,   6f,    5,   3f,    2, 1.25f};
 
 	private int currentLevel;
 	
@@ -17,6 +17,8 @@ public class AI {
 	private float timeSinceLastBot;
 	
 	private static final Random rnd = new Random();
+	
+	private int[] numGenerated = new int[Bot.Type.values().length];
 	
 	public void update(float _dt) {
 		timeSinceLastBot += _dt;
@@ -35,10 +37,14 @@ public class AI {
 			for(int i = 0; i < Bot.Type.values().length; i++) {
 				if(w < Bot.Type.values()[i].aiWeight) {
 					type = Bot.Type.values()[i];
+					break;
 				} else {
 					w -= Bot.Type.values()[i].aiWeight;
 				}
 			}
+			
+			numGenerated[type.ordinal()]++;
+			System.out.println("bot " + numGenerated[0] + " " + numGenerated[1] + " " + numGenerated[2]);
 			
 			Battleground.instance.addBot(new Bot(false, type, lane));
 			

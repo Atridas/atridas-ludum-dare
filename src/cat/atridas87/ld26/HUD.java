@@ -1,4 +1,4 @@
-package cat.atridas87.ld26.gameobjects;
+package cat.atridas87.ld26;
 
 import java.nio.FloatBuffer;
 import java.util.Vector;
@@ -11,6 +11,10 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
+import cat.atridas87.ld26.gameobjects.Battleground;
+import cat.atridas87.ld26.gameobjects.Bot;
+import cat.atridas87.ld26.gameobjects.Formation;
+import cat.atridas87.ld26.gameobjects.Lane;
 import cat.atridas87.ld26.render.ShaderManager;
 import cat.atridas87.ld26.render.ShaderManager.ProgramType;
 
@@ -220,8 +224,15 @@ public class HUD {
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
 
-		renderText(numToRoman(numCoins), 10, 570);
-		renderText(numToRoman(MAX_COINS_PER_LEVEL[level]), 140, 570);
+		String strNumCoins = Integer.toString(numCoins);
+		String strMaxCoins = Integer.toString(MAX_COINS_PER_LEVEL[level]);
+		
+		while(strNumCoins.length() < strMaxCoins.length()) {
+			strNumCoins = '0' + strNumCoins;
+		}
+
+		renderText(strNumCoins, 10, 570);
+		renderText(strMaxCoins, 140, 570);
 
 		renderText("LEVEL", 10, 520);
 		ShaderManager.instance.setColor(0.5f, 0.5f, 0.5f, 1);
@@ -234,7 +245,7 @@ public class HUD {
 			}
 			renderPlus(120, 520);
 			ShaderManager.instance.setColor(0, 0, 0, 1);
-			renderText(numToRoman(COST_LEVEL[level]), 150, 520);
+			renderText(Integer.toString(COST_LEVEL[level]), 150, 520);
 		} else {
 			ShaderManager.instance.setColor(1, 0, 0, 1);
 			renderPlus(120, 520);
@@ -401,6 +412,270 @@ public class HUD {
 				vb.add(2.5f + x);
 				vb.add(10.f);
 				vb.add(5f + x);
+				vb.add(10.f);
+
+				x += 10;
+				break;
+
+			case '0':
+				vb.add(2.5f + x);
+				vb.add(0.f);
+				vb.add(7.5f + x);
+				vb.add(0.f);
+
+				vb.add(7.5f + x);
+				vb.add(0.f);
+				vb.add(7.5f + x);
+				vb.add(15f);
+
+				vb.add(2.5f + x);
+				vb.add(0f);
+				vb.add(2.5f + x);
+				vb.add(15f);
+
+				vb.add(2.5f + x);
+				vb.add(15f);
+				vb.add(7.5f + x);
+				vb.add(15f);
+
+				x += 10;
+				break;
+
+			case '1':
+				vb.add(2.5f + x);
+				vb.add(0.f);
+				vb.add(7.5f + x);
+				vb.add(0.f);
+
+				vb.add(5f + x);
+				vb.add(0.f);
+				vb.add(5f + x);
+				vb.add(15.f);
+
+				vb.add(5f + x);
+				vb.add(15.f);
+				vb.add(2.5f + x);
+				vb.add(10.f);
+
+				x += 10;
+				break;
+
+			case '2':
+				vb.add(2.5f + x);
+				vb.add(0.f);
+				vb.add(7.5f + x);
+				vb.add(0.f);
+
+				vb.add(2.5f + x);
+				vb.add(0.f);
+				vb.add(1.5f + x);
+				vb.add(7.5f);
+
+				vb.add(2.5f + x);
+				vb.add(7.5f);
+				vb.add(7.5f + x);
+				vb.add(7.5f);
+
+				vb.add(7.5f + x);
+				vb.add(7.5f);
+				vb.add(7.5f + x);
+				vb.add(15f);
+
+				vb.add(2.5f + x);
+				vb.add(15f);
+				vb.add(7.5f + x);
+				vb.add(15f);
+
+				x += 10;
+				break;
+
+			case '3':
+				vb.add(2.5f + x);
+				vb.add(0.f);
+				vb.add(7.5f + x);
+				vb.add(0.f);
+
+				vb.add(7.5f + x);
+				vb.add(0.f);
+				vb.add(7.5f + x);
+				vb.add(15f);
+
+				vb.add(5f + x);
+				vb.add(7.5f);
+				vb.add(7.5f + x);
+				vb.add(7.5f);
+
+				vb.add(2.5f + x);
+				vb.add(15f);
+				vb.add(7.5f + x);
+				vb.add(15f);
+
+				x += 10;
+				break;
+
+			case '4':
+				vb.add(2.5f + x);
+				vb.add(15.f);
+				vb.add(2.5f + x);
+				vb.add(7.5f);
+
+				vb.add(2.5f + x);
+				vb.add(7.5f);
+				vb.add(7.5f + x);
+				vb.add(7.5f);
+
+				vb.add(7.5f + x);
+				vb.add(12.5f);
+				vb.add(7.5f + x);
+				vb.add(0f);
+
+				x += 10;
+				break;
+
+			case '5':
+				vb.add(2.5f + x);
+				vb.add(0.f);
+				vb.add(7.5f + x);
+				vb.add(0.f);
+
+				vb.add(7.5f + x);
+				vb.add(0.f);
+				vb.add(7.5f + x);
+				vb.add(7.5f);
+
+				vb.add(2.5f + x);
+				vb.add(7.5f);
+				vb.add(7.5f + x);
+				vb.add(7.5f);
+
+				vb.add(2.5f + x);
+				vb.add(7.5f);
+				vb.add(2.5f + x);
+				vb.add(15f);
+
+				vb.add(2.5f + x);
+				vb.add(15f);
+				vb.add(7.5f + x);
+				vb.add(15f);
+
+				x += 10;
+				break;
+
+			case '6':
+				vb.add(2.5f + x);
+				vb.add(0.f);
+				vb.add(2.5f + x);
+				vb.add(15.f);
+
+				vb.add(2.5f + x);
+				vb.add(15.f);
+				vb.add(7.5f + x);
+				vb.add(15f);
+
+				vb.add(2.5f + x);
+				vb.add(7.5f);
+				vb.add(7.5f + x);
+				vb.add(7.5f);
+
+				vb.add(2.5f + x);
+				vb.add(0f);
+				vb.add(7.5f + x);
+				vb.add(0f);
+				
+				vb.add(7.5f + x);
+				vb.add(0.f);
+				vb.add(7.5f + x);
+				vb.add(7.5f);
+
+				x += 10;
+				break;
+
+			case '7':
+				vb.add(2.5f + x);
+				vb.add(15f);
+				vb.add(7.5f + x);
+				vb.add(15f);
+
+				vb.add(7.5f + x);
+				vb.add(15.f);
+				vb.add(2.5f + x);
+				vb.add(0f);
+
+				vb.add(2.5f + x);
+				vb.add(7.5f);
+				vb.add(7.5f + x);
+				vb.add(7.5f);
+
+				x += 10;
+				break;
+
+			case '8':
+				vb.add(2.5f + x);
+				vb.add(0.f);
+				vb.add(7.5f + x);
+				vb.add(0.f);
+
+				vb.add(7.5f + x);
+				vb.add(0.f);
+				vb.add(7.5f + x);
+				vb.add(15f);
+
+				vb.add(2.5f + x);
+				vb.add(7.5f);
+				vb.add(7.5f + x);
+				vb.add(7.5f);
+
+				vb.add(2.5f + x);
+				vb.add(0f);
+				vb.add(2.5f + x);
+				vb.add(15f);
+
+				vb.add(2.5f + x);
+				vb.add(15f);
+				vb.add(7.5f + x);
+				vb.add(15f);
+
+				x += 10;
+				break;
+
+			case '9':
+				vb.add(2.5f + x);
+				vb.add(0.f);
+				vb.add(7.5f + x);
+				vb.add(0.f);
+
+				vb.add(7.5f + x);
+				vb.add(0.f);
+				vb.add(7.5f + x);
+				vb.add(15f);
+
+				vb.add(2.5f + x);
+				vb.add(7.5f);
+				vb.add(7.5f + x);
+				vb.add(7.5f);
+
+				vb.add(2.5f + x);
+				vb.add(7.5f);
+				vb.add(2.5f + x);
+				vb.add(15f);
+
+				vb.add(2.5f + x);
+				vb.add(15f);
+				vb.add(7.5f + x);
+				vb.add(15f);
+
+				x += 10;
+				break;
+
+			case ':':
+				vb.add(4.5f + x);
+				vb.add(5.f);
+				vb.add(5.5f + x);
+				vb.add(5.f);
+				
+				vb.add(4.5f + x);
+				vb.add(10.f);
+				vb.add(5.5f + x);
 				vb.add(10.f);
 
 				x += 10;
