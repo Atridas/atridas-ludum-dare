@@ -3,6 +3,8 @@ package cat.atridas87.ld26.gameobjects;
 import javax.vecmath.Vector2f;
 
 import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 
 import cat.atridas87.ld26.render.Model;
 import cat.atridas87.ld26.render.ShaderManager;

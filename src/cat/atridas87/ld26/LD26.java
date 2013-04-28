@@ -28,7 +28,7 @@ public class LD26 extends BaseGame {
 	public void init() throws Exception {
 
 		// Start up the sound system
-		AL.create();
+		//AL.create();
 
 		// TODO: Load in your textures etc here
 		ShaderManager.instance = new ShaderManager();

@@ -5,10 +5,12 @@ import java.util.Vector;
 import javax.vecmath.Vector2f;
 
 import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.openal.SoundStore;
 
 import cat.atridas87.ld26.GameInfo;
 import cat.atridas87.ld26.HUD;
 import cat.atridas87.ld26.ai.AI;
+import cat.atridas87.ld26.sounds.Sounds;
 import cat.atridas87.ld26.render.Model;
 import cat.atridas87.ld26.render.ShaderManager;
 import cat.atridas87.ld26.render.ShaderManager.ProgramType;
@@ -309,6 +311,8 @@ public class Battleground {
 
 	public void addShot(Shot shot) {
 		shots.add(shot);
+		
+		Sounds.shot.play(1, FX_VOLUME * 0.25f);
 	}
 
 	public void update(float _dt) {
@@ -349,6 +353,8 @@ public class Battleground {
 					Bot b = botsInQueuePlayer[i].remove(0);
 					bots.add(b);
 					timeSinceLastBotPlayer[i] = 0;
+					
+					Sounds.newBot.play(1, FX_VOLUME * 0.25f);
 				}
 			} else {
 				timeSinceLastBotPlayer[i] += _dt;

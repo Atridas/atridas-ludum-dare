@@ -17,7 +17,7 @@ public class AI {
 
 	private static final Random rnd = new Random();
 
-	private int[] numGenerated = new int[Bot.Type.values().length];
+	//private int[] numGenerated = new int[Bot.Type.values().length];
 
 	public void update(float _dt) {
 		timeSinceLastBot += _dt;
@@ -41,9 +41,9 @@ public class AI {
 				}
 			}
 
-			numGenerated[type.ordinal()]++;
-			System.out.println("bot " + numGenerated[0] + " " + numGenerated[1]
-					+ " " + numGenerated[2]);
+			//numGenerated[type.ordinal()]++;
+			//System.out.println("bot " + numGenerated[0] + " " + numGenerated[1]
+			//		+ " " + numGenerated[2]);
 
 			Battleground.instance.addBot(new Bot(false, type, lane));
 

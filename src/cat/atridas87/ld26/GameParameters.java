@@ -69,4 +69,7 @@ public class GameParameters {
 	public static final float AI_TIME_BTWN_LEVELS[] =  {  30,   45,   60,   75,   90,  105,  120};
 	public static final float AI_LEVEL_TIME_TO_ADD[] = {   0.5f,    0.5f,    0.5f,   0.5f,    0.5f,   0.5f,    0.5f, 0.5f};
 	//public static final float AI_LEVEL_TIME_TO_ADD[] = {  10,    8,    7,   6f,    5,   3f,    2, 1.25f};
+	
+	
+	public static final float FX_VOLUME = 0.25f;
 }
