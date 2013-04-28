@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL11;
 import cat.atridas87.ld26.GameInfo;
 import cat.atridas87.ld26.render.Model;
 import cat.atridas87.ld26.render.ShaderManager;
+import cat.atridas87.ld26.sounds.Sounds;
 
 import static cat.atridas87.ld26.GameParameters.*;
 
@@ -73,6 +74,8 @@ public class Tower {
 					GameInfo.instance.addTowerKill();
 					GameInfo.instance.addPoints(TOWER_POINTS);
 				}
+				
+				Sounds.towerDestroyed.play(1, FX_VOLUME_TOWER_DESTROYED);
 			}
 
 			return;

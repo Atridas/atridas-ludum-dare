@@ -8,6 +8,7 @@ import org.lwjgl.opengl.Display;
 
 import cat.atridas87.ld26.gameobjects.Battleground;
 import cat.atridas87.ld26.render.ShaderManager;
+import cat.atridas87.ld26.sounds.Sounds;
 
 public class LD26 extends BaseGame {
 
@@ -29,6 +30,8 @@ public class LD26 extends BaseGame {
 
 		// Start up the sound system
 		//AL.create();
+		
+		Sounds.music.loop(1, 0.5f);
 
 		// TODO: Load in your textures etc here
 		ShaderManager.instance = new ShaderManager();

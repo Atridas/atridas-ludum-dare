@@ -5,7 +5,6 @@ import java.util.Vector;
 import javax.vecmath.Vector2f;
 
 import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.openal.SoundStore;
 
 import cat.atridas87.ld26.GameInfo;
 import cat.atridas87.ld26.HUD;
@@ -312,7 +311,7 @@ public class Battleground {
 	public void addShot(Shot shot) {
 		shots.add(shot);
 		
-		Sounds.shot.play(1, FX_VOLUME * 0.25f);
+		Sounds.shot.play(1, FX_VOLUME_SHOT);
 	}
 
 	public void update(float _dt) {
@@ -335,6 +334,7 @@ public class Battleground {
 					GameInfo.instance.addLose();
 				}
 
+				Sounds.botDestroyed.play(1, FX_VOLUME_BOT_DESTROYED);
 			}
 		}
 
@@ -345,6 +345,8 @@ public class Battleground {
 				i--;
 			}
 		}
+		
+		boolean newBot = false;
 
 		// new bots
 		for (int i = 0; i < Lane.values().length; i++) {
@@ -354,7 +356,7 @@ public class Battleground {
 					bots.add(b);
 					timeSinceLastBotPlayer[i] = 0;
 					
-					Sounds.newBot.play(1, FX_VOLUME * 0.25f);
+					newBot = true;
 				}
 			} else {
 				timeSinceLastBotPlayer[i] += _dt;
@@ -365,10 +367,16 @@ public class Battleground {
 					Bot b = botsInQueueAI[i].remove(0);
 					bots.add(b);
 					timeSinceLastBotAI[i] = 0;
+
+					newBot = true;
 				}
 			} else {
 				timeSinceLastBotAI[i] += _dt;
 			}
+		}
+		
+		if(newBot) {
+			Sounds.newBot.play(1, FX_VOLUME_NEW_BOT);
 		}
 
 		ai.update(_dt);

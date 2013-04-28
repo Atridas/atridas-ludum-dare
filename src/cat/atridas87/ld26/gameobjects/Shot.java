@@ -1,13 +1,14 @@
 package cat.atridas87.ld26.gameobjects;
 
+import static cat.atridas87.ld26.GameParameters.*;
+
 import javax.vecmath.Vector2f;
 
 import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.Sound;
 
 import cat.atridas87.ld26.render.Model;
 import cat.atridas87.ld26.render.ShaderManager;
+import cat.atridas87.ld26.sounds.Sounds;
 
 public class Shot {
 
@@ -104,6 +105,8 @@ public class Shot {
 						* Tower.TOWER_WIDTH / 4) {
 					tower.live -= attack;
 					alive = false;
+
+					//Sounds.botDestroyed.play(1, FX_VOLUME_TOUCH);
 					return;
 				}
 			}

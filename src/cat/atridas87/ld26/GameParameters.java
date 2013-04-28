@@ -70,6 +70,10 @@ public class GameParameters {
 	public static final float AI_LEVEL_TIME_TO_ADD[] = {   0.5f,    0.5f,    0.5f,   0.5f,    0.5f,   0.5f,    0.5f, 0.5f};
 	//public static final float AI_LEVEL_TIME_TO_ADD[] = {  10,    8,    7,   6f,    5,   3f,    2, 1.25f};
 	
-	
-	public static final float FX_VOLUME = 0.25f;
+
+	public static final float FX_VOLUME_BOT_DESTROYED = 0.33f;
+	public static final float FX_VOLUME_NEW_BOT = 0.25f;
+	public static final float FX_VOLUME_SHOT = 0.25f;
+	public static final float FX_VOLUME_TOUCH = 0.25f;
+	public static final float FX_VOLUME_TOWER_DESTROYED = 0.75f;
 }
