@@ -28,7 +28,7 @@ public class HUD {
 	public static HUD instance;
 
 	public int level = 0;
-	public int numCoins;
+	private int numCoins;
 	private float lastUpdateCoins;
 
 	private Lane sendTo = Lane.MIDDLE;
@@ -67,6 +67,13 @@ public class HUD {
 			if (numCoins > MAX_COINS_PER_LEVEL[level]) {
 				numCoins = MAX_COINS_PER_LEVEL[level];
 			}
+		}
+	}
+	
+	public void addCoins(int n) {
+		numCoins += n;
+		if(numCoins > MAX_COINS_PER_LEVEL[level]) {
+			numCoins = MAX_COINS_PER_LEVEL[level];
 		}
 	}
 

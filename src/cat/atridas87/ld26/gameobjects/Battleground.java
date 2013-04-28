@@ -324,9 +324,9 @@ public class Battleground {
 				i--;
 
 				if (!removedBot.player) {
-					HUD.instance.numCoins += removedBot.type.value;
+					HUD.instance.addCoins( removedBot.type.value );
 					GameInfo.instance.addKill();
-					GameInfo.instance.addPoints(HUD.instance.numCoins);
+					GameInfo.instance.addPoints(removedBot.type.value);
 				} else {
 					GameInfo.instance.addLose();
 				}

@@ -1,6 +1,10 @@
 package cat.atridas87.ld26;
 
+import java.nio.FloatBuffer;
+
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 
 import cat.atridas87.ld26.gameobjects.Bot;
 import cat.atridas87.ld26.gameobjects.Lane;
@@ -97,6 +101,10 @@ public class GameInfo {
 				hours++;
 				minutes -= 60;
 			}
+		} else {
+			while(milis > 1) {
+				milis -= 1;
+			}
 		}
 	}
 
@@ -151,6 +159,37 @@ public class GameInfo {
 		
 		HUD.renderText(strTime, 325, 450);
 		
+		
+		if(gameFinished() && milis < 0.5f) {
+			if(won) {
+				ShaderManager.instance.setColor(1, 0, 1, 1);
+			} else {
+				ShaderManager.instance.setColor(0, 1, 0, 1);
+			}
+			renderCrown(375, 325);
+		}
 	}
 
+	
+
+
+	private static void renderCrown(float x, float y) {
+		ShaderManager.instance.setPosition(x, y);
+
+		float vvb[] = { 20,0, 0,80, 30,40, 40,80, 60,40, 80,80, 90,40, 120,80, 100,0 };
+
+		FloatBuffer fb = BufferUtils.createFloatBuffer(vvb.length);
+
+		for (int i = 0; i < vvb.length; i++) {
+			fb.put(vvb[i]);
+		}
+
+		fb.flip();
+
+		GL20.glEnableVertexAttribArray(ShaderManager.POSITION_ATTRIBUTE);
+		GL20.glVertexAttribPointer(ShaderManager.POSITION_ATTRIBUTE, 2, false,
+				2 * 4, fb);
+
+		GL11.glDrawArrays(GL11.GL_LINE_LOOP, 0, vvb.length / 2);
+	}
 }

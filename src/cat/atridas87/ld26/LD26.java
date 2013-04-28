@@ -68,7 +68,7 @@ public class LD26 extends BaseGame {
 			finished = true;
 		}
 
-		if (GameInfo.instance.gameFinished()) {
+		if (!GameInfo.instance.gameFinished()) {
 			battleground.update(_dt);
 
 			hud.update(_dt);
@@ -105,7 +105,9 @@ public class LD26 extends BaseGame {
 
 	@Override
 	public void mouseClick(float x, float y) {
-		hud.mouseClick(x - 600, y);
+		if (!gameInfo.gameFinished()) {
+			hud.mouseClick(x - 600, y);
+		}
 	}
 
 }
