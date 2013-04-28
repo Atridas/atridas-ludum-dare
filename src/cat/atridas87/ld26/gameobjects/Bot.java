@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 
 import cat.atridas87.ld26.render.Model;
 import cat.atridas87.ld26.render.ShaderManager;
+import static cat.atridas87.ld26.GameParameters.*;
 
 public class Bot {
 
@@ -374,19 +375,21 @@ public class Bot {
 	private void calcShoot(Tower closestTower, Bot closestBots[], float _dt) {
 		if (timeSinceLastShot < type.attTime) {
 			timeSinceLastShot += _dt;
-		} else if (closestTower.player != player && closestTower.live > 0) {
-			Vector2f distToTower = new Vector2f();
-			distToTower.x = closestTower.position.x - position.x;
-			distToTower.y = closestTower.position.y - position.y;
-
-			if (distToTower.lengthSquared() < rangeToTower * rangeToTower) {
-				Shot shot = new Shot(player, type.range, type.attack, position,
-						closestTower.position);
-				timeSinceLastShot = 0;
-				Battleground.instance.addShot(shot);
-				return;
-			}
 		} else {
+			
+			if (closestTower.player != player && closestTower.live > 0) {
+				Vector2f distToTower = new Vector2f();
+				distToTower.x = closestTower.position.x - position.x;
+				distToTower.y = closestTower.position.y - position.y;
+
+				if (distToTower.lengthSquared() < rangeToTower * rangeToTower) {
+					Shot shot = new Shot(player, type.range, type.attack,
+							position, closestTower.position);
+					timeSinceLastShot = 0;
+					Battleground.instance.addShot(shot);
+					return;
+				}
+			}
 
 			int enemyBotsAtRange = 0;
 			for (int i = 0; i < closestBots.length; i++) {
@@ -494,8 +497,16 @@ public class Bot {
 	}
 
 	public static enum Type {
-		BASIC(25, 5, 1.f, 1, 10, 500, 25, 5, 10), TANK(100, 2, 5.f, 3, 7.5f,
-				500, 10, 2, 15), SUPER(40, 10, 0.75f, 2, 10, 500, 50, 1, 60);
+
+		BASIC(BASIC_BOT_LIVES, BASIC_BOT_ATTACK, BASIC_BOT_ATTACK_TIME,
+				BASIC_BOT_MASS, BASIC_BOT_MAX_SPEED, BASIC_BOT_MAX_FORCE,
+				BASIC_BOT_RANGE, BASIC_BOT_AI_WEIGHT, BASIC_BOT_VALUE), TANK(
+				TANK_BOT_LIVES, TANK_BOT_ATTACK, TANK_BOT_ATTACK_TIME,
+				TANK_BOT_MASS, TANK_BOT_MAX_SPEED, TANK_BOT_MAX_FORCE,
+				TANK_BOT_RANGE, TANK_BOT_AI_WEIGHT, TANK_BOT_VALUE), SUPER(
+				SUPER_BOT_LIVES, SUPER_BOT_ATTACK, SUPER_BOT_ATTACK_TIME,
+				SUPER_BOT_MASS, SUPER_BOT_MAX_SPEED, SUPER_BOT_MAX_FORCE,
+				SUPER_BOT_RANGE, SUPER_BOT_AI_WEIGHT, SUPER_BOT_VALUE);
 
 		private final int lives, attack;
 		private final float attTime, mass, maxSpeed, maxForce, range;

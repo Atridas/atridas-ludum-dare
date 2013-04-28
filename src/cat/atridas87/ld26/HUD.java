@@ -18,39 +18,41 @@ import cat.atridas87.ld26.gameobjects.Lane;
 import cat.atridas87.ld26.render.ShaderManager;
 import cat.atridas87.ld26.render.ShaderManager.ProgramType;
 
+import static cat.atridas87.ld26.GameParameters.*;
+
+
 public class HUD {
 
-	public static final int COINS_PER_SECOND_PER_LEVEL[] = { 10, 15, 20, 25, 30, 35, 40 };
-	public static final int MAX_COINS_PER_LEVEL[] = { 500, 875, 1250, 1625, 2000, 2750, 3500 };
-	public static final int COST_LEVEL[] = { 250, 550, 850, 1200, 1600, 2000, 2500 };
-
-	public static final int NUM_BOTS[][] = {{3,0,0}, {0,3,0}, {0,0,3}, {0,9,0}, {15,0,0}, {12,6,0}, {12,0,3}, {15,9,3}};
-	public static final int COST_FORMATION[] = {50, 75, 150, 200, 240, 300, 320, 550};
-
-	public static final int NUM_LEVELS = COINS_PER_SECOND_PER_LEVEL.length;
-	
 	private static final float LANE_BUTTONS_Y = 460;
-	
+
 	public static HUD instance;
-	
+
 	public int level = 0;
 	public int numCoins;
 	private float lastUpdateCoins;
-	
+
 	private Lane sendTo = Lane.MIDDLE;
-	
+
 	private final Formation formations[] = new Formation[8];
-	
+
 	{
-		formations[0] = new Formation(NUM_BOTS[0], COST_FORMATION[0], new Vector2f( 10,320));
-		formations[1] = new Formation(NUM_BOTS[1], COST_FORMATION[1], new Vector2f(110,320));
-		formations[2] = new Formation(NUM_BOTS[2], COST_FORMATION[2], new Vector2f( 10,220));
-		formations[3] = new Formation(NUM_BOTS[3], COST_FORMATION[3], new Vector2f(110,220));
-		formations[4] = new Formation(NUM_BOTS[4], COST_FORMATION[4], new Vector2f( 10,120));
-		formations[5] = new Formation(NUM_BOTS[5], COST_FORMATION[5], new Vector2f(110,120));
-		formations[6] = new Formation(NUM_BOTS[6], COST_FORMATION[6], new Vector2f( 10, 20));
-		formations[7] = new Formation(NUM_BOTS[7], COST_FORMATION[7], new Vector2f(110, 20));
-		
+		formations[0] = new Formation(NUM_BOTS[0], COST_FORMATION[0],
+				new Vector2f(10, 320));
+		formations[1] = new Formation(NUM_BOTS[1], COST_FORMATION[1],
+				new Vector2f(110, 320));
+		formations[2] = new Formation(NUM_BOTS[2], COST_FORMATION[2],
+				new Vector2f(10, 220));
+		formations[3] = new Formation(NUM_BOTS[3], COST_FORMATION[3],
+				new Vector2f(110, 220));
+		formations[4] = new Formation(NUM_BOTS[4], COST_FORMATION[4],
+				new Vector2f(10, 120));
+		formations[5] = new Formation(NUM_BOTS[5], COST_FORMATION[5],
+				new Vector2f(110, 120));
+		formations[6] = new Formation(NUM_BOTS[6], COST_FORMATION[6],
+				new Vector2f(10, 20));
+		formations[7] = new Formation(NUM_BOTS[7], COST_FORMATION[7],
+				new Vector2f(110, 20));
+
 		instance = this;
 	}
 
@@ -113,23 +115,18 @@ public class HUD {
 	private void renderLaneButtons(float x, float y) {
 		ShaderManager.instance.setPosition(x, y);
 
-		float vvb1[] = { 25,25, 50,25, 25,25, 31.25f,31.25f, 25,25, 31.25f,18.75f ,
-				12.5f,0, 62.5f,0, 
-				62.5f,0, 62.5f,50, 
-				62.5f,50, 12.5f,50,
-				12.5f,50, 12.5f,0};
+		float vvb1[] = { 25, 25, 50, 25, 25, 25, 31.25f, 31.25f, 25, 25,
+				31.25f, 18.75f, 12.5f, 0, 62.5f, 0, 62.5f, 0, 62.5f, 50, 62.5f,
+				50, 12.5f, 50, 12.5f, 50, 12.5f, 0 };
 
-		float vvb2[] = { 87.5f,37.5f, 112.5f,12.5f, 87.5f,37.5f, 87.5f,25f, 87.5f,37.5f, 100f,37.5f, 
-				75f,0, 125f,0, 
-				125f,0, 125f,50, 
-				125f,50, 75f,50,
-				75f,50, 75f,0};
+		float vvb2[] = { 87.5f, 37.5f, 112.5f, 12.5f, 87.5f, 37.5f, 87.5f, 25f,
+				87.5f, 37.5f, 100f, 37.5f, 75f, 0, 125f, 0, 125f, 0, 125f, 50,
+				125f, 50, 75f, 50, 75f, 50, 75f, 0 };
 
-		float vvb3[] = { 162.5f,37.5f, 162.5f,12.5f, 162.5f,37.5f, 157.5f,31.25f, 162.5f,37.5f, 168.75f,31.25f, 
-				137.5f,0, 187.5f,0, 
-				187.5f,0, 187.5f,50, 
-				187.5f,50, 137.5f,50,
-				137.5f,50, 137.5f,0};
+		float vvb3[] = { 162.5f, 37.5f, 162.5f, 12.5f, 162.5f, 37.5f, 157.5f,
+				31.25f, 162.5f, 37.5f, 168.75f, 31.25f, 137.5f, 0, 187.5f, 0,
+				187.5f, 0, 187.5f, 50, 187.5f, 50, 137.5f, 50, 137.5f, 50,
+				137.5f, 0 };
 
 		FloatBuffer fb1 = BufferUtils.createFloatBuffer(vvb1.length);
 		FloatBuffer fb2 = BufferUtils.createFloatBuffer(vvb2.length);
@@ -153,64 +150,72 @@ public class HUD {
 		GL20.glVertexAttribPointer(ShaderManager.POSITION_ATTRIBUTE, 2, false,
 				2 * 4, fb1);
 
-		if(sendTo == Lane.BOT) ShaderManager.instance.setColor(0, 1, 0, 1);
-		else ShaderManager.instance.setColor(0, 0, 0, 1);
+		if (sendTo == Lane.BOT)
+			ShaderManager.instance.setColor(0, 1, 0, 1);
+		else
+			ShaderManager.instance.setColor(0, 0, 0, 1);
 		GL11.glDrawArrays(GL11.GL_LINES, 0, vvb1.length / 2);
 
-		//----
+		// ----
 		GL20.glEnableVertexAttribArray(ShaderManager.POSITION_ATTRIBUTE);
 		GL20.glVertexAttribPointer(ShaderManager.POSITION_ATTRIBUTE, 2, false,
 				2 * 4, fb2);
 
-		if(sendTo == Lane.MIDDLE) ShaderManager.instance.setColor(0, 1, 0, 1);
-		else ShaderManager.instance.setColor(0, 0, 0, 1);
+		if (sendTo == Lane.MIDDLE)
+			ShaderManager.instance.setColor(0, 1, 0, 1);
+		else
+			ShaderManager.instance.setColor(0, 0, 0, 1);
 		GL11.glDrawArrays(GL11.GL_LINES, 0, vvb2.length / 2);
 
-		//----
+		// ----
 		GL20.glEnableVertexAttribArray(ShaderManager.POSITION_ATTRIBUTE);
 		GL20.glVertexAttribPointer(ShaderManager.POSITION_ATTRIBUTE, 2, false,
 				2 * 4, fb3);
 
-		if(sendTo == Lane.UP) ShaderManager.instance.setColor(0, 1, 0, 1);
-		else ShaderManager.instance.setColor(0, 0, 0, 1);
+		if (sendTo == Lane.UP)
+			ShaderManager.instance.setColor(0, 1, 0, 1);
+		else
+			ShaderManager.instance.setColor(0, 0, 0, 1);
 		GL11.glDrawArrays(GL11.GL_LINES, 0, vvb3.length / 2);
 	}
-	
+
 	public void mouseClick(float x, float y) {
-		
+
 		// check level +
-		if(x > 120 && y > 520 && x < 130 && y < 535) {
-			if(numCoins >= COST_LEVEL[level] && level < NUM_LEVELS - 1) {
+		if (x > 120 && y > 520 && x < 130 && y < 535) {
+			if (numCoins >= COST_LEVEL[level] && level < NUM_LEVELS - 1) {
 				numCoins -= COST_LEVEL[level];
 				level++;
 			}
 		}
-		
-		if(y > LANE_BUTTONS_Y  && y < LANE_BUTTONS_Y + 50) {
-			if(x > 12.5f && x < 62.5f) {
+
+		if (y > LANE_BUTTONS_Y && y < LANE_BUTTONS_Y + 50) {
+			if (x > 12.5f && x < 62.5f) {
 				sendTo = Lane.BOT;
-			} else if(x > 75f && x < 125f) {
+			} else if (x > 75f && x < 125f) {
 				sendTo = Lane.MIDDLE;
-			} else if(x > 137.5f && x < 187.5f) {
+			} else if (x > 137.5f && x < 187.5f) {
 				sendTo = Lane.UP;
 			}
 		}
-		
-		for(int i = 0; i < formations.length; i++) {
-			if(x > formations[i].position.x && x < formations[i].position.x + 80 &&
-					y > formations[i].position.y && y < formations[i].position.y + 80 &&
-					numCoins >= formations[i].price)
-			{
-				for(int t = 0; t < Bot.Type.values().length; t++) {
-					for(int j = 0; j < formations[i].numBots[t]; j++) {
-						Battleground.instance.addBot(new Bot(true, Bot.Type.values()[t], sendTo));
+
+		for (int i = 0; i < formations.length; i++) {
+			if (x > formations[i].position.x
+					&& x < formations[i].position.x + 80
+					&& y > formations[i].position.y
+					&& y < formations[i].position.y + 80
+					&& numCoins >= formations[i].price) {
+				for (int t = 0; t < Bot.Type.values().length; t++) {
+					for (int j = 0; j < formations[i].numBots[t]; j++) {
+						Battleground.instance.addBot(new Bot(true, Bot.Type
+								.values()[t], sendTo));
 					}
 				}
-				
+
 				numCoins -= formations[i].price;
 			}
 		}
-		
+
 	}
 
 	public void render() {
@@ -226,8 +231,8 @@ public class HUD {
 
 		String strNumCoins = Integer.toString(numCoins);
 		String strMaxCoins = Integer.toString(MAX_COINS_PER_LEVEL[level]);
-		
-		while(strNumCoins.length() < strMaxCoins.length()) {
+
+		while (strNumCoins.length() < strMaxCoins.length()) {
 			strNumCoins = '0' + strNumCoins;
 		}
 
@@ -238,7 +243,7 @@ public class HUD {
 		ShaderManager.instance.setColor(0.5f, 0.5f, 0.5f, 1);
 		renderText(numToRoman(level + 1), 75, 520);
 		if (level < NUM_LEVELS - 1) {
-			if(numCoins >= COST_LEVEL[level]) {
+			if (numCoins >= COST_LEVEL[level]) {
 				ShaderManager.instance.setColor(0, 1, 0, 1);
 			} else {
 				ShaderManager.instance.setColor(0, 0, 1, 1);
@@ -250,11 +255,10 @@ public class HUD {
 			ShaderManager.instance.setColor(1, 0, 0, 1);
 			renderPlus(120, 520);
 		}
-		
-		
+
 		renderLaneButtons(0, LANE_BUTTONS_Y);
-		
-		for(int i = 0; i < formations.length; i++) {
+
+		for (int i = 0; i < formations.length; i++) {
 			formations[i].render(numCoins);
 		}
 	}
@@ -581,7 +585,7 @@ public class HUD {
 				vb.add(0f);
 				vb.add(7.5f + x);
 				vb.add(0f);
-				
+
 				vb.add(7.5f + x);
 				vb.add(0.f);
 				vb.add(7.5f + x);
@@ -672,7 +676,7 @@ public class HUD {
 				vb.add(5.f);
 				vb.add(5.5f + x);
 				vb.add(5.f);
-				
+
 				vb.add(4.5f + x);
 				vb.add(10.f);
 				vb.add(5.5f + x);

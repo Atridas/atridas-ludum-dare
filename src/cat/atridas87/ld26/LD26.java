@@ -36,13 +36,13 @@ public class LD26 extends BaseGame {
 		battleground = new Battleground();
 		hud = new HUD();
 		gameInfo = new GameInfo();
-		
+
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		GL11.glEnable(GL11.GL_LINE_SMOOTH);
 		GL11.glEnable(GL11.GL_POINT_SMOOTH);
-		GL11.glHint( GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST );
-		GL11.glHint( GL11.GL_POINT_SMOOTH_HINT, GL11.GL_NICEST );
+		GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
+		GL11.glHint(GL11.GL_POINT_SMOOTH_HINT, GL11.GL_NICEST);
 	}
 
 	/**
@@ -68,10 +68,12 @@ public class LD26 extends BaseGame {
 			finished = true;
 		}
 
-		battleground.update(_dt);
-		
-		hud.update(_dt);
-		
+		if (GameInfo.instance.gameFinished()) {
+			battleground.update(_dt);
+
+			hud.update(_dt);
+		}
+
 		gameInfo.update(_dt);
 	}
 
@@ -86,14 +88,13 @@ public class LD26 extends BaseGame {
 		GL11.glViewport(0, 0, height, height);
 
 		battleground.render();
-		
+
 		gameInfo.render();
 
 		GL11.glViewport(height, 0, width - height, height);
 
+		// battleground.render();
 
-		//battleground.render();
-		
 		hud.render();
 	}
 

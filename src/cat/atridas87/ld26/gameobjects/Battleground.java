@@ -13,9 +13,9 @@ import cat.atridas87.ld26.render.Model;
 import cat.atridas87.ld26.render.ShaderManager;
 import cat.atridas87.ld26.render.ShaderManager.ProgramType;
 
-public class Battleground {
+import static cat.atridas87.ld26.GameParameters.*;
 
-	public static final float TIME_BETWEEN_BOTS = 1f;
+public class Battleground {
 
 	public static Battleground instance;
 
@@ -314,9 +314,7 @@ public class Battleground {
 	public void update(float _dt) {
 
 		for (int i = 0; i < towers.length; i++) {
-			if (towers[i].live > 0) {
-				towers[i].update(_dt);
-			}
+			towers[i].update(_dt);
 		}
 
 		for (int i = 0; i < bots.size(); i++) {
@@ -324,15 +322,15 @@ public class Battleground {
 			if (bots.get(i).lives <= 0) {
 				Bot removedBot = bots.remove(i);
 				i--;
-				
-				if(!removedBot.player) {
+
+				if (!removedBot.player) {
 					HUD.instance.numCoins += removedBot.type.value;
 					GameInfo.instance.addKill();
 					GameInfo.instance.addPoints(HUD.instance.numCoins);
 				} else {
 					GameInfo.instance.addLose();
 				}
-				
+
 			}
 		}
 
@@ -369,7 +367,11 @@ public class Battleground {
 
 		ai.update(_dt);
 
-		// TODO update homes <- check finish game
+		if(homePlayer.lives <= 0) {
+			GameInfo.instance.lose();
+		} else if(homeAI.lives <= 0) {
+			GameInfo.instance.win();
+		}
 	}
 
 	public void render() {

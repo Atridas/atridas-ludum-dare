@@ -7,11 +7,11 @@ import org.lwjgl.opengl.GL11;
 import cat.atridas87.ld26.render.Model;
 import cat.atridas87.ld26.render.ShaderManager;
 
+import static cat.atridas87.ld26.GameParameters.*;
+
 public class Home {
 
 	public static final float HOME_WIDTH = 20;
-
-	public static final int LIVES = 5000;
 
 	public static final Vector2f PLAYER_HOME = new Vector2f(575, 25);
 	public static final Vector2f AI_HOME = new Vector2f(25, 575);
@@ -35,7 +35,7 @@ public class Home {
 		this.player = player;
 		this.x = x;
 		this.y = y;
-		this.lives = LIVES;
+		this.lives = HOME_LIVES;
 	}
 
 	public void render() {
@@ -44,7 +44,7 @@ public class Home {
 			float g = player ? 0 : 1;
 			float b = player ? 1 : 0;
 
-			float vida = ((float) lives) / ((float) LIVES);
+			float vida = ((float) lives) / ((float) HOME_LIVES);
 
 			r = r * vida + (1 - vida);
 			g *= vida;

@@ -10,27 +10,22 @@ import cat.atridas87.ld26.GameInfo;
 import cat.atridas87.ld26.render.Model;
 import cat.atridas87.ld26.render.ShaderManager;
 
+import static cat.atridas87.ld26.GameParameters.*;
+
 public class Tower {
 
-	public static final int LIVES = 5000;
 	public static final float TOWER_WIDTH = 15;
-	public static final float COOL_DOWN = 1.5f;
 
-	public static final float RANGE = 75;
-	public static final float ATTACK = 10;
-
-	public static final int TOWER_POINTS = 2000;
-	
 	public final boolean player;
 	public final Vector2f position;
 	public int live;
 
 	private static final Model model;
-	
+
 	private static final Random rnd = new Random();
-	
+
 	private float timeSinceLastShot = 0;
-	
+
 	private boolean alive = true;
 
 	static {
@@ -44,7 +39,7 @@ public class Tower {
 	public Tower(boolean player, float x, float y) {
 		this.player = player;
 		this.position = new Vector2f(x, y);
-		this.live = LIVES;
+		this.live = TOWER_LIVES;
 	}
 
 	public void render() {
@@ -53,7 +48,7 @@ public class Tower {
 			float g = player ? 0 : 1;
 			float b = player ? 1 : 0;
 
-			float vida = ((float) live) / ((float) LIVES);
+			float vida = ((float) live) / ((float) TOWER_LIVES);
 
 			r = r * vida + (1 - vida);
 			g *= vida;
@@ -69,24 +64,24 @@ public class Tower {
 	}
 
 	public void update(float _dt) {
-		if(live <= 0) {
-			if(alive) {
+		if (live <= 0) {
+			if (alive) {
 				alive = false;
-				if(player) {
+				if (player) {
 					GameInfo.instance.addTowerLose();
 				} else {
 					GameInfo.instance.addTowerKill();
 					GameInfo.instance.addPoints(TOWER_POINTS);
 				}
 			}
-			
+
 			return;
 		}
-		
-		if (timeSinceLastShot < COOL_DOWN) {
+
+		if (timeSinceLastShot < TOWER_COOL_DOWN) {
 			timeSinceLastShot += _dt;
 		} else {
-			
+
 			Bot[] closestBots = Battleground.instance.getClosestBots(position);
 
 			int enemyBotsAtRange = 0;
@@ -97,7 +92,7 @@ public class Tower {
 					distToBot.x = closestBots[i].position.x - position.x;
 					distToBot.y = closestBots[i].position.y - position.y;
 
-					if (distToBot.lengthSquared() < RANGE * RANGE) {
+					if (distToBot.lengthSquared() < TOWER_RANGE * TOWER_RANGE) {
 						enemyBotsAtRange++;
 					}
 				}
@@ -113,10 +108,11 @@ public class Tower {
 						distToBot.x = closestBots[i].position.x - position.x;
 						distToBot.y = closestBots[i].position.y - position.y;
 
-						if (distToBot.lengthSquared() < RANGE * RANGE) {
+						if (distToBot.lengthSquared() < TOWER_RANGE
+								* TOWER_RANGE) {
 							if (shootAt == 0) {
-								Shot shot = new Shot(player, RANGE,
-										ATTACK, position,
+								Shot shot = new Shot(player, TOWER_RANGE,
+										TOWER_ATTACK, position,
 										closestBots[i].position);
 								timeSinceLastShot = 0;
 								Battleground.instance.addShot(shot);
