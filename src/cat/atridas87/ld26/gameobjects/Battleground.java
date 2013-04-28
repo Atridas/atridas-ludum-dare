@@ -55,29 +55,29 @@ public class Battleground {
 		model = new Model(positions, colors, indexs, GL11.GL_LINES);
 
 		towers = new Tower[22];
-		towers[0] = new Tower(true, 125, 25);
-		towers[1] = new Tower(true, 325, 25);
-		towers[2] = new Tower(true, 425, 25);
-		towers[3] = new Tower(true, 500, 100);
-		towers[4] = new Tower(true, 575, 175);
-		towers[5] = new Tower(true, 575, 275);
-		towers[6] = new Tower(true, 575, 475);
-		towers[7] = new Tower(true, 425, 175);
-		towers[8] = new Tower(true, 375, 225);
-		towers[9] = new Tower(true, 515, 40);
-		towers[10] = new Tower(true, 560, 85);
+		towers[0] = new Tower(true, TOWER_0_X, TOWER_0_Y);
+		towers[1] = new Tower(true, TOWER_1_X, TOWER_1_Y);
+		towers[2] = new Tower(true, TOWER_2_X, TOWER_2_Y);
+		towers[3] = new Tower(true, TOWER_3_X, TOWER_3_Y);
+		towers[4] = new Tower(true, TOWER_4_X, TOWER_4_Y);
+		towers[5] = new Tower(true, TOWER_5_X, TOWER_5_Y);
+		towers[6] = new Tower(true, TOWER_6_X, TOWER_6_Y);
+		towers[7] = new Tower(true, TOWER_7_X, TOWER_7_Y);
+		towers[8] = new Tower(true, TOWER_8_X, TOWER_8_Y);
+		towers[9] = new Tower(true, TOWER_9_X, TOWER_9_Y);
+		towers[10] = new Tower(true, TOWER_10_X, TOWER_10_Y);
 
-		towers[11] = new Tower(false, 600 - 125, 600 - 25);
-		towers[12] = new Tower(false, 600 - 325, 600 - 25);
-		towers[13] = new Tower(false, 600 - 425, 600 - 25);
-		towers[14] = new Tower(false, 600 - 500, 600 - 100);
-		towers[15] = new Tower(false, 600 - 575, 600 - 175);
-		towers[16] = new Tower(false, 600 - 575, 600 - 275);
-		towers[17] = new Tower(false, 600 - 575, 600 - 475);
-		towers[18] = new Tower(false, 600 - 425, 600 - 175);
-		towers[19] = new Tower(false, 600 - 375, 600 - 225);
-		towers[20] = new Tower(false, 600 - 500, 600 - 50);
-		towers[21] = new Tower(false, 600 - 550, 600 - 100);
+		towers[11] = new Tower(false, 600 - TOWER_0_X, 600 - TOWER_0_Y);
+		towers[12] = new Tower(false, 600 - TOWER_1_X, 600 - TOWER_1_Y);
+		towers[13] = new Tower(false, 600 - TOWER_2_X, 600 - TOWER_2_Y);
+		towers[14] = new Tower(false, 600 - TOWER_3_X, 600 - TOWER_3_Y);
+		towers[15] = new Tower(false, 600 - TOWER_4_X, 600 - TOWER_4_Y);
+		towers[16] = new Tower(false, 600 - TOWER_5_X, 600 - TOWER_5_Y);
+		towers[17] = new Tower(false, 600 - TOWER_6_X, 600 - TOWER_6_Y);
+		towers[18] = new Tower(false, 600 - TOWER_7_X, 600 - TOWER_7_Y);
+		towers[19] = new Tower(false, 600 - TOWER_8_X, 600 - TOWER_8_Y);
+		towers[20] = new Tower(false, 600 - TOWER_9_X, 600 - TOWER_9_Y);
+		towers[21] = new Tower(false, 600 - TOWER_10_X, 600 - TOWER_10_Y);
 
 		bots = new Vector<Bot>();
 
@@ -311,7 +311,9 @@ public class Battleground {
 	public void addShot(Shot shot) {
 		shots.add(shot);
 		
-		Sounds.shot.play(1, FX_VOLUME_SHOT);
+		if(HUD.instance.soundFXEnabled) {
+			Sounds.shot.play(1, FX_VOLUME_SHOT);
+		}
 	}
 
 	public void update(float _dt) {
@@ -334,7 +336,9 @@ public class Battleground {
 					GameInfo.instance.addLose();
 				}
 
+				if(HUD.instance.soundFXEnabled) {
 				Sounds.botDestroyed.play(1, FX_VOLUME_BOT_DESTROYED);
+				}
 			}
 		}
 
@@ -375,7 +379,7 @@ public class Battleground {
 			}
 		}
 		
-		if(newBot) {
+		if(newBot && HUD.instance.soundFXEnabled) {
 			Sounds.newBot.play(1, FX_VOLUME_NEW_BOT);
 		}
 

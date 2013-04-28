@@ -1,5 +1,7 @@
 package cat.atridas87.ld26;
 
+import static cat.atridas87.ld26.GameParameters.*;
+
 import org.lwjgl.opengl.GL11;
 
 import org.lwjgl.input.Keyboard;
@@ -31,7 +33,7 @@ public class LD26 extends BaseGame {
 		// Start up the sound system
 		//AL.create();
 		
-		Sounds.music.loop(1, 0.5f);
+		Sounds.music.loop(1, FX_VOLUME_MUSIC);
 
 		// TODO: Load in your textures etc here
 		ShaderManager.instance = new ShaderManager();

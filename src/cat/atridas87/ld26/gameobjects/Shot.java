@@ -1,14 +1,11 @@
 package cat.atridas87.ld26.gameobjects;
 
-import static cat.atridas87.ld26.GameParameters.*;
-
 import javax.vecmath.Vector2f;
 
 import org.lwjgl.opengl.GL11;
 
 import cat.atridas87.ld26.render.Model;
 import cat.atridas87.ld26.render.ShaderManager;
-import cat.atridas87.ld26.sounds.Sounds;
 
 public class Shot {
 

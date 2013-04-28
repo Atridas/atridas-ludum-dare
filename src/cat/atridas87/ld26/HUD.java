@@ -17,6 +17,7 @@ import cat.atridas87.ld26.gameobjects.Formation;
 import cat.atridas87.ld26.gameobjects.Lane;
 import cat.atridas87.ld26.render.ShaderManager;
 import cat.atridas87.ld26.render.ShaderManager.ProgramType;
+import cat.atridas87.ld26.sounds.Sounds;
 
 import static cat.atridas87.ld26.GameParameters.*;
 
@@ -24,12 +25,15 @@ import static cat.atridas87.ld26.GameParameters.*;
 public class HUD {
 
 	private static final float LANE_BUTTONS_Y = 460;
+	private static final float SOUND_BUTTONS_Y = 405;
 
 	public static HUD instance;
 
 	public int level = 0;
 	private int numCoins;
 	private float lastUpdateCoins;
+	
+	public boolean soundFXEnabled = true, musicEnabled = true;
 
 	private Lane sendTo = Lane.MIDDLE;
 
@@ -118,6 +122,68 @@ public class HUD {
 
 		GL11.glDrawArrays(GL11.GL_LINES, 0, vvb.length / 2);
 	}
+	
+	private void renderSoundSwitches(float x, float y) {
+		ShaderManager.instance.setPosition(x, y);
+
+		float vvb1[] = { 35,5, 75,5, 75,5, 75,45, 75,45, 35,45, 35,45, 35,5 ,
+				40,20, 45,20, 45,20, 55,10, 55,10, 55,40, 55,40, 45,30, 45,30, 40,30, 40,30, 40,20,
+				60,35, 65,25, 65,25, 60,15,
+				65,35, 70,25, 70,25, 65,15,};
+		
+		
+		
+
+		float vvb2[] = { 125,5, 165,5, 165,5, 165,45, 165,45, 125,45, 125,45, 125,5 ,
+				130,20, 140,15, 140,15, 140,40, 140,40, 160,30, 140,35, 160,25, 160,30, 160,10, 160,10, 150,15};
+		
+		
+
+
+		FloatBuffer fb1 = BufferUtils.createFloatBuffer(vvb1.length);
+
+		for (int i = 0; i < vvb1.length; i++) {
+			fb1.put(vvb1[i]);
+		}
+
+		fb1.flip();
+
+		FloatBuffer fb2 = BufferUtils.createFloatBuffer(vvb1.length);
+
+		for (int i = 0; i < vvb2.length; i++) {
+			fb2.put(vvb2[i]);
+		}
+
+		fb2.flip();
+
+		
+		
+		if(soundFXEnabled) {
+			ShaderManager.instance.setColor(0, 1, 0, 1);
+		} else {
+			ShaderManager.instance.setColor(1, 0, 0, 1);
+		}
+		
+		GL20.glEnableVertexAttribArray(ShaderManager.POSITION_ATTRIBUTE);
+		GL20.glVertexAttribPointer(ShaderManager.POSITION_ATTRIBUTE, 2, false,
+				2 * 4, fb1);
+
+		GL11.glDrawArrays(GL11.GL_LINES, 0, vvb1.length / 2);
+		
+		
+		if(musicEnabled) {
+			ShaderManager.instance.setColor(0, 1, 0, 1);
+		} else {
+			ShaderManager.instance.setColor(1, 0, 0, 1);
+		}
+		
+		GL20.glEnableVertexAttribArray(ShaderManager.POSITION_ATTRIBUTE);
+		GL20.glVertexAttribPointer(ShaderManager.POSITION_ATTRIBUTE, 2, false,
+				2 * 4, fb2);
+
+		GL11.glDrawArrays(GL11.GL_LINES, 0, vvb2.length / 2);
+		
+	}
 
 	private void renderLaneButtons(float x, float y) {
 		ShaderManager.instance.setPosition(x, y);
@@ -205,6 +271,19 @@ public class HUD {
 				sendTo = Lane.UP;
 			}
 		}
+		
+		if( y > SOUND_BUTTONS_Y + 5 && y < SOUND_BUTTONS_Y + 45) {
+			if(x > 35 && x < 75) {
+				soundFXEnabled = !soundFXEnabled;
+			} else if(x > 125 && x < 165) {
+				musicEnabled = !musicEnabled;
+				if(musicEnabled) {
+					Sounds.music.resume();
+				} else {
+					Sounds.music.pause();
+				}
+			}
+		}
 
 		for (int i = 0; i < formations.length; i++) {
 			if (x > formations[i].position.x
@@ -264,6 +343,8 @@ public class HUD {
 		}
 
 		renderLaneButtons(0, LANE_BUTTONS_Y);
+		
+		renderSoundSwitches(0, SOUND_BUTTONS_Y);
 
 		for (int i = 0; i < formations.length; i++) {
 			formations[i].render(numCoins);

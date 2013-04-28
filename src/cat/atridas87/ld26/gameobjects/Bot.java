@@ -14,10 +14,6 @@ public class Bot {
 
 	public static final float BOT_WIDTH = 5;
 
-	private static final float DISTANCE_CHANGE_CONTROL_POINT = 25;
-	private static final float EVADE_TOWERS_AT = 25;
-	private static final float EVADE_BOTS_AT = 10;
-
 	private static final Model models[];
 
 	private static Random rnd = new Random();
@@ -25,6 +21,8 @@ public class Bot {
 	public final boolean player;
 	public final Type type;
 	public final Lane lane;
+
+	private Bot fixedEnemy;
 
 	private final float rangeToTower;
 	private final float rangeToBot;
@@ -179,13 +177,31 @@ public class Bot {
 		distance.x = targetPoint.x - position.x;
 		distance.y = targetPoint.y - position.y;
 
-		if (distance.lengthSquared() < DISTANCE_CHANGE_CONTROL_POINT
-				* DISTANCE_CHANGE_CONTROL_POINT) {
-			int nextControlPoint = controlPoint + (player ? 1 : -1);
-			if (nextControlPoint >= 0
-					&& nextControlPoint < lane.controlPoints.length) {
+		int nextControlPoint = controlPoint + (player ? 1 : -1);
+		if (nextControlPoint >= 0
+				&& nextControlPoint < lane.controlPoints.length) {
+			
+			if (distance.lengthSquared() < DISTANCE_CHANGE_CONTROL_POINT
+					* DISTANCE_CHANGE_CONTROL_POINT) {
 				controlPoint = nextControlPoint;
 				targetPoint = lane.controlPoints[controlPoint];
+			} else {
+
+				int prevControlPoint = controlPoint + (player ? -1 : 1);
+				Vector2f prevTargetPoint = lane.controlPoints[prevControlPoint];
+
+				Vector2f distancePrev = new Vector2f();
+				distancePrev.x = prevTargetPoint.x - position.x;
+				distancePrev.y = prevTargetPoint.y - position.y;
+
+				Vector2f distancePrevToCurrent = new Vector2f();
+				distancePrevToCurrent.x = prevTargetPoint.x - targetPoint.x;
+				distancePrevToCurrent.y = prevTargetPoint.y - targetPoint.y;
+				
+				if(distancePrevToCurrent.lengthSquared() < distancePrev.lengthSquared() * 0.9f) {
+					controlPoint = nextControlPoint;
+					targetPoint = lane.controlPoints[controlPoint];
+				}
 			}
 		}
 
@@ -376,7 +392,7 @@ public class Bot {
 		if (timeSinceLastShot < type.attTime) {
 			timeSinceLastShot += _dt;
 		} else {
-			
+
 			if (closestTower.player != player && closestTower.live > 0) {
 				Vector2f distToTower = new Vector2f();
 				distToTower.x = closestTower.position.x - position.x;
@@ -389,6 +405,39 @@ public class Bot {
 					Battleground.instance.addShot(shot);
 					return;
 				}
+			}
+
+			{
+				Vector2f enemyHomePosition = player ? Home.AI_HOME
+						: Home.PLAYER_HOME;
+				Vector2f distToHome = new Vector2f();
+				distToHome.x = enemyHomePosition.x - position.x;
+				distToHome.y = enemyHomePosition.y - position.y;
+
+				if (distToHome.lengthSquared() < rangeToHome * rangeToHome) {
+					Shot shot = new Shot(player, type.range, type.attack,
+							position, enemyHomePosition);
+					timeSinceLastShot = 0;
+					Battleground.instance.addShot(shot);
+					return;
+				}
+			}
+
+			if (fixedEnemy != null && fixedEnemy.lives > 0) {
+
+				Vector2f distToBot = new Vector2f();
+				distToBot.x = fixedEnemy.position.x - position.x;
+				distToBot.y = fixedEnemy.position.y - position.y;
+
+				if (distToBot.lengthSquared() < rangeToBot * rangeToBot) {
+
+					Shot shot = new Shot(player, type.range, type.attack,
+							position, fixedEnemy.position);
+					timeSinceLastShot = 0;
+					Battleground.instance.addShot(shot);
+					return;
+				}
+
 			}
 
 			int enemyBotsAtRange = 0;
@@ -422,6 +471,7 @@ public class Bot {
 										closestBots[i].position);
 								timeSinceLastShot = 0;
 								Battleground.instance.addShot(shot);
+								fixedEnemy = closestBots[i];
 								return;
 							} else {
 								shootAt--;
@@ -430,20 +480,6 @@ public class Bot {
 					}
 				}
 
-			}
-
-			Vector2f enemyHomePosition = player ? Home.AI_HOME
-					: Home.PLAYER_HOME;
-			Vector2f distToHome = new Vector2f();
-			distToHome.x = enemyHomePosition.x - position.x;
-			distToHome.y = enemyHomePosition.y - position.y;
-
-			if (distToHome.lengthSquared() < rangeToHome * rangeToHome) {
-				Shot shot = new Shot(player, type.range, type.attack, position,
-						enemyHomePosition);
-				timeSinceLastShot = 0;
-				Battleground.instance.addShot(shot);
-				return;
 			}
 		}
 	}
