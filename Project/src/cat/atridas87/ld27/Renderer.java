@@ -19,7 +19,7 @@ import static cat.atridas87.ld27.LD27.*;
 
 public class Renderer {
 
-	private Texture caselles, graella;
+	private Texture caselles, graella, recursos;
 	private ShaderManager shaderManager;
 
 	private FloatBuffer casellaPositionBuffer;
@@ -35,6 +35,11 @@ public class Renderer {
 		bi = ImageIO.read(url);
 
 		caselles = BufferedImageUtil.getTexture("caselles", bi);
+
+		url = ResourceLoader.getResource("resources/recursos.png");
+		bi = ImageIO.read(url);
+
+		recursos = BufferedImageUtil.getTexture("recursos", bi);
 
 		shaderManager = new ShaderManager();
 		shaderManager.setCurrentProgram(ShaderManager.ProgramType.TEXTURED);
@@ -74,62 +79,66 @@ public class Renderer {
 		GL20.glVertexAttribPointer(ShaderManager.TEX_COORD_ATTRIBUTE, 2, false,
 				0, casellaTexCoordBuffer);
 
-		// Cada un dels cuadrets
-		caselles.bind();
+		for (int pass = 0; pass < 2; pass++) {
+			switch(pass) {
+			case 0:
+				// Cada un dels cuadrets
+				caselles.bind();
+				break;
+			case 1:
+				// Graella
 
-		float cuadreX = casellaX * TAMANY_CASELLA - x;
-
-		for (int i = casellaX; i < ultimaCasellesX; i++) {
-			
-			if(i >= GRAELLA_TAMANY_X) {
+				graella.bind();
+				shaderManager.setTexcoords(0, 0, 1, 1);
+				break;
+				
+			case 2:
+				recursos.bind();
+				
 				break;
 			}
-
-			float cuadreY = casellaY * TAMANY_CASELLA - y;
-
-			for (int j = casellaY; j < ultimaCasellesY; j++) {
+	
+			float cuadreX = casellaX * TAMANY_CASELLA - x;
+	
+			for (int i = casellaX; i < ultimaCasellesX; i++) {
 				
-				if(j >= GRAELLA_TAMANY_Y) {
+				if(i >= GRAELLA_TAMANY_X) {
 					break;
 				}
-				
-				shaderManager.setPosition(cuadreX, cuadreY);
-				Casella casella = terrenyDeJoc.caselles[i][j];
-				int index = casella.ordinal();
-				int indexX = index % 6;
-				int indexY = index / 6;
-				shaderManager
-						.setTexcoords((indexX * 170) / 1024.f,
-								(indexY * 170) / 1024.f, 170.f / 1024.f,
-								170.f / 1024.f);
+	
+				float cuadreY = casellaY * TAMANY_CASELLA - y;
+	
+				for (int j = casellaY; j < ultimaCasellesY; j++) {
+					
+					if(j >= GRAELLA_TAMANY_Y) {
+						break;
+					}
 
-				GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
+					switch(pass) {
+					case 0:
+						shaderManager.setPosition(cuadreX, cuadreY);
+						Casella casella = terrenyDeJoc.caselles[i][j];
+						int indexX = casella.type.spriteX;
+						int indexY = casella.type.spriteY;
+						shaderManager
+								.setTexcoords((indexX * 170) / 1024.f,
+										(indexY * 170) / 1024.f, 170.f / 1024.f,
+										170.f / 1024.f);
+		
+						GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
+						break;
+					case 1:
+						shaderManager.setPosition(cuadreX, cuadreY);
 
-				cuadreY += TAMANY_CASELLA;
+						GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
+						break;
+					}
+	
+					cuadreY += TAMANY_CASELLA;
+				}
+				cuadreX += TAMANY_CASELLA;
 			}
-			cuadreX += TAMANY_CASELLA;
-		}
 
-		// Graella
-
-		graella.bind();
-
-		shaderManager.setTexcoords(0, 0, 1, 1);
-
-		cuadreX = casellaX * TAMANY_CASELLA - x;
-
-		for (int i = casellaX; i < ultimaCasellesX; i++) {
-
-			float cuadreY = casellaY * TAMANY_CASELLA - y;
-
-			for (int j = casellaY; j < ultimaCasellesY; j++) {
-				shaderManager.setPosition(cuadreX, cuadreY);
-
-				GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
-
-				cuadreY += TAMANY_CASELLA;
-			}
-			cuadreX += TAMANY_CASELLA;
 		}
 	}
 

@@ -9,13 +9,14 @@ public class TerrenyDeJoc {
 	TerrenyDeJoc() {
 		for(int i = 0; i < GRAELLA_TAMANY_X; i++) {
 			for(int j = 0; j < GRAELLA_TAMANY_Y; j++) {
-				caselles[i][j] = Casella.CAMP;
+				caselles[i][j] = new Casella();
+				caselles[i][j].type = Casella.Type.CAMP;
 			}
 		}
 
-		caselles[1][1] = Casella.BOSC;
-		caselles[2][3] = Casella.AIGUA;
-		caselles[3][2] = Casella.CANTERA;
+		caselles[1][1].type = Casella.Type.BOSC;
+		caselles[2][3].type = Casella.Type.AIGUA;
+		caselles[3][2].type = Casella.Type.CANTERA;
 	}
 	
 }

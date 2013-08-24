@@ -72,9 +72,6 @@ public class LD27 extends BaseGame {
 	@Override
 	public void mouseRelease(float _x, float _y) {
 		dragging = false;
-
-		
-		
 	}
 
 	@Override
