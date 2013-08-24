@@ -80,10 +80,11 @@ public class Starter extends Applet {
 						} else {
 							game.mouseRelease(Mouse.getX(), Mouse.getY());
 						}
-					} else {
-						if(Mouse.getDX() != 0 || Mouse.getDY() != 0) {
-							game.mouseMove(Mouse.getDX(), Mouse.getDY());
-						}
+					}
+					float x = Mouse.getDX();
+					float y = Mouse.getDY();
+					if(x != 0 || y != 0) {
+						game.mouseMove(x,y);
 					}
 				}
 
