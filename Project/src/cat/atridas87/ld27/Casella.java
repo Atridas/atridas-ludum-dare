@@ -1,6 +1,6 @@
 package cat.atridas87.ld27;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 public class Casella {
 	public enum Type {
@@ -30,10 +30,11 @@ public class Casella {
 		}
 	}
 	public Type type;
-	public final LinkedList<Recurs> recursosEntrants, recursosGenerats;
+	public final ArrayList<Recurs> recursosEntrants, recursosGenerats, treballadors;
 	
 	{
-		recursosEntrants = new LinkedList<Recurs>();
-		recursosGenerats = new LinkedList<Recurs>();
+		recursosEntrants = new ArrayList<Recurs>();
+		recursosGenerats = new ArrayList<Recurs>();
+		treballadors = new ArrayList<Recurs>();
 	}
 }

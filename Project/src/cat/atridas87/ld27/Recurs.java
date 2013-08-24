@@ -19,7 +19,7 @@ public enum Recurs {
 	SERRA(6,1, Type.OBJECTE),
 	MONEDES(7,1, Type.OBJECTE),
 	AIGUA(0,2, Type.OBJECTE),
-	FUITA(1,2, Type.OBJECTE),
+	FRUITA(1,2, Type.OBJECTE),
 	RAIM(2,2, Type.OBJECTE),
 	VI(3,2, Type.OBJECTE),
 

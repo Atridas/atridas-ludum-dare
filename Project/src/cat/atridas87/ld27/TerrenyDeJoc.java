@@ -17,6 +17,16 @@ public class TerrenyDeJoc {
 		caselles[1][1].type = Casella.Type.BOSC;
 		caselles[2][3].type = Casella.Type.AIGUA;
 		caselles[3][2].type = Casella.Type.CANTERA;
+
+		caselles[1][2].recursosEntrants.add(Recurs.FUSTA);
+		caselles[1][2].treballadors.add(Recurs.HABITANT);
+
+
+		caselles[2][1].recursosEntrants.add(Recurs.FUSTA);
+		caselles[2][1].recursosEntrants.add(Recurs.PEDRA);
+
+		caselles[2][1].recursosGenerats.add(Recurs.FUSTA);
+		caselles[2][1].recursosGenerats.add(Recurs.FUSTA);
 	}
 	
 }
