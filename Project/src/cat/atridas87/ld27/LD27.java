@@ -23,7 +23,7 @@ public class LD27 extends BaseGame {
 
 	Recurs recursTransportant = null;
 	ArrayList<Recurs> llistaOriginal = null;
-
+	
 	public LD27(int _width, int _height) {
 		super(_width, _height);
 		// TODO Auto-generated constructor stub
@@ -63,6 +63,7 @@ public class LD27 extends BaseGame {
 	public void update(float _dt) {
 		// TODO Auto-generated method stub
 
+		terrenyDeJoc.update(_dt);
 	}
 
 	@Override
