@@ -11,12 +11,12 @@ public class TerrenyDeJoc {
 			for(int j = 0; j < GRAELLA_TAMANY_Y; j++) {
 				caselles[i][j] = new Casella();
 				caselles[i][j].type = Casella.Type.CAMP;
+				
+				caselles[i][j].type = Casella.Type.values()[(i + j * GRAELLA_TAMANY_X) % Casella.Type.values().length];
 			}
 		}
-
-		caselles[1][1].type = Casella.Type.BOSC;
-		caselles[2][3].type = Casella.Type.AIGUA;
-		caselles[3][2].type = Casella.Type.CANTERA;
+		
+		
 
 		caselles[1][2].recursosEntrants.add(Recurs.FUSTA);
 		caselles[1][2].treballadors.add(Recurs.HABITANT);

@@ -80,8 +80,20 @@ public class LD27 extends BaseGame {
 			int casellaY = (int) (y + _y) / TAMANY_CASELLA;
 
 			Casella casella = terrenyDeJoc.caselles[casellaX][casellaY];
-			llistaOriginal = casella.recursosEntrants;
-			if (llistaOriginal.size() > 0) {
+			float dx = (x + _x) - casellaX * TAMANY_CASELLA;
+			float dy = (y + _y) - casellaY * TAMANY_CASELLA;
+			
+			if(dx > 10 && dx < 84 && dy > 50 && dy < 124) {
+				llistaOriginal = casella.treballadors;
+			} else if(dx > 90 && dx < 164 && dy > 10 && dy < 84) {
+				llistaOriginal = casella.recursosGenerats;
+			} else if(dx > 90 && dx < 164 && dy > 90 && dy < 164) {
+				llistaOriginal = casella.recursosEntrants;
+			} else {
+				llistaOriginal = null;
+			}
+			
+			if (llistaOriginal != null && llistaOriginal.size() > 0) {
 				recursTransportant = llistaOriginal
 						.get(llistaOriginal.size() - 1);
 				llistaOriginal.remove(llistaOriginal.size() - 1);
