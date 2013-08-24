@@ -14,14 +14,14 @@ public class Casella {
 		FLECA(1,1),
 		MAGATZEM(2,1),
 		TEMPLE(3,1),
-		//CASA(2,1),
 		CABANA_BRUIXA(4,1),
 		TEATRE(5,1),
 		CONSTRUCTORA(0,2),
 		BANC(1,2),
 		INSTITUT(2,2),
 		BAR(3,2),
-		MERCAT(4,2);
+		MERCAT(4,2),
+		CASA(4,3);
 		
 		public final int spriteX, spriteY;
 		

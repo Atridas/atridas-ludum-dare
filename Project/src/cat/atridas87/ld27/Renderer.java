@@ -10,6 +10,8 @@ import javax.imageio.ImageIO;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+import org.newdawn.slick.Font;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.util.BufferedImageUtil;
 import org.newdawn.slick.util.ResourceLoader;
@@ -26,8 +28,13 @@ public class Renderer {
 	private FloatBuffer casellaPositionBuffer;
 	private FloatBuffer recursosPositionBuffer;
 	private FloatBuffer casellaTexCoordBuffer;
+	
+	private Font font;
 
 	Renderer() throws Exception {
+		
+		font = new TrueTypeFont(new java.awt.Font("Arial", java.awt.Font.PLAIN, 20), true);
+		
 		URL url = ResourceLoader.getResource("resources/quadre.png");
 		BufferedImage bi = ImageIO.read(url);
 
@@ -56,18 +63,22 @@ public class Renderer {
 		recursosPositionBuffer
 		.put(new float[] { 0, 0, 64, 0, 64, 64, 0, 64 });
 
+
 		GL20.glEnableVertexAttribArray(ShaderManager.POSITION_ATTRIBUTE);
 		GL20.glEnableVertexAttribArray(ShaderManager.TEX_COORD_ATTRIBUTE);
 	}
 
-	void render(float x, float y, float width, float height,
-			TerrenyDeJoc terrenyDeJoc, float recursX, float recursY, Recurs recursTransportat) {
+	void render(int x, int y, int width, int height,
+			TerrenyDeJoc terrenyDeJoc, int recursX, int recursY, Recurs recursTransportat) {
+		
 		if (x + width >= TAMANY_CASELLA * GRAELLA_TAMANY_X) {
 			x = TAMANY_CASELLA * GRAELLA_TAMANY_X - width;
 		}
 		if (y + height >= TAMANY_CASELLA * GRAELLA_TAMANY_Y) {
 			y = TAMANY_CASELLA * GRAELLA_TAMANY_Y - height;
 		}
+		
+		shaderManager.setCurrentProgram(ShaderManager.ProgramType.TEXTURED);
 
 		shaderManager.setScreenSize(width, height);
 
@@ -209,4 +220,21 @@ public class Renderer {
 		}
 	}
 
+	void renderHUD(int w, int h, TerrenyDeJoc terrenyDeJoc) {
+		GL20.glUseProgram(0);
+		
+
+        GL11.glMatrixMode(GL11.GL_PROJECTION);
+        GL11.glLoadIdentity();
+        GL11.glOrtho(0, w, h, 0, 1, -1);
+        GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		
+        int partEntera = (int)terrenyDeJoc.timer % 10;
+        float decimals = terrenyDeJoc.timer - (float)Math.floor(terrenyDeJoc.timer);
+        
+		font.drawString(260, 10, partEntera + "." + ((int) (decimals * 10) ));
+
+		font.drawString(10, 10, "punts: " + terrenyDeJoc.pv + " / 10000");
+		font.drawString(10, 35, "ticks: " + terrenyDeJoc.ticks);
+	}
 }

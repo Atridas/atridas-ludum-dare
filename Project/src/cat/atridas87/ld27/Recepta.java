@@ -8,9 +8,9 @@ public class Recepta {
 	public final Recurs resultats[];
 	public final int possibilitatsResultats[];
 	public final boolean consumeixTreballador;
-	public final int px;
+	public final int pv;
 	
-	Recepta(Casella.Type _casella, Recurs _treballador, Recurs _materials[], Recurs _resultats[], int _possibilitatsResultats[], boolean _consumeixTreballador, int _px) {
+	Recepta(Casella.Type _casella, Recurs _treballador, Recurs _materials[], Recurs _resultats[], int _possibilitatsResultats[], boolean _consumeixTreballador, int _pv) {
 		casella = _casella;
 		treballador = _treballador;
 
@@ -19,6 +19,6 @@ public class Recepta {
 		possibilitatsResultats = _possibilitatsResultats.clone();
 		
 		consumeixTreballador = _consumeixTreballador;
-		px = _px;
+		pv = _pv;
 	}
 }

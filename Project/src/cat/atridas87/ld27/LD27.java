@@ -55,8 +55,13 @@ public class LD27 extends BaseGame {
 
 		GL11.glViewport(0, 0, ZONA_JOC_W, ZONA_JOC_H);
 
-		renderer.render(x, y, ZONA_JOC_W, ZONA_JOC_H, terrenyDeJoc, mouseX,
-				mouseY, recursTransportant);
+		renderer.render((int)x, (int)y, ZONA_JOC_W, ZONA_JOC_H, terrenyDeJoc, (int)mouseX,
+				(int)mouseY, recursTransportant);
+		
+
+		GL11.glViewport(ZONA_JOC_W, 0, 1280 - ZONA_JOC_W, ZONA_JOC_H);
+		
+		renderer.renderHUD(1280 - ZONA_JOC_W, ZONA_JOC_H, terrenyDeJoc);
 	}
 
 	@Override

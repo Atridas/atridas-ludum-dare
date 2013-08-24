@@ -11,6 +11,8 @@ public class TerrenyDeJoc {
 
 	final Recepta receptes[];
 	float timer;
+	int pv;
+	int ticks;
 	
 	final private Random rnd = new Random();
 
@@ -48,6 +50,7 @@ public class TerrenyDeJoc {
 			timer = 10;
 
 			checkReceptes();
+			ticks++;
 		}
 		
 		rnd.nextInt(); // randomize a saco
@@ -153,5 +156,7 @@ public class TerrenyDeJoc {
 			}
 			possibilitats -= recepta.possibilitatsResultats[m];
 		}
+		
+		pv += recepta.pv;
 	}
 }
