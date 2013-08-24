@@ -1,10 +1,5 @@
 package cat.atridas87.ld26.render;
 
-import java.nio.FloatBuffer;
-
-import javax.vecmath.Matrix4f;
-
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
@@ -87,8 +82,9 @@ public class ShaderManager {
 		}
 
 		p.textureUniform = GL20.glGetUniformLocation(p.program, "uTexture");
-		p.screenSize    = GL20.glGetUniformLocation(p.program, "uScreenSize");
-		p.position    = GL20.glGetUniformLocation(p.program, "uPosition");
+		p.screenSize     = GL20.glGetUniformLocation(p.program, "uScreenSize");
+		p.position       = GL20.glGetUniformLocation(p.program, "uPosition");
+		p.texcoord       = GL20.glGetUniformLocation(p.program, "uTexcoord");
 		
 		return p;
 	}
@@ -115,6 +111,11 @@ public class ShaderManager {
 		GL20.glUniform2f(currentProgram.position, x, y);
 	}
 	
+	public void setTexcoords(float x, float y, float w, float h)
+	{
+		GL20.glUniform4f(currentProgram.texcoord, x, y, w, h);
+	}
+	
 	
 	private static class Program {
 		int program;
@@ -122,6 +123,7 @@ public class ShaderManager {
 		int textureUniform;
 		int screenSize;
 		int position;
+		int texcoord;
 	}
 	
 	

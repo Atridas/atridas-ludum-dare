@@ -12,6 +12,10 @@ public class TerrenyDeJoc {
 				caselles[i][j] = Casella.CAMP;
 			}
 		}
+
+		caselles[1][1] = Casella.BOSC;
+		caselles[2][3] = Casella.AIGUA;
+		caselles[3][2] = Casella.CANTERA;
 	}
 	
 }

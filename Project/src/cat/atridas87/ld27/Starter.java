@@ -73,9 +73,17 @@ public class Starter extends Applet {
 				// The window is in the foreground, so we should play the game
 
 				while (Mouse.next()) {
-					if (Mouse.getEventButton() == 0
-							&& Mouse.getEventButtonState()) {
-						game.mouseClick(Mouse.getX(), Mouse.getY());
+					if (Mouse.getEventButton() == 0) {
+						
+						if ( Mouse.getEventButtonState()) {
+							game.mouseClick(Mouse.getX(), Mouse.getY());
+						} else {
+							game.mouseRelease(Mouse.getX(), Mouse.getY());
+						}
+					} else {
+						if(Mouse.getDX() != 0 || Mouse.getDY() != 0) {
+							game.mouseMove(Mouse.getDX(), Mouse.getDY());
+						}
 					}
 				}
 

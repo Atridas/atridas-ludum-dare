@@ -12,6 +12,8 @@ public class LD27 extends BaseGame {
 
 	Renderer renderer;
 	TerrenyDeJoc terrenyDeJoc;
+	
+	float x, y;
 
 	public LD27(int _width, int _height) {
 		super(_width, _height);
@@ -44,13 +46,21 @@ public class LD27 extends BaseGame {
 		
 		GL11.glViewport(0, 0, 800, 800);
 
-		renderer.render(0, 0, 800, 800, terrenyDeJoc);
+		renderer.render(x, y, 800, 800, terrenyDeJoc);
 	}
 
 	@Override
 	public void update(float _dt) {
 		// TODO Auto-generated method stub
 
+		x += _dt * TAMANY_CASELLA / 2;
+		y += _dt * TAMANY_CASELLA / 3;
+
+		if( x > TAMANY_CASELLA * GRAELLA_TAMANY_X - 700 && y > TAMANY_CASELLA * GRAELLA_TAMANY_Y - 700) {
+			x = 0;
+			y = 0;
+		}
+		
 	}
 
 	@Override
@@ -63,6 +73,18 @@ public class LD27 extends BaseGame {
 	public void mouseClick(float x, float y) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void mouseRelease(float x, float y) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMove(float dx, float dy) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
