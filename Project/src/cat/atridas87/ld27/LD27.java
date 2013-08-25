@@ -128,7 +128,9 @@ public class LD27 extends BaseGame {
 				int casellaX = (int) (x + _x) / TAMANY_CASELLA;
 				int casellaY = (int) (y + _y) / TAMANY_CASELLA;
 
-				llista = terrenyDeJoc.caselles[casellaX][casellaY].recursosEntrants;
+				terrenyDeJoc.casellaSeleccionada = terrenyDeJoc.caselles[casellaX][casellaY];
+				
+				llista = terrenyDeJoc.casellaSeleccionada.recursosEntrants;
 				if (recursTransportant.type == Recurs.Type.HABITANT) {
 					llista = terrenyDeJoc.caselles[casellaX][casellaY].treballadors;
 					if(llista.size() >= MAX_TREBALLADORS) {
@@ -146,6 +148,12 @@ public class LD27 extends BaseGame {
 			}
 			llistaOriginal = null;
 			recursTransportant = null;
+		} else if (mouseX < ZONA_JOC_W && mouseX > 0 && mouseY < ZONA_JOC_H
+				&& mouseY > 0) {
+			int casellaX = (int) (x + _x) / TAMANY_CASELLA;
+			int casellaY = (int) (y + _y) / TAMANY_CASELLA;
+
+			terrenyDeJoc.casellaSeleccionada = terrenyDeJoc.caselles[casellaX][casellaY];
 		}
 
 		dragging = false;

@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.Random;
 
 public class TerrenyDeJoc {
-	
+
 	final Casella caselles[][] = new Casella[GRAELLA_TAMANY_X][GRAELLA_TAMANY_Y];
 	Casella casellaSeleccionada = null;
 
@@ -15,7 +15,7 @@ public class TerrenyDeJoc {
 	float timer;
 	int pv;
 	int ticks;
-	
+
 	final private Random rnd = new Random();
 
 	TerrenyDeJoc() {
@@ -32,6 +32,7 @@ public class TerrenyDeJoc {
 
 		caselles[1][2].recursosEntrants.add(Recurs.FUSTA);
 		caselles[1][2].treballadors.add(Recurs.HABITANT);
+		caselles[1][3].treballadors.add(Recurs.HABITANT);
 
 		caselles[2][1].recursosEntrants.add(Recurs.FUSTA);
 		caselles[2][1].recursosEntrants.add(Recurs.PEDRA);
@@ -39,9 +40,7 @@ public class TerrenyDeJoc {
 		caselles[2][1].recursosGenerats.add(Recurs.FUSTA);
 		caselles[2][1].recursosGenerats.add(Recurs.FUSTA);
 
-		receptes = new Recepta[] { new Recepta(Casella.Type.BOSC, null,
-				new Recurs[] {}, new Recurs[] { Recurs.FUSTA, Recurs.FRUITA,
-						Recurs.AIGUA }, new int[] { 10, 1, 1 }, false, 1) };
+		receptes = GeneradorDeReceptes.receptes();
 
 		timer = 10;
 	}
@@ -54,7 +53,7 @@ public class TerrenyDeJoc {
 			checkReceptes();
 			ticks++;
 		}
-		
+
 		rnd.nextInt(); // randomize a saco
 	}
 
@@ -72,54 +71,55 @@ public class TerrenyDeJoc {
 				}
 				Recepta millorRecepta = triarMillorRecepta(receptesPossibles,
 						casella);
-				
-				
-				executarRecepta(millorRecepta, casella);
-				
-				// TODO receptes especials
+
+				if (!executarRecepta(millorRecepta, casella)) {
+					executarEdificiEspecial(casella);
+				}
+
 			}
 		}
 	}
 
 	private boolean receptaPossible(Recepta recepta, Casella casella) {
-		if(casella.treballadors.isEmpty() || recepta.casella != casella.type || casella.recursosGenerats.size() >= MAX_RECURSOS_GENERATS) {
+		if (casella.treballadors.isEmpty() || recepta.casella != casella.type
+				|| casella.recursosGenerats.size() >= MAX_RECURSOS_GENERATS) {
 			return false;
 		}
-		
-		if(recepta.treballador != null && 
-				recepta.treballador != casella.treballadors.get(casella.treballadors.size() - 1))
-		{
+
+		if (recepta.treballador != null
+				&& recepta.treballador != casella.treballadors
+						.get(casella.treballadors.size() - 1)) {
 			return false;
 		}
-		
+
 		HashMap<Recurs, Integer> recursosTrobats = new HashMap<Recurs, Integer>();
-		
-		for(int m = 0; m < recepta.materials.length; m++) {
+
+		for (int m = 0; m < recepta.materials.length; m++) {
 			Recurs material = recepta.materials[m];
-			//Integer anteriors0 = recursosTrobats.get(material);
-			int anteriors = recursosTrobats.get(material);
-			//if(anteriors0 != null) {
-			//	anteriors = anteriors0.intValue();
-			//}
+			Integer anteriors0 = recursosTrobats.get(material);
+			int anteriors = 0;
+			if (anteriors0 != null) {
+				anteriors = anteriors0.intValue();
+			}
 			int buscant = 0;
-			
-			for(int i = 0; i < casella.recursosEntrants.size(); i++) {
+
+			for (int i = 0; i < casella.recursosEntrants.size(); i++) {
 				Recurs recuts = casella.recursosEntrants.get(i);
-				if(recuts == material) {
+				if (recuts == material) {
 					buscant++;
-					if(buscant > anteriors) {
+					if (buscant > anteriors) {
 						break;
 					}
 				}
 			}
-			
-			if(buscant > anteriors) {
+
+			if (buscant > anteriors) {
 				recursosTrobats.put(material, buscant);
 			} else {
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -127,38 +127,80 @@ public class TerrenyDeJoc {
 			Casella casella) {
 		return receptesPossibles.peekLast(); // TODO
 	}
-	
-	private void executarRecepta(Recepta recepta, Casella casella) {
-		if(recepta == null) {
-			return;
+
+	private boolean executarRecepta(Recepta recepta, Casella casella) {
+		if (recepta == null) {
+			return false;
 		}
-		for(int m = 0; m < recepta.materials.length; m++) {
+		for (int m = 0; m < recepta.materials.length; m++) {
 			Recurs material = recepta.materials[m];
-			
+
 			casella.recursosEntrants.remove(material);
 		}
-		
+
 		int possibilitats = 0;
-		for(int m = 0; m < recepta.possibilitatsResultats.length; m++) {
+		for (int m = 0; m < recepta.possibilitatsResultats.length; m++) {
 			possibilitats += recepta.possibilitatsResultats[m];
 		}
-		
-		if(possibilitats > 0) {
+
+		if (possibilitats > 0) {
 			possibilitats = rnd.nextInt(possibilitats);
 		}
-		
-		for(int m = 0; m < recepta.resultats.length; m++) {
-			if(recepta.possibilitatsResultats[m] == 0 || (possibilitats >= 0 && possibilitats < recepta.possibilitatsResultats[m])) {
-				
+
+		boolean haGenerat = false;
+
+		for (int m = 0; m < recepta.resultats.length; m++) {
+			if (recepta.possibilitatsResultats[m] == 0
+					|| (possibilitats >= 0 && possibilitats < recepta.possibilitatsResultats[m])) {
+
 				Recurs material = recepta.resultats[m];
-				if(material != null) {
+				if (material != null) {
 					casella.recursosGenerats.add(material);
+					haGenerat = true;
 				}
-				
+
 			}
 			possibilitats -= recepta.possibilitatsResultats[m];
 		}
-		
-		pv += recepta.pv;
+
+		if (haGenerat) {
+			if (recepta.consumeixTreballador) {
+				casella.treballadors.remove(casella.treballadors.size() - 1);
+			}
+
+			pv += recepta.pv;
+		}
+
+		return haGenerat;
+	}
+
+	private void executarEdificiEspecial(Casella casella) {
+		switch (casella.type) {
+		case CASA:
+			if(casella.treballadors.size() == 2 && casella.recursosGenerats.size() == 0) {
+				float possibilitats = .1f;
+				if(casella.recursosEntrants.contains(Recurs.PA)) {
+					possibilitats = .5f;
+					casella.recursosEntrants.remove(Recurs.PA);
+					pv += 500;
+				} else if(casella.recursosEntrants.contains(Recurs.PEIX)) {
+					possibilitats = .25f;
+					casella.recursosEntrants.remove(Recurs.PEIX);
+					pv += 50;
+				} else if(casella.recursosEntrants.contains(Recurs.FRUITA)) {
+					possibilitats = .25f;
+					casella.recursosEntrants.remove(Recurs.FRUITA);
+					pv += 50;
+				}
+				
+				if(rnd.nextFloat() < possibilitats) {
+					casella.recursosGenerats.add(Recurs.HABITANT);
+				}
+			}
+			break;
+
+		default:
+			break;
+		}
 	}
 }
