@@ -12,6 +12,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.FUSTA, Recurs.FRUITA, Recurs.POLLASTRE },
 						new int[] { 6, 3, 1 },
 						false,
+						false,
 						1),
 				new Recepta(
 						Casella.Type.AIGUA,
@@ -19,6 +20,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { },
 						new Recurs[] { Recurs.AIGUA, Recurs.PEIX },
 						new int[] { 2, 1 },
+						false,
 						false,
 						1),
 				new Recepta(
@@ -28,6 +30,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.FUSTA, Recurs.FUSTA, Recurs.FUSTA },
 						new int[] { 0,0,0 },
 						false,
+						false,
 						1),
 				new Recepta(
 						Casella.Type.CANTERA,
@@ -35,6 +38,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] {},
 						new Recurs[] { Recurs.PEDRA },
 						new int[] { 0 },
+						false,
 						false,
 						1),
 				new Recepta(
@@ -44,6 +48,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.PEDRA, Recurs.PEDRA, Recurs.PEDRA },
 						new int[] { 0, 0, 0 },
 						false,
+						false,
 						1),
 				new Recepta(
 						Casella.Type.CANTERA,
@@ -51,6 +56,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.AIGUA, Recurs.AIGUA, Recurs.AIGUA },
 						new Recurs[] { Recurs.ARGILA },
 						new int[] { 0 },
+						false,
 						false,
 						1),
 				new Recepta(
@@ -60,6 +66,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.PEDRES_PRECIOSES },
 						new int[] { 0 },
 						false,
+						false,
 						1),
 				new Recepta(
 						Casella.Type.CANTERA,
@@ -68,37 +75,51 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.OR },
 						new int[] { 0 },
 						false,
+						false,
 						1),
 				new Recepta(
 						Casella.Type.CAMP,
 						null,
 						new Recurs[] { },
 						new Recurs[] { Recurs.BLAT, Recurs.RAIM, null },
-						new int[] { 1, 1, 5 },
+						new int[] { 3, 1, 3 },
+						false,
 						false,
 						1),
 				new Recepta(
+						Casella.Type.CAMP,
+						null,
+						new Recurs[] { Recurs.AIGUA },
+						new Recurs[] { Recurs.BLAT, Recurs.RAIM },
+						new int[] { 3, 1 },
+						false,
+						false,
+						2),
+				new Recepta(
 						Casella.Type.HORT,
 						Recurs.GRANGER,
-						new Recurs[] { Recurs.BLAT },
+						new Recurs[] { Recurs.BLAT, Recurs.AIGUA },
 						new Recurs[] { Recurs.BLAT, Recurs.BLAT, Recurs.BLAT, Recurs.BLAT, Recurs.BLAT },
 						new int[] { 0, 0, 0, 0, 0 },
 						false,
+						false,
 						1),
 				new Recepta(
 						Casella.Type.HORT,
 						Recurs.GRANGER,
-						new Recurs[] { Recurs.RAIM },
+						new Recurs[] { Recurs.RAIM, Recurs.AIGUA },
 						new Recurs[] { Recurs.RAIM, Recurs.RAIM, Recurs.RAIM, null },
 						new int[] { 0, 0, 1, 1 },
 						false,
-						1),
+						false,
+						2),
 				new Recepta(
 						Casella.Type.MOLI_DE_VENT,
 						null,
 						new Recurs[] { Recurs.BLAT, Recurs.BLAT },
 						new Recurs[] { Recurs.FARINA },
 						new int[] { 0 },
+						false,
 						false,
 						1),
 				new Recepta(
@@ -108,6 +129,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.PA },
 						new int[] { 0 },
 						false,
+						false,
 						1),
 				new Recepta(
 						Casella.Type.GRANJA,
@@ -115,6 +137,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.POLLASTRE, Recurs.POLLASTRE },
 						new Recurs[] { Recurs.OUS },
 						new int[] { 0 },
+						false,
 						false,
 						1),
 				new Recepta(
@@ -124,6 +147,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.PASTIS },
 						new int[] { 0 },
 						false,
+						false,
 						1),
 				new Recepta(
 						Casella.Type.GRANJA,
@@ -131,6 +155,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.RAIM, Recurs.RAIM },
 						new Recurs[] { Recurs.VI },
 						new int[] { 0 },
+						false,
 						false,
 						50),
 				new Recepta(
@@ -140,6 +165,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.MONEDES, Recurs.MONEDES, Recurs.MONEDES, Recurs.MONEDES, Recurs.MONEDES },
 						new int[] { 0, 0, 0, 0, 0 },
 						false,
+						false,
 						300),
 				new Recepta(
 						Casella.Type.BAR,
@@ -147,6 +173,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.PA, Recurs.VI },
 						new Recurs[] { Recurs.MONEDES, Recurs.MONEDES, Recurs.MONEDES, Recurs.MONEDES, Recurs.MONEDES },
 						new int[] { 0, 0, 0, 0, 0 },
+						false,
 						false,
 						200),
 				new Recepta(
@@ -156,6 +183,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.MONEDES, Recurs.MONEDES, Recurs.MONEDES, Recurs.MONEDES },
 						new int[] { 0, 0, 0, 0 },
 						false,
+						false,
 						100),
 				new Recepta(
 						Casella.Type.BAR,
@@ -163,6 +191,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.PA },
 						new Recurs[] { Recurs.MONEDES, Recurs.MONEDES, Recurs.MONEDES },
 						new int[] { 0, 0, 0 },
+						false,
 						false,
 						50),
 				new Recepta(
@@ -172,6 +201,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.MONEDES, Recurs.MONEDES },
 						new int[] { 0, 0 },
 						false,
+						false,
 						25),
 				new Recepta(
 						Casella.Type.BAR,
@@ -179,6 +209,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.PASTIS },
 						new Recurs[] { Recurs.MONEDES, Recurs.MONEDES, Recurs.MONEDES },
 						new int[] { 0, 0, 0, 0, 0 },
+						false,
 						false,
 						75),
 
@@ -189,6 +220,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.FALC },
 						new int[] { 0 },
 						false,
+						false,
 						50),
 				new Recepta(
 						Casella.Type.CONSTRUCTORA,
@@ -197,6 +229,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.PIC },
 						new int[] { 0 },
 						false,
+						false,
 						50),
 				new Recepta(
 						Casella.Type.CONSTRUCTORA,
@@ -204,6 +237,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.FUSTA, Recurs.FUSTA },
 						new Recurs[] { Recurs.SERRA },
 						new int[] { 0 },
+						false,
 						false,
 						50),
 						
@@ -214,6 +248,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.PA, Recurs.PA, null },
 						new int[] { 0,1,1 },
 						false,
+						false,
 						1),						
 				new Recepta(
 						Casella.Type.TEMPLE,
@@ -221,6 +256,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.PEIX },
 						new Recurs[] { Recurs.PEIX, Recurs.PEIX, null },
 						new int[] { 0,1,1 },
+						false,
 						false,
 						1),
 						
@@ -231,6 +267,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.MONEDES, null },
 						new int[] { 1, 1},
 						false,
+						false,
 						100),
 
 				new Recepta(
@@ -240,6 +277,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.GRANGER },
 						new int[] { 0 },
 						true,
+						false,
 						100),
 				new Recepta(
 						Casella.Type.INSTITUT,
@@ -248,6 +286,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.MINER },
 						new int[] { 0 },
 						true,
+						false,
 						100),
 				new Recepta(
 						Casella.Type.INSTITUT,
@@ -256,6 +295,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.GUARDABOSC },
 						new int[] { 0 },
 						true,
+						false,
 						100),
 				new Recepta(
 						Casella.Type.CONSTRUCTORA,
@@ -264,6 +304,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.CONSTRUCTOR },
 						new int[] { 0 },
 						true,
+						false,
 						100),
 				new Recepta(
 						Casella.Type.CABANA_BRUIXA,
@@ -272,6 +313,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.BRUIXA },
 						new int[] { 0 },
 						true,
+						false,
 						100),
 				new Recepta(
 						Casella.Type.TEMPLE,
@@ -280,6 +322,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.SACERDOTESSA },
 						new int[] { 0 },
 						true,
+						false,
 						100),
 				new Recepta(
 						Casella.Type.TEATRE,
@@ -288,6 +331,7 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.JOGLAR },
 						new int[] { 0 },
 						true,
+						false,
 						100),
 				new Recepta(
 						Casella.Type.MERCAT,
@@ -296,8 +340,119 @@ public abstract class GeneradorDeReceptes {
 						new Recurs[] { Recurs.MERCADER },
 						new int[] { 0 },
 						true,
+						false,
 						100),
 				
+						
+
+				new Recepta(
+						Casella.Type.CONSTRUCTORA,
+						Recurs.CONSTRUCTOR,
+						new Recurs[] { Recurs.BLAT },
+						new Recurs[] { Recurs.HORT },
+						new int[] { 0 },
+						false,
+						true,
+						100),
+				new Recepta(
+						Casella.Type.CONSTRUCTORA,
+						Recurs.CONSTRUCTOR,
+						new Recurs[] { Recurs.POLLASTRE, Recurs.FUSTA },
+						new Recurs[] { Recurs.GRANJA },
+						new int[] { 0 },
+						false,
+						true,
+						100),
+				new Recepta(
+						Casella.Type.CONSTRUCTORA,
+						Recurs.CONSTRUCTOR,
+						new Recurs[] { Recurs.BLAT, Recurs.BLAT, Recurs.PEIX, Recurs.PEIX, Recurs.ARGILA },
+						new Recurs[] { Recurs.TEMPLE },
+						new int[] { 0 },
+						false,
+						true,
+						100),
+				new Recepta(
+						Casella.Type.CONSTRUCTORA,
+						Recurs.CONSTRUCTOR,
+						new Recurs[] { Recurs.ARGILA },
+						new Recurs[] { Recurs.CASA },
+						new int[] { 0 },
+						false,
+						true,
+						100),
+				new Recepta(
+						Casella.Type.CONSTRUCTORA,
+						Recurs.CONSTRUCTOR,
+						new Recurs[] { Recurs.ARGILA, Recurs.ARGILA, Recurs.PEDRA, Recurs.FUSTA },
+						new Recurs[] { Recurs.CABANA_BRUIXA },
+						new int[] { 0 },
+						false,
+						true,
+						100),
+				new Recepta(
+						Casella.Type.CONSTRUCTORA,
+						Recurs.CONSTRUCTOR,
+						new Recurs[] { Recurs.VI, Recurs.ARGILA },
+						new Recurs[] { Recurs.TEATRE },
+						new int[] { 0 },
+						false,
+						true,
+						100),
+				new Recepta(
+						Casella.Type.CONSTRUCTORA,
+						Recurs.CONSTRUCTOR,
+						new Recurs[] { Recurs.MONEDES, Recurs.MONEDES, Recurs.MONEDES, Recurs.MONEDES, Recurs.ARGILA },
+						new Recurs[] { Recurs.BANC },
+						new int[] { 0 },
+						false,
+						true,
+						100),
+				new Recepta(
+						Casella.Type.CONSTRUCTORA,
+						Recurs.CONSTRUCTOR,
+						new Recurs[] { Recurs.PEDRA, Recurs.PEDRA },
+						new Recurs[] { Recurs.INSTITUT },
+						new int[] { 0 },
+						false,
+						true,
+						100),
+				new Recepta(
+						Casella.Type.CONSTRUCTORA,
+						Recurs.CONSTRUCTOR,
+						new Recurs[] { Recurs.PEIX, Recurs.PA, Recurs.FUSTA },
+						new Recurs[] { Recurs.BAR },
+						new int[] { 0 },
+						false,
+						true,
+						100),
+				new Recepta(
+						Casella.Type.CONSTRUCTORA,
+						Recurs.CONSTRUCTOR,
+						new Recurs[] { Recurs.BLAT, Recurs.BLAT, Recurs.BLAT, Recurs.BLAT, Recurs.PEDRA },
+						new Recurs[] { Recurs.MOLI_DE_VENT },
+						new int[] { 0 },
+						false,
+						true,
+						100),
+				new Recepta(
+						Casella.Type.CONSTRUCTORA,
+						Recurs.CONSTRUCTOR,
+						new Recurs[] { Recurs.FARINA, Recurs.FARINA, Recurs.PEDRA },
+						new Recurs[] { Recurs.FLECA },
+						new int[] { 0 },
+						false,
+						true,
+						100),
+				new Recepta(
+						Casella.Type.CONSTRUCTORA,
+						Recurs.CONSTRUCTOR,
+						new Recurs[] { Recurs.ARGILA, Recurs.MONEDES, Recurs.PEDRA },
+						new Recurs[] { Recurs.MERCAT },
+						new int[] { 0 },
+						false,
+						true,
+						100),
 				};
 		
 	}

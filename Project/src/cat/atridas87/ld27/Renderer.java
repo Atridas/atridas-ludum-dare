@@ -82,7 +82,6 @@ public class Renderer {
 			y = TAMANY_CASELLA * GRAELLA_TAMANY_Y - height;
 		}
 
-
 		shaderManager.setScreenSize(width, height);
 
 		int casellaX = (int) (x / TAMANY_CASELLA);
@@ -201,7 +200,7 @@ public class Renderer {
 		}
 
 	}
-	
+
 	void renderHUD(int w, int h, TerrenyDeJoc terrenyDeJoc) {
 
 		shaderManager.setScreenSize(w, h);
@@ -262,12 +261,14 @@ public class Renderer {
 
 			fontTimer.drawString(
 					245 - fontTimer.getWidth(Integer.toString(partEntera)) / 2,
-					60, Integer.toString(partEntera));
+					60, Integer.toString(partEntera), Color.black);
 
-			font.drawString(30, 25, terrenyDeJoc.pv + " / " + POINTS_TO_WIN,
-					Color.black);
-			font.drawString(30, 130, Integer.toString(terrenyDeJoc.ticks),
-					Color.black);
+			font.drawString(
+					130 - fontTimer.getWidth(Integer.toString(terrenyDeJoc.pv)) / 2,
+					35, Integer.toString(terrenyDeJoc.pv), Color.white);
+			font.drawString(
+					130 - fontTimer.getWidth(Integer.toString(terrenyDeJoc.ticks)) / 2,
+					135, Integer.toString(terrenyDeJoc.ticks), Color.white);
 			break;
 		}
 	}
@@ -388,14 +389,15 @@ public class Renderer {
 			cont++;
 		}
 	}
-	
-	void renderRecurs(int w, int h, int recursX, int recursY, Recurs recursTransportat) {
+
+	void renderRecurs(int w, int h, int recursX, int recursY,
+			Recurs recursTransportat) {
 
 		shaderManager.setCurrentProgram(ShaderManager.ProgramType.TEXTURED);
 		recursos.bind();
-		
+
 		shaderManager.setScreenSize(w, h);
-		
+
 		if (recursTransportat != null) {
 			shaderManager.setPosition(recursX - 32, recursY - 32, 64, 64);
 			int indexX = recursTransportat.spriteX;
