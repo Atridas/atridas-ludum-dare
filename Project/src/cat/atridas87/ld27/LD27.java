@@ -1,13 +1,14 @@
 package cat.atridas87.ld27;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.lwjgl.opengl.GL11;
 
 public class LD27 extends BaseGame {
 
-	final static public int GRAELLA_TAMANY_X = 10;
-	final static public int GRAELLA_TAMANY_Y = 10;
+	final static public int GRAELLA_TAMANY_X = 7;
+	final static public int GRAELLA_TAMANY_Y = 6;
 
 	final static public int TAMANY_CASELLA = 170;
 
@@ -61,13 +62,16 @@ public class LD27 extends BaseGame {
 
 		GL11.glViewport(0, 0, ZONA_JOC_W, ZONA_JOC_H);
 
-		renderer.render((int)x, (int)y, ZONA_JOC_W, ZONA_JOC_H, terrenyDeJoc, (int)mouseX,
-				(int)mouseY, recursTransportant);
-		
+		renderer.render((int)x, (int)y, ZONA_JOC_W, ZONA_JOC_H, terrenyDeJoc);
 
 		GL11.glViewport(ZONA_JOC_W, 0, 1280 - ZONA_JOC_W, ZONA_JOC_H);
 		
 		renderer.renderHUD(1280 - ZONA_JOC_W, ZONA_JOC_H, terrenyDeJoc);
+
+		GL11.glViewport(0, 0, 1280, 800);
+		
+		renderer.renderRecurs(1280, 800, (int)mouseX,
+				(int)mouseY, recursTransportant);
 	}
 
 	@Override
@@ -113,6 +117,33 @@ public class LD27 extends BaseGame {
 				dragging = true;
 				llistaOriginal = null;
 			}
+		} else {
+			float dx = 300.f / 3.f;
+			float dy = 450.f / 7.f;
+			
+			int cont = 0;
+			Iterator<Recurs> it = terrenyDeJoc.magatzem.keySet().iterator();
+			while (it.hasNext()) {
+				Recurs recurs = it.next();
+				int columna = cont % 3;
+				int fila = cont / 3;
+
+				float left = ZONA_JOC_W + columna * dx;
+				float right = left + dx;
+				float top = ZONA_JOC_H - 350 - fila * dy;
+				float bottom = top - dy;
+				
+				if(_x > left && _x < right && _y < top && _y > bottom) {
+					int cuantitat = terrenyDeJoc.magatzem.get(recurs);
+					if(cuantitat > 0) {
+						recursTransportant = recurs;
+						terrenyDeJoc.magatzem.put(recurs, cuantitat - 1);
+					}
+					break;
+				}
+				cont++;
+			}
+			
 		}
 
 	}
@@ -143,8 +174,10 @@ public class LD27 extends BaseGame {
 			
 			if(llista != null) {
 				llista.add(recursTransportant);
+			} else if (recursTransportant.type == Recurs.Type.OBJECTE) {
+				terrenyDeJoc.magatzem.put(recursTransportant, terrenyDeJoc.magatzem.get(recursTransportant) + 1);
 			} else {
-				// TODO
+				// TODO no hauria de passar mai aixos...
 			}
 			llistaOriginal = null;
 			recursTransportant = null;

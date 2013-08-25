@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 
@@ -69,10 +70,10 @@ public class Renderer {
 		positionBuffer.rewind();
 		GL20.glVertexAttribPointer(ShaderManager.POSITION_ATTRIBUTE, 2, false,
 				0, positionBuffer);
+		shaderManager.setCurrentProgram(ShaderManager.ProgramType.TEXTURED);
 	}
 
-	void render(int x, int y, int width, int height, TerrenyDeJoc terrenyDeJoc,
-			int recursX, int recursY, Recurs recursTransportat) {
+	void render(int x, int y, int width, int height, TerrenyDeJoc terrenyDeJoc) {
 
 		if (x + width >= TAMANY_CASELLA * GRAELLA_TAMANY_X) {
 			x = TAMANY_CASELLA * GRAELLA_TAMANY_X - width;
@@ -81,7 +82,6 @@ public class Renderer {
 			y = TAMANY_CASELLA * GRAELLA_TAMANY_Y - height;
 		}
 
-		shaderManager.setCurrentProgram(ShaderManager.ProgramType.TEXTURED);
 
 		shaderManager.setScreenSize(width, height);
 
@@ -200,17 +200,8 @@ public class Renderer {
 			}
 		}
 
-		if (recursTransportat != null) {
-			shaderManager.setPosition(recursX - 32, recursY - 32, 64, 64);
-			int indexX = recursTransportat.spriteX;
-			int indexY = recursTransportat.spriteY;
-			shaderManager.setTexcoords((indexX * 64) / 512.f,
-					(indexY * 64) / 512.f, 64.f / 512.f, 64.f / 512.f);
-
-			GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
-		}
 	}
-
+	
 	void renderHUD(int w, int h, TerrenyDeJoc terrenyDeJoc) {
 
 		shaderManager.setScreenSize(w, h);
@@ -220,7 +211,6 @@ public class Renderer {
 		GL11.glOrtho(0, w, h, 0, 1, -1);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 
-
 		for (int pass = 0; pass < 4; pass++) {
 			switch (pass) {
 			case 0:
@@ -228,8 +218,9 @@ public class Renderer {
 				break;
 			case 1:
 				hud.bind();
-				shaderManager.setPosition(0, 800-350, 300, 350);
-				shaderManager.setTexcoords(0, 0, 300.f/1024.f, 350.f/1024.f);
+				shaderManager.setPosition(0, 800 - 350, 300, 350);
+				shaderManager
+						.setTexcoords(0, 0, 300.f / 1024.f, 350.f / 1024.f);
 				GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
 				break;
 			case 2:
@@ -243,6 +234,8 @@ public class Renderer {
 			renderGameInfo(pass, terrenyDeJoc);
 
 			renderSelectedField(pass, terrenyDeJoc);
+
+			renderMagatzem(pass, terrenyDeJoc);
 		}
 	}
 
@@ -250,17 +243,19 @@ public class Renderer {
 
 		switch (pass) {
 		case 1:
-			
-			float completed = (float)terrenyDeJoc.pv / (float)POINTS_TO_WIN;
+
+			float completed = (float) terrenyDeJoc.pv / (float) POINTS_TO_WIN;
 
 			shaderManager.setPosition(20, 700, 148, 38);
-			shaderManager.setTexcoords(41/1024.f, 401/1024.f, 148.f/1024.f, 38.f/1024.f);
+			shaderManager.setTexcoords(41 / 1024.f, 401 / 1024.f,
+					148.f / 1024.f, 38.f / 1024.f);
 			GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
 
 			shaderManager.setPosition(20, 700, 148 * completed, 38);
-			shaderManager.setTexcoords(41/1024.f, 452/1024.f, 148.f/1024.f * completed, 38.f/1024.f);
+			shaderManager.setTexcoords(41 / 1024.f, 452 / 1024.f,
+					148.f / 1024.f * completed, 38.f / 1024.f);
 			GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
-			
+
 			break;
 		case 3:
 			int partEntera = (int) Math.ceil(terrenyDeJoc.timer);
@@ -269,9 +264,10 @@ public class Renderer {
 					245 - fontTimer.getWidth(Integer.toString(partEntera)) / 2,
 					60, Integer.toString(partEntera));
 
-			font.drawString(30, 25, terrenyDeJoc.pv + " / "
-					+ POINTS_TO_WIN, Color.black);
-			font.drawString(30, 130, Integer.toString( terrenyDeJoc.ticks ), Color.black);
+			font.drawString(30, 25, terrenyDeJoc.pv + " / " + POINTS_TO_WIN,
+					Color.black);
+			font.drawString(30, 130, Integer.toString(terrenyDeJoc.ticks),
+					Color.black);
 			break;
 		}
 	}
@@ -280,15 +276,19 @@ public class Renderer {
 		switch (pass) {
 		case 0:
 			if (terrenyDeJoc.casellaSeleccionada != null) {
-				
+
 				int indexX = terrenyDeJoc.casellaSeleccionada.type.spriteX;
 				int indexY = terrenyDeJoc.casellaSeleccionada.type.spriteY;
-				shaderManager.setTexcoords((indexX * 170) / 1024.f,
-						(indexY * 170) / 1024.f, 170.f / 1024.f, 170.f / 1024.f);
+				shaderManager
+						.setTexcoords((indexX * 170) / 1024.f,
+								(indexY * 170) / 1024.f, 170.f / 1024.f,
+								170.f / 1024.f);
 
 			} else {
-				shaderManager.setTexcoords((Casella.Type.CAMP.spriteX * 170) / 1024.f,
-						(Casella.Type.CAMP.spriteY * 170) / 1024.f, 170.f / 1024.f, 170.f / 1024.f);
+				shaderManager.setTexcoords(
+						(Casella.Type.CAMP.spriteX * 170) / 1024.f,
+						(Casella.Type.CAMP.spriteY * 170) / 1024.f,
+						170.f / 1024.f, 170.f / 1024.f);
 			}
 			shaderManager.setPosition(25, 495, 85, 85);
 			GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
@@ -312,20 +312,21 @@ public class Renderer {
 						y = 472;
 						break;
 					}
-	
+
 					float dx = 150.f / (recursos.size() + 1);
-	
+
 					for (int r = 0; r < recursos.size(); r++) {
 						Recurs recurs = recursos.get(r);
 						int x = (int) (137.5f + dx * (r + 1) - 16);
-	
+
 						shaderManager.setPosition(x, y, 32, 32);
-	
+
 						int indexX = recurs.spriteX;
 						int indexY = recurs.spriteY;
 						shaderManager.setTexcoords((indexX * 64) / 512.f,
-								(indexY * 64) / 512.f, 64.f / 512.f, 64.f / 512.f);
-	
+								(indexY * 64) / 512.f, 64.f / 512.f,
+								64.f / 512.f);
+
 						GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
 					}
 				}
@@ -333,4 +334,77 @@ public class Renderer {
 			break;
 		}
 	}
+
+	private void renderMagatzem(int pass, TerrenyDeJoc terrenyDeJoc) {
+
+		float dx = 300.f / 6.f;
+		float dy = 450.f / 14.f;
+
+		int cont = 0;
+		Iterator<Recurs> it = terrenyDeJoc.magatzem.keySet().iterator();
+		while (it.hasNext()) {
+			Recurs recurs = it.next();
+			int number = terrenyDeJoc.magatzem.get(recurs);
+			int columna = cont % 3;
+			int fila = cont / 3;
+
+			float baseX = dx * (columna * 2 + 1);
+			float baseY = 450.f - dy * (fila * 2 + 1);
+
+			switch (pass) {
+			case 2:
+
+				shaderManager.setPosition(baseX - 16 - 20, baseY - 16, 32, 32);
+
+				if (number > 0 || terrenyDeJoc.knownRecursos.contains(recurs)) {
+					int indexX = recurs.spriteX;
+					int indexY = recurs.spriteY;
+					shaderManager.setTexcoords((indexX * 64) / 512.f,
+							(indexY * 64) / 512.f, 64.f / 512.f, 64.f / 512.f);
+				} else {
+					shaderManager.setTexcoords(
+							(Recurs.unknownSpriteX * 64) / 512.f,
+							(Recurs.unknownSpriteY * 64) / 512.f, 64.f / 512.f,
+							64.f / 512.f);
+				}
+				GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
+
+				break;
+			case 3:
+				if (number > 0) {
+					font.drawString(
+							baseX + 35
+									- font.getWidth(Integer.toString(number)),
+							800 - baseY - 10, Integer.toString(number),
+							Color.black);
+				} else {
+					font.drawString(baseX + 35 - font.getWidth("-"),
+							800 - baseY - 10, "-", Color.black);
+				}
+				break;
+
+			}
+
+			cont++;
+		}
+	}
+	
+	void renderRecurs(int w, int h, int recursX, int recursY, Recurs recursTransportat) {
+
+		shaderManager.setCurrentProgram(ShaderManager.ProgramType.TEXTURED);
+		recursos.bind();
+		
+		shaderManager.setScreenSize(w, h);
+		
+		if (recursTransportat != null) {
+			shaderManager.setPosition(recursX - 32, recursY - 32, 64, 64);
+			int indexX = recursTransportat.spriteX;
+			int indexY = recursTransportat.spriteY;
+			shaderManager.setTexcoords((indexX * 64) / 512.f,
+					(indexY * 64) / 512.f, 64.f / 512.f, 64.f / 512.f);
+
+			GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
+		}
+	}
+
 }

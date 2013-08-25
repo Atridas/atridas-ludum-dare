@@ -50,6 +50,9 @@ public enum Recurs {
 	
 	public final int spriteX, spriteY;
 	public final Type type;
+
+	public final static int unknownSpriteX = 3;
+	public final static int unknownSpriteY = 5;
 	
 	Recurs(int x, int y, Type _type) {
 		spriteX = x;

@@ -3,8 +3,10 @@ package cat.atridas87.ld27;
 import static cat.atridas87.ld27.LD27.*;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.TreeMap;
 
 public class TerrenyDeJoc {
 
@@ -17,32 +19,54 @@ public class TerrenyDeJoc {
 	int ticks;
 
 	final private Random rnd = new Random();
+	
+	final TreeMap<Recurs, Integer> magatzem = new TreeMap<Recurs, Integer>();
+	final HashSet<Recurs> knownRecursos = new HashSet<Recurs>();
 
 	TerrenyDeJoc() {
 		for (int i = 0; i < GRAELLA_TAMANY_X; i++) {
 			for (int j = 0; j < GRAELLA_TAMANY_Y; j++) {
 				caselles[i][j] = new Casella();
 				caselles[i][j].type = Casella.Type.CAMP;
-
+				/*
 				caselles[i][j].type = Casella.Type.values()[(i + j
 						* GRAELLA_TAMANY_X)
 						% Casella.Type.values().length];
+				*/
 			}
 		}
 
-		caselles[1][2].recursosEntrants.add(Recurs.FUSTA);
+		caselles[GRAELLA_TAMANY_X - 1][GRAELLA_TAMANY_Y - 1].type = Casella.Type.AIGUA;
+		caselles[GRAELLA_TAMANY_X - 1][GRAELLA_TAMANY_Y - 2].type = Casella.Type.AIGUA;
+		caselles[GRAELLA_TAMANY_X - 2][GRAELLA_TAMANY_Y - 1].type = Casella.Type.AIGUA;
+		caselles[GRAELLA_TAMANY_X - 2][GRAELLA_TAMANY_Y - 2].type = Casella.Type.AIGUA;
+		caselles[GRAELLA_TAMANY_X - 1][GRAELLA_TAMANY_Y - 3].type = Casella.Type.AIGUA;
+		caselles[GRAELLA_TAMANY_X - 2][GRAELLA_TAMANY_Y - 3].type = Casella.Type.AIGUA;
+
+		caselles[GRAELLA_TAMANY_X - 3][GRAELLA_TAMANY_Y - 2].type = Casella.Type.BOSC;
+		caselles[GRAELLA_TAMANY_X - 3][GRAELLA_TAMANY_Y - 3].type = Casella.Type.BOSC;
+		caselles[GRAELLA_TAMANY_X - 4][GRAELLA_TAMANY_Y - 2].type = Casella.Type.BOSC;
+		caselles[GRAELLA_TAMANY_X - 4][GRAELLA_TAMANY_Y - 3].type = Casella.Type.BOSC;
+
+		caselles[GRAELLA_TAMANY_X - 3][GRAELLA_TAMANY_Y - 1].type = Casella.Type.CANTERA;
+		caselles[GRAELLA_TAMANY_X - 4][GRAELLA_TAMANY_Y - 1].type = Casella.Type.CANTERA;
+		
+		
+		caselles[1][1].type = Casella.Type.MAGATZEM;
+
 		caselles[1][2].treballadors.add(Recurs.HABITANT);
-		caselles[1][3].treballadors.add(Recurs.HABITANT);
-
-		caselles[2][1].recursosEntrants.add(Recurs.FUSTA);
-		caselles[2][1].recursosEntrants.add(Recurs.PEDRA);
-
-		caselles[2][1].recursosGenerats.add(Recurs.FUSTA);
-		caselles[2][1].recursosGenerats.add(Recurs.FUSTA);
+		caselles[1][0].treballadors.add(Recurs.HABITANT);
 
 		receptes = GeneradorDeReceptes.receptes();
 
 		timer = 10;
+		
+		for(int i = 0; i < Recurs.values().length; i++) {
+			Recurs recurs = Recurs.values()[i];
+			if(recurs.type == Recurs.Type.OBJECTE) {
+				magatzem.put(recurs, 0);
+			}
+		}
 	}
 
 	public void update(float _dt) {
@@ -156,6 +180,7 @@ public class TerrenyDeJoc {
 				Recurs material = recepta.resultats[m];
 				if (material != null) {
 					casella.recursosGenerats.add(material);
+					knownRecursos.add(material);
 					haGenerat = true;
 				}
 
@@ -199,6 +224,18 @@ public class TerrenyDeJoc {
 			}
 			break;
 
+		case MAGATZEM:
+			if(casella.treballadors.size() > 0) {
+				for(int i = 0; i < casella.recursosEntrants.size(); i++) {
+					Recurs recurs = casella.recursosEntrants.get(i);
+					if(recurs.type == Recurs.Type.OBJECTE) {
+						magatzem.put(recurs, magatzem.get(recurs) + 1);
+						casella.recursosEntrants.remove(recurs);
+						i--;
+					}
+				}
+			}
+			break;
 		default:
 			break;
 		}
