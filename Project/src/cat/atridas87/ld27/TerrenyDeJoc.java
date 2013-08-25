@@ -9,6 +9,7 @@ import java.util.Random;
 public class TerrenyDeJoc {
 	
 	final Casella caselles[][] = new Casella[GRAELLA_TAMANY_X][GRAELLA_TAMANY_Y];
+	Casella casellaSeleccionada = null;
 
 	final Recepta receptes[];
 	float timer;

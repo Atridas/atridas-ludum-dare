@@ -5,8 +5,8 @@ public enum Recurs {
 	FUSTA(0,0, Type.OBJECTE),
 	PEDRA(1,0, Type.OBJECTE),
 	ARGILA(2,0, Type.OBJECTE),
-	PEDRES_PRECIOSES(4,2, Type.OBJECTE),//
-	OR(0,5, Type.OBJECTE), //
+	PEDRES_PRECIOSES(3,0, Type.OBJECTE),
+	OR(4,0, Type.OBJECTE),
 	BLAT(5,0, Type.OBJECTE),
 	FARINA(6,0, Type.OBJECTE),
 	PA(7,0, Type.OBJECTE),
@@ -23,7 +23,7 @@ public enum Recurs {
 	RAIM(2,2, Type.OBJECTE),
 	VI(3,2, Type.OBJECTE),
 
-	HORT(3,0, Type.EDIFICI), //
+	HORT(4,2, Type.EDIFICI),
 	GRANJA(5,2, Type.EDIFICI),
 	MAGATZEM(5,2, Type.EDIFICI),
 	TEMPLE(6,2, Type.EDIFICI),
@@ -37,7 +37,7 @@ public enum Recurs {
 	FLECA(6,4, Type.EDIFICI),
 	MERCAT(7,4, Type.EDIFICI),
 	
-	HABITANT(4,0, Type.HABITANT), //
+	HABITANT(0,5, Type.HABITANT), //
 	BRUIXA(1,5, Type.HABITANT),
 	SACERDOTESSA(2,5, Type.HABITANT),
 	GRANGER(3,5, Type.HABITANT),

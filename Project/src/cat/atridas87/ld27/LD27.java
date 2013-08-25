@@ -18,7 +18,7 @@ public class LD27 extends BaseGame {
 
 	final static public int MAX_RECURSOS_ENTRANTS = 5;
 	final static public int MAX_RECURSOS_GENERATS = 5;
-	final static public int MAX_TREBALLADORS = 5;
+	final static public int MAX_TREBALLADORS = 2;
 	
 	Renderer renderer;
 	TerrenyDeJoc terrenyDeJoc;
@@ -91,16 +91,16 @@ public class LD27 extends BaseGame {
 			int casellaX = (int) (x + _x) / TAMANY_CASELLA;
 			int casellaY = (int) (y + _y) / TAMANY_CASELLA;
 
-			Casella casella = terrenyDeJoc.caselles[casellaX][casellaY];
+			terrenyDeJoc.casellaSeleccionada = terrenyDeJoc.caselles[casellaX][casellaY];
 			float dx = (x + _x) - casellaX * TAMANY_CASELLA;
 			float dy = (y + _y) - casellaY * TAMANY_CASELLA;
 			
 			if(dx > 10 && dx < 84 && dy > 50 && dy < 124) {
-				llistaOriginal = casella.treballadors;
+				llistaOriginal = terrenyDeJoc.casellaSeleccionada.treballadors;
 			} else if(dx > 90 && dx < 164 && dy > 10 && dy < 84) {
-				llistaOriginal = casella.recursosGenerats;
+				llistaOriginal = terrenyDeJoc.casellaSeleccionada.recursosGenerats;
 			} else if(dx > 90 && dx < 164 && dy > 90 && dy < 164) {
-				llistaOriginal = casella.recursosEntrants;
+				llistaOriginal = terrenyDeJoc.casellaSeleccionada.recursosEntrants;
 			} else {
 				llistaOriginal = null;
 			}

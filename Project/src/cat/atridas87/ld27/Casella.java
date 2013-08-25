@@ -21,7 +21,7 @@ public class Casella {
 		INSTITUT(2,2),
 		BAR(3,2),
 		MERCAT(4,2),
-		CASA(4,3);
+		CASA(5,2);
 		
 		public final int spriteX, spriteY;
 		
