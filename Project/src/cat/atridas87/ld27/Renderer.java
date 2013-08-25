@@ -234,7 +234,7 @@ public class Renderer {
         
 		font.drawString(260, 10, partEntera + "." + ((int) (decimals * 10) ));
 
-		font.drawString(10, 10, "punts: " + terrenyDeJoc.pv + " / 10000");
+		font.drawString(10, 10, "punts: " + terrenyDeJoc.pv + " / " + POINTS_TO_WIN);
 		font.drawString(10, 35, "ticks: " + terrenyDeJoc.ticks);
 	}
 }

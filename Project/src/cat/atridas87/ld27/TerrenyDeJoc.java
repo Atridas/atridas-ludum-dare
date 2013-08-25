@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.Random;
 
 public class TerrenyDeJoc {
+	
 	final Casella caselles[][] = new Casella[GRAELLA_TAMANY_X][GRAELLA_TAMANY_Y];
 
 	final Recepta receptes[];
@@ -80,7 +81,7 @@ public class TerrenyDeJoc {
 	}
 
 	private boolean receptaPossible(Recepta recepta, Casella casella) {
-		if(casella.treballadors.isEmpty() || recepta.casella != casella.type) {
+		if(casella.treballadors.isEmpty() || recepta.casella != casella.type || casella.recursosGenerats.size() >= MAX_RECURSOS_GENERATS) {
 			return false;
 		}
 		

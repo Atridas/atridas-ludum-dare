@@ -14,6 +14,12 @@ public class LD27 extends BaseGame {
 	final static public int ZONA_JOC_W = 980;
 	final static public int ZONA_JOC_H = 800;
 
+	final static public int POINTS_TO_WIN = 10000;
+
+	final static public int MAX_RECURSOS_ENTRANTS = 5;
+	final static public int MAX_RECURSOS_GENERATS = 5;
+	final static public int MAX_TREBALLADORS = 5;
+	
 	Renderer renderer;
 	TerrenyDeJoc terrenyDeJoc;
 
@@ -115,19 +121,26 @@ public class LD27 extends BaseGame {
 	public void mouseRelease(float _x, float _y) {
 
 		if (recursTransportant != null) {
+			ArrayList<Recurs> llista = llistaOriginal;
+			
 			if (mouseX < ZONA_JOC_W && mouseX > 0 && mouseY < ZONA_JOC_H
 					&& mouseY > 0) {
 				int casellaX = (int) (x + _x) / TAMANY_CASELLA;
 				int casellaY = (int) (y + _y) / TAMANY_CASELLA;
 
-				ArrayList<Recurs> llista = terrenyDeJoc.caselles[casellaX][casellaY].recursosEntrants;
+				llista = terrenyDeJoc.caselles[casellaX][casellaY].recursosEntrants;
 				if (recursTransportant.type == Recurs.Type.HABITANT) {
 					llista = terrenyDeJoc.caselles[casellaX][casellaY].treballadors;
+					if(llista.size() >= MAX_TREBALLADORS) {
+						llista = llistaOriginal;
+					}
+				} else if(llista.size() >= MAX_RECURSOS_ENTRANTS) {
+					llista = llistaOriginal;
 				}
-				
+			}
+			
+			if(llista != null) {
 				llista.add(recursTransportant);
-			} else if(llistaOriginal != null) {
-				llistaOriginal.add(recursTransportant);
 			} else {
 				// TODO
 			}
