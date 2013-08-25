@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Font;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.opengl.Texture;
@@ -22,13 +23,10 @@ import static cat.atridas87.ld27.LD27.*;
 
 public class Renderer {
 
-	private Texture caselles, graella, recursos;
+	private Texture caselles, graella, recursos, hud;
 	private ShaderManager shaderManager;
 
-	private FloatBuffer casellaPositionBuffer, recursosPositionBuffer,
-			texCoordBuffer;
-	private FloatBuffer casellaSmallPositionBuffer,
-			recursosSmallPositionBuffer;
+	private FloatBuffer positionBuffer;
 
 	private Font font, fontTimer;
 
@@ -54,30 +52,23 @@ public class Renderer {
 
 		recursos = BufferedImageUtil.getTexture("recursos", bi);
 
+		url = ResourceLoader.getResource("resources/hud.png");
+		bi = ImageIO.read(url);
+
+		hud = BufferedImageUtil.getTexture("recursos", bi);
+
 		shaderManager = new ShaderManager();
 		shaderManager.setCurrentProgram(ShaderManager.ProgramType.TEXTURED);
 		shaderManager.setTexturePosition(0);
 
-		casellaPositionBuffer = BufferUtils.createFloatBuffer(4 * 2);
-		recursosPositionBuffer = BufferUtils.createFloatBuffer(4 * 2);
-		casellaSmallPositionBuffer = BufferUtils.createFloatBuffer(4 * 2);
-		recursosSmallPositionBuffer = BufferUtils.createFloatBuffer(4 * 2);
-		texCoordBuffer = BufferUtils.createFloatBuffer(4 * 2);
-		casellaPositionBuffer
-				.put(new float[] { 0, 0, 170, 0, 170, 170, 0, 170 });
-		texCoordBuffer.put(new float[] { 0, 1, 1, 1, 1, 0, 0, 0 });
-		recursosPositionBuffer.put(new float[] { 0, 0, 64, 0, 64, 64, 0, 64 });
-
-		casellaSmallPositionBuffer
-				.put(new float[] { 0, 0, 85, 0, 85, 85, 0, 85 });
-		recursosSmallPositionBuffer.put(new float[] { 0, 0, 32, 0, 32, 32, 0, 32 });
+		positionBuffer = BufferUtils.createFloatBuffer(4 * 2);
+		positionBuffer.put(new float[] { 0, 0, 1, 0, 1, 1, 0, 1 });
 
 		GL20.glEnableVertexAttribArray(ShaderManager.POSITION_ATTRIBUTE);
-		GL20.glEnableVertexAttribArray(ShaderManager.TEX_COORD_ATTRIBUTE);
 
-		texCoordBuffer.rewind();
-		GL20.glVertexAttribPointer(ShaderManager.TEX_COORD_ATTRIBUTE, 2, false,
-				0, texCoordBuffer);
+		positionBuffer.rewind();
+		GL20.glVertexAttribPointer(ShaderManager.POSITION_ATTRIBUTE, 2, false,
+				0, positionBuffer);
 	}
 
 	void render(int x, int y, int width, int height, TerrenyDeJoc terrenyDeJoc,
@@ -100,11 +91,6 @@ public class Renderer {
 		int ultimaCasellesX = (int) ((x + width) / TAMANY_CASELLA) + 1;
 		int ultimaCasellesY = (int) ((y + height) / TAMANY_CASELLA) + 1;
 
-		casellaPositionBuffer.rewind();
-		recursosPositionBuffer.rewind();
-		GL20.glVertexAttribPointer(ShaderManager.POSITION_ATTRIBUTE, 2, false,
-				0, casellaPositionBuffer);
-
 		for (int pass = 0; pass < 3; pass++) {
 			switch (pass) {
 			case 0:
@@ -120,8 +106,6 @@ public class Renderer {
 
 			case 2:
 				recursos.bind();
-				GL20.glVertexAttribPointer(ShaderManager.POSITION_ATTRIBUTE, 2,
-						false, 0, recursosPositionBuffer);
 
 				break;
 			}
@@ -146,7 +130,7 @@ public class Renderer {
 					int indexY;
 					switch (pass) {
 					case 0:
-						shaderManager.setPosition(cuadreX, cuadreY);
+						shaderManager.setPosition(cuadreX, cuadreY, 170, 170);
 						casella = terrenyDeJoc.caselles[i][j];
 						indexX = casella.type.spriteX;
 						indexY = casella.type.spriteY;
@@ -157,7 +141,7 @@ public class Renderer {
 						GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
 						break;
 					case 1:
-						shaderManager.setPosition(cuadreX, cuadreY);
+						shaderManager.setPosition(cuadreX, cuadreY, 170, 170);
 
 						GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
 						break;
@@ -193,7 +177,7 @@ public class Renderer {
 								float px = baseX + r * dt;
 								float py = baseY + r * dt;
 								shaderManager.setPosition(cuadreX + px, cuadreY
-										+ py);
+										+ py, 64, 64);
 
 								Recurs recurs = recursos.get(r);
 								indexX = recurs.spriteX;
@@ -217,7 +201,7 @@ public class Renderer {
 		}
 
 		if (recursTransportat != null) {
-			shaderManager.setPosition(recursX - 32, recursY - 32);
+			shaderManager.setPosition(recursX - 32, recursY - 32, 64, 64);
 			int indexX = recursTransportat.spriteX;
 			int indexY = recursTransportat.spriteY;
 			shaderManager.setTexcoords((indexX * 64) / 512.f,
@@ -236,91 +220,117 @@ public class Renderer {
 		GL11.glOrtho(0, w, h, 0, 1, -1);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 
-		renderGameInfo(terrenyDeJoc);
 
-		renderSelectedField(terrenyDeJoc);
+		for (int pass = 0; pass < 4; pass++) {
+			switch (pass) {
+			case 0:
+				caselles.bind();
+				break;
+			case 1:
+				hud.bind();
+				shaderManager.setPosition(0, 800-350, 300, 350);
+				shaderManager.setTexcoords(0, 0, 300.f/1024.f, 350.f/1024.f);
+				GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
+				break;
+			case 2:
+				recursos.bind();
+				break;
+			case 3:
+				GL20.glUseProgram(0);
+				break;
+			}
+
+			renderGameInfo(pass, terrenyDeJoc);
+
+			renderSelectedField(pass, terrenyDeJoc);
+		}
 	}
 
-	private void renderGameInfo(TerrenyDeJoc terrenyDeJoc) {
+	private void renderGameInfo(int pass, TerrenyDeJoc terrenyDeJoc) {
 
-		GL20.glUseProgram(0);
+		switch (pass) {
+		case 1:
+			
+			float completed = (float)terrenyDeJoc.pv / (float)POINTS_TO_WIN;
 
-		int partEntera = (int) Math.ceil(terrenyDeJoc.timer);
+			shaderManager.setPosition(20, 700, 148, 38);
+			shaderManager.setTexcoords(41/1024.f, 401/1024.f, 148.f/1024.f, 38.f/1024.f);
+			GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
 
-		fontTimer.drawString(
-				260 - fontTimer.getWidth(Integer.toString(partEntera)) / 2, 10,
-				Integer.toString(partEntera));
-
-		font.drawString(10, 10, "punts: " + terrenyDeJoc.pv + " / "
-				+ POINTS_TO_WIN);
-		font.drawString(10, 35, "ticks: " + terrenyDeJoc.ticks);
-
-	}
-
-	private void renderSelectedField(TerrenyDeJoc terrenyDeJoc) {
-		if (terrenyDeJoc.casellaSeleccionada != null) {
-			shaderManager.setCurrentProgram(ShaderManager.ProgramType.TEXTURED);
-
-			casellaSmallPositionBuffer.rewind();
-			recursosSmallPositionBuffer.rewind();
-			GL20.glVertexAttribPointer(ShaderManager.POSITION_ATTRIBUTE, 2, false,
-					0, casellaSmallPositionBuffer);
-
-			caselles.bind();
-
-			shaderManager.setPosition(25, 495);
-			int indexX = terrenyDeJoc.casellaSeleccionada.type.spriteX;
-			int indexY = terrenyDeJoc.casellaSeleccionada.type.spriteY;
-			shaderManager.setTexcoords((indexX * 170) / 1024.f,
-					(indexY * 170) / 1024.f, 170.f / 1024.f,
-					170.f / 1024.f);
-
+			shaderManager.setPosition(20, 700, 148 * completed, 38);
+			shaderManager.setTexcoords(41/1024.f, 452/1024.f, 148.f/1024.f * completed, 38.f/1024.f);
 			GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
 			
-			// -------------
-			
-			recursos.bind();
-			GL20.glVertexAttribPointer(ShaderManager.POSITION_ATTRIBUTE, 2, false,
-					0, recursosSmallPositionBuffer);
-			
-			for (int pass = 0; pass < 3; pass++) {
-				ArrayList<Recurs> recursos = null;
-				int y = 0;
-				switch(pass) {
-				case 0:
-					recursos = terrenyDeJoc.casellaSeleccionada.treballadors;
-					y = 571;
-					break;
-				case 1:
-					recursos = terrenyDeJoc.casellaSeleccionada.recursosEntrants;
-					y = 521;
-					break;
-				case 2:
-					recursos = terrenyDeJoc.casellaSeleccionada.recursosGenerats;
-					y = 471;
-					break;
-				}
+			break;
+		case 3:
+			int partEntera = (int) Math.ceil(terrenyDeJoc.timer);
 
-				float dx = 150.f / (recursos.size() + 1);
+			fontTimer.drawString(
+					245 - fontTimer.getWidth(Integer.toString(partEntera)) / 2,
+					60, Integer.toString(partEntera));
+
+			font.drawString(30, 25, terrenyDeJoc.pv + " / "
+					+ POINTS_TO_WIN, Color.black);
+			font.drawString(30, 130, Integer.toString( terrenyDeJoc.ticks ), Color.black);
+			break;
+		}
+	}
+
+	private void renderSelectedField(int pass, TerrenyDeJoc terrenyDeJoc) {
+		switch (pass) {
+		case 0:
+			if (terrenyDeJoc.casellaSeleccionada != null) {
 				
-				for(int r = 0; r < recursos.size(); r++) {
-					Recurs recurs = recursos.get(r);
-					int x = (int)(137.5f + dx * (r + 1) - 16);
+				int indexX = terrenyDeJoc.casellaSeleccionada.type.spriteX;
+				int indexY = terrenyDeJoc.casellaSeleccionada.type.spriteY;
+				shaderManager.setTexcoords((indexX * 170) / 1024.f,
+						(indexY * 170) / 1024.f, 170.f / 1024.f, 170.f / 1024.f);
 
-					shaderManager.setPosition(x, y);
-
-					indexX = recurs.spriteX;
-					indexY = recurs.spriteY;
-					shaderManager.setTexcoords(
-							(indexX * 64) / 512.f,
-							(indexY * 64) / 512.f, 64.f / 512.f,
-							64.f / 512.f);
-
-					GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
+			} else {
+				shaderManager.setTexcoords((Casella.Type.CAMP.spriteX * 170) / 1024.f,
+						(Casella.Type.CAMP.spriteY * 170) / 1024.f, 170.f / 1024.f, 170.f / 1024.f);
+			}
+			shaderManager.setPosition(25, 495, 85, 85);
+			GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
+			break;
+		case 2:
+			if (terrenyDeJoc.casellaSeleccionada != null) {
+				for (int linea = 0; linea < 3; linea++) {
+					ArrayList<Recurs> recursos = null;
+					int y = 0;
+					switch (linea) {
+					case 0:
+						recursos = terrenyDeJoc.casellaSeleccionada.treballadors;
+						y = 572;
+						break;
+					case 1:
+						recursos = terrenyDeJoc.casellaSeleccionada.recursosEntrants;
+						y = 522;
+						break;
+					case 2:
+						recursos = terrenyDeJoc.casellaSeleccionada.recursosGenerats;
+						y = 472;
+						break;
+					}
+	
+					float dx = 150.f / (recursos.size() + 1);
+	
+					for (int r = 0; r < recursos.size(); r++) {
+						Recurs recurs = recursos.get(r);
+						int x = (int) (137.5f + dx * (r + 1) - 16);
+	
+						shaderManager.setPosition(x, y, 32, 32);
+	
+						int indexX = recurs.spriteX;
+						int indexY = recurs.spriteY;
+						shaderManager.setTexcoords((indexX * 64) / 512.f,
+								(indexY * 64) / 512.f, 64.f / 512.f, 64.f / 512.f);
+	
+						GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
+					}
 				}
 			}
-			
-			//GL20.glUseProgram(0);
+			break;
 		}
 	}
 }

@@ -66,7 +66,6 @@ public class ShaderManager {
 		
 
 		GL20.glBindAttribLocation(p.program, POSITION_ATTRIBUTE, "aPosition");
-		GL20.glBindAttribLocation(p.program, TEX_COORD_ATTRIBUTE, "aTexcoord");
 		
 		
 		GL20.glLinkProgram(p.program);
@@ -84,7 +83,7 @@ public class ShaderManager {
 		p.textureUniform = GL20.glGetUniformLocation(p.program, "uTexture");
 		p.screenSize     = GL20.glGetUniformLocation(p.program, "uScreenSize");
 		p.position       = GL20.glGetUniformLocation(p.program, "uPosition");
-		p.texcoord       = GL20.glGetUniformLocation(p.program, "uTexcoord");
+		p.texcoord       = GL20.glGetUniformLocation(p.program, "uTexCoord");
 		
 		return p;
 	}
@@ -106,9 +105,9 @@ public class ShaderManager {
 		GL20.glUniform2f(currentProgram.screenSize, width, height);
 	}
 	
-	public void setPosition(float x, float y)
+	public void setPosition(float x, float y, float w, float h)
 	{
-		GL20.glUniform2f(currentProgram.position, x, y);
+		GL20.glUniform4f(currentProgram.position, x, y, w, h);
 	}
 	
 	public void setTexcoords(float x, float y, float w, float h)
