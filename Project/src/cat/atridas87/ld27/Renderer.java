@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
@@ -24,12 +25,13 @@ import static cat.atridas87.ld27.LD27.*;
 
 public class Renderer {
 
-	private Texture caselles, graella, recursos, hud;
-	private ShaderManager shaderManager;
+	private final Texture caselles, graella, recursos, hud;
+	private final HashMap<Popup.Type, Texture> popups = new HashMap<Popup.Type, Texture>();
+	private final ShaderManager shaderManager;
 
-	private FloatBuffer positionBuffer;
+	private final FloatBuffer positionBuffer;
 
-	private Font font, fontTimer;
+	private final Font font, fontTimer;
 
 	Renderer() throws Exception {
 
@@ -57,6 +59,15 @@ public class Renderer {
 		bi = ImageIO.read(url);
 
 		hud = BufferedImageUtil.getTexture("recursos", bi);
+
+		for (int i = 0; i < Popup.Type.values().length; i++) {
+			url = ResourceLoader
+					.getResource(Popup.Type.values()[i].textureName);
+			bi = ImageIO.read(url);
+
+			popups.put(Popup.Type.values()[i], BufferedImageUtil.getTexture(
+					Popup.Type.values()[i].textureName, bi));
+		}
 
 		shaderManager = new ShaderManager();
 		shaderManager.setCurrentProgram(ShaderManager.ProgramType.TEXTURED);
@@ -243,16 +254,24 @@ public class Renderer {
 		switch (pass) {
 		case 1:
 
-			float completed = (float) terrenyDeJoc.pv / (float) POINTS_TO_WIN;
+			float completed;
+			if(terrenyDeJoc.timedMode) {
+				completed = (float) terrenyDeJoc.ticks / (float) TIMED_MODE_TICKS;
+			} else {
+				completed = (float) terrenyDeJoc.pv / (float) POINTS_TO_WIN;
+			}
+			if (completed > 1) {
+				completed = 1;
+			}
 
-			shaderManager.setPosition(20, 700, 148, 38);
-			shaderManager.setTexcoords(41 / 1024.f, 401 / 1024.f,
-					148.f / 1024.f, 38.f / 1024.f);
+			shaderManager.setPosition(50, 685, 118, 33);
+			shaderManager.setTexcoords(51 / 1024.f, 417 / 1024.f,
+					118.f / 1024.f, 33.f / 1024.f);
 			GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
 
-			shaderManager.setPosition(20, 700, 148 * completed, 38);
-			shaderManager.setTexcoords(41 / 1024.f, 452 / 1024.f,
-					148.f / 1024.f * completed, 38.f / 1024.f);
+			shaderManager.setPosition(50, 685, 118 * completed, 33);
+			shaderManager.setTexcoords(51 / 1024.f, 467 / 1024.f,
+					118.f / 1024.f * completed, 33.f / 1024.f);
 			GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
 
 			break;
@@ -264,11 +283,17 @@ public class Renderer {
 					60, Integer.toString(partEntera), Color.black);
 
 			font.drawString(
-					130 - fontTimer.getWidth(Integer.toString(terrenyDeJoc.pv)) / 2,
+					130 - font.getWidth(Integer.toString(terrenyDeJoc.pv)) / 2,
 					35, Integer.toString(terrenyDeJoc.pv), Color.white);
-			font.drawString(
-					130 - fontTimer.getWidth(Integer.toString(terrenyDeJoc.ticks)) / 2,
-					135, Integer.toString(terrenyDeJoc.ticks), Color.white);
+			if(terrenyDeJoc.timedMode) {
+				font.drawString(130 - font.getWidth(Integer
+						.toString(TIMED_MODE_TICKS - terrenyDeJoc.ticks)) / 2, 135, Integer
+						.toString(TIMED_MODE_TICKS - terrenyDeJoc.ticks), Color.white);
+			} else {
+				font.drawString(130 - font.getWidth(Integer
+						.toString(terrenyDeJoc.ticks)) / 2, 135, Integer
+						.toString(terrenyDeJoc.ticks), Color.white);
+			}
 			break;
 		}
 	}
@@ -407,6 +432,67 @@ public class Renderer {
 
 			GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
 		}
+	}
+
+	void renderPopup(int w, int h, TerrenyDeJoc terreny, Popup popup) {
+
+		shaderManager.setScreenSize(w, h);
+		popups.get(popup.type).bind();
+
+		int baseX = w/2 - 350;
+		int baseY = h/2 - 350;
+		
+		shaderManager.setPosition(baseX, baseY, 700, 700);
+		shaderManager.setTexcoords(0,
+				0, 700.f / 1024.f, 700.f / 1024.f);
+
+		GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
+		
+		for(int b = 0; b < popup.numButtons; b++) {
+			int bx = baseX + popup.buttonX[b];
+			int by = baseY + popup.buttonY[b];
+			int bw = popup.buttonW[b];
+			int bh = popup.buttonH[b];
+
+			int bs = (popup.buttonPressed[b]) ? popup.buttonSP[b] : popup.buttonS[b];
+			int bt = (popup.buttonPressed[b]) ? popup.buttonTP[b] : popup.buttonT[b];
+
+			shaderManager.setPosition(bx,by,bw,bh);
+			shaderManager.setTexcoords(bs/1024.f,bt/1024.f,bw/1024.f,bh/1024.f);
+
+			GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
+		}
+		
+		if(popup.type == Popup.Type.FINISH) {
+			GL20.glUseProgram(0);
+
+			GL11.glMatrixMode(GL11.GL_PROJECTION);
+			GL11.glLoadIdentity();
+			GL11.glOrtho(0, w, h, 0, 1, -1);
+			GL11.glMatrixMode(GL11.GL_MODELVIEW);
+			
+			
+			String text1, text2;
+			if(terreny.timedMode) {
+				text1 = "You've finished a timed game with";
+				text2 = terreny.pv + " points!";
+			} else {
+				text1 = "You've finished a game in";
+				text2 = terreny.ticks + " steps!";
+			}
+
+			font.drawString(
+					640 - (font.getWidth(text1) / 2),
+					370, text1, Color.black);
+			
+			fontTimer.drawString(
+					640 - (fontTimer.getWidth(text2) / 2),
+					420, text2, Color.black);
+
+
+			shaderManager.setCurrentProgram(ShaderManager.ProgramType.TEXTURED);
+		}
+		
 	}
 
 }

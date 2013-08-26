@@ -17,6 +17,8 @@ public class TerrenyDeJoc {
 	float timer;
 	int pv;
 	int ticks;
+	
+	boolean timedMode;
 
 	final private Random rnd = new Random();
 
@@ -50,6 +52,14 @@ public class TerrenyDeJoc {
 		caselles[GRAELLA_TAMANY_X - 3][GRAELLA_TAMANY_Y - 1].type = Casella.Type.CANTERA;
 		caselles[GRAELLA_TAMANY_X - 4][GRAELLA_TAMANY_Y - 1].type = Casella.Type.CANTERA;
 
+		
+		caselles[GRAELLA_TAMANY_X - 1][GRAELLA_TAMANY_Y - 1].recursosGenerats.add(Recurs.AIGUA);
+		caselles[GRAELLA_TAMANY_X - 2][GRAELLA_TAMANY_Y - 2].recursosGenerats.add(Recurs.PEIX);
+		caselles[GRAELLA_TAMANY_X - 3][GRAELLA_TAMANY_Y - 2].recursosGenerats.add(Recurs.FUSTA);
+		caselles[GRAELLA_TAMANY_X - 4][GRAELLA_TAMANY_Y - 1].recursosGenerats.add(Recurs.PEDRA);
+
+		caselles[0][3].recursosGenerats.add(Recurs.BLAT);
+
 		caselles[2][1].type = Casella.Type.MAGATZEM;
 
 		caselles[1][2].recursosEntrants.add(Recurs.CASA);
@@ -61,6 +71,13 @@ public class TerrenyDeJoc {
 
 		caselles[1][2].treballadors.add(Recurs.HABITANT);
 		caselles[1][0].treballadors.add(Recurs.HABITANT);
+
+		knownRecursos.add(Recurs.AIGUA);
+		knownRecursos.add(Recurs.PEIX);
+		knownRecursos.add(Recurs.FUSTA);
+		knownRecursos.add(Recurs.PEDRA);
+		knownRecursos.add(Recurs.ARGILA);
+		knownRecursos.add(Recurs.BLAT);
 
 		receptes = GeneradorDeReceptes.receptes();
 
@@ -74,7 +91,7 @@ public class TerrenyDeJoc {
 		}
 	}
 
-	public void update(float _dt) {
+	public void update(LD27 ld27, float _dt) {
 		timer -= _dt;
 		if (timer <= 0) {
 			timer = 10;
@@ -84,6 +101,17 @@ public class TerrenyDeJoc {
 		}
 
 		rnd.nextInt(); // randomize a saco
+		
+		if(timedMode) {
+			if(ticks >= TIMED_MODE_TICKS) {
+				ld27.popup = new Popup(Popup.Type.FINISH);
+			}
+		} else {
+			if(pv >= POINTS_TO_WIN) {
+				ld27.popup = new Popup(Popup.Type.FINISH);
+			}
+		}
+		
 	}
 
 	private void checkReceptes() {

@@ -375,7 +375,7 @@ public abstract class GeneradorDeReceptes {
 				new Recepta(
 						Casella.Type.CONSTRUCTORA,
 						Recurs.CONSTRUCTOR,
-						new Recurs[] { Recurs.ARGILA },
+						new Recurs[] { Recurs.ARGILA, Recurs.ARGILA, Recurs.ARGILA },
 						new Recurs[] { Recurs.CASA },
 						new int[] { 0 },
 						false,
