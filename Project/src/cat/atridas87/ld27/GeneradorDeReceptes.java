@@ -53,12 +53,12 @@ public abstract class GeneradorDeReceptes {
 				new Recepta(
 						Casella.Type.CANTERA,
 						Recurs.MINER,
-						new Recurs[] { Recurs.AIGUA, Recurs.AIGUA, Recurs.AIGUA },
+						new Recurs[] { Recurs.AIGUA },
 						new Recurs[] { Recurs.ARGILA },
 						new int[] { 0 },
 						false,
 						false,
-						1),
+						2),
 				new Recepta(
 						Casella.Type.CANTERA,
 						Recurs.BRUIXA,
@@ -69,14 +69,14 @@ public abstract class GeneradorDeReceptes {
 						false,
 						1),
 				new Recepta(
-						Casella.Type.CANTERA,
+						Casella.Type.CABANA_BRUIXA,
 						Recurs.BRUIXA,
-						new Recurs[] { Recurs.PIC },
+						new Recurs[] { Recurs.ARGILA },
 						new Recurs[] { Recurs.OR },
 						new int[] { 0 },
 						false,
 						false,
-						1),
+						2),
 				new Recepta(
 						Casella.Type.CAMP,
 						null,

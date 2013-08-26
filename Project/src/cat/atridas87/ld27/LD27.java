@@ -7,8 +7,8 @@ import org.lwjgl.opengl.GL11;
 
 public class LD27 extends BaseGame {
 
-	final static public int GRAELLA_TAMANY_X = 7;
-	final static public int GRAELLA_TAMANY_Y = 6;
+	final static public int GRAELLA_TAMANY_X = 6;
+	final static public int GRAELLA_TAMANY_Y = 5;
 
 	final static public int TAMANY_CASELLA = 170;
 

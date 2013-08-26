@@ -50,14 +50,14 @@ public class TerrenyDeJoc {
 		caselles[GRAELLA_TAMANY_X - 3][GRAELLA_TAMANY_Y - 1].type = Casella.Type.CANTERA;
 		caselles[GRAELLA_TAMANY_X - 4][GRAELLA_TAMANY_Y - 1].type = Casella.Type.CANTERA;
 
-		caselles[1][1].type = Casella.Type.MAGATZEM;
+		caselles[2][1].type = Casella.Type.MAGATZEM;
 
-		caselles[2][2].recursosEntrants.add(Recurs.CASA);
+		caselles[1][2].recursosEntrants.add(Recurs.CASA);
 
-		caselles[3][2].type = Casella.Type.CONSTRUCTORA;
-		caselles[3][2].recursosEntrants.add(Recurs.PEDRA);
-		caselles[3][2].recursosEntrants.add(Recurs.FUSTA);
-		caselles[3][2].recursosEntrants.add(Recurs.ARGILA);
+		caselles[3][1].type = Casella.Type.CONSTRUCTORA;
+		caselles[3][1].recursosEntrants.add(Recurs.PEDRA);
+		caselles[3][1].recursosEntrants.add(Recurs.FUSTA);
+		caselles[3][1].recursosEntrants.add(Recurs.ARGILA);
 
 		caselles[1][2].treballadors.add(Recurs.HABITANT);
 		caselles[1][0].treballadors.add(Recurs.HABITANT);
@@ -161,26 +161,6 @@ public class TerrenyDeJoc {
 		}
 
 		{
-			int maxPunts = 0;
-			for (int i = 0; i < receptesPossibles.size(); i++) {
-				int punts = receptesPossibles.get(i).pv;
-				if (punts > maxPunts) {
-					maxPunts = punts;
-				}
-			}
-
-			for (int i = 0; i < receptesPossibles.size(); i++) {
-				if (receptesPossibles.get(i).pv != maxPunts) {
-					receptesPossibles.remove(i);
-					i--;
-				}
-			}
-
-			if (receptesPossibles.size() == 1) {
-				return receptesPossibles.get(0);
-			}
-		}
-		{
 			boolean hasSpecialist = false;
 			for (int i = 0; i < receptesPossibles.size(); i++) {
 				if (receptesPossibles.get(i).treballador != null) {
@@ -195,6 +175,26 @@ public class TerrenyDeJoc {
 						receptesPossibles.remove(i);
 						i--;
 					}
+				}
+			}
+
+			if (receptesPossibles.size() == 1) {
+				return receptesPossibles.get(0);
+			}
+		}
+		{
+			int maxPunts = 0;
+			for (int i = 0; i < receptesPossibles.size(); i++) {
+				int punts = receptesPossibles.get(i).pv;
+				if (punts > maxPunts) {
+					maxPunts = punts;
+				}
+			}
+
+			for (int i = 0; i < receptesPossibles.size(); i++) {
+				if (receptesPossibles.get(i).pv != maxPunts) {
+					receptesPossibles.remove(i);
+					i--;
 				}
 			}
 
@@ -320,26 +320,26 @@ public class TerrenyDeJoc {
 			}
 			break;
 		case MAGATZEM:
-			if (casella.treballadors.size() > 0) {
-				boolean guardat = false;
-				for (int i = 0; i < casella.recursosEntrants.size(); i++) {
-					Recurs recurs = casella.recursosEntrants.get(i);
-					if (recurs.type == Recurs.Type.OBJECTE) {
-						magatzem.put(recurs, magatzem.get(recurs) + 1);
-						casella.recursosEntrants.remove(recurs);
-						i--;
-						guardat = true;
-					}
+			boolean guardat = false;
+			for (int i = 0; i < casella.recursosEntrants.size(); i++) {
+				Recurs recurs = casella.recursosEntrants.get(i);
+				if (recurs.type == Recurs.Type.OBJECTE) {
+					magatzem.put(recurs, magatzem.get(recurs) + 1);
+					casella.recursosEntrants.remove(recurs);
+					i--;
+					guardat = true;
 				}
-				if (guardat) {
-					return true;
-				}
+			}
+			if (guardat) {
+				return true;
 			}
 			break;
 
 		case CAMP:
 
-			if (casella.treballadors.contains(Recurs.CONSTRUCTOR)) {
+			if (casella.treballadors.contains(Recurs.CONSTRUCTOR)
+					&& casella.type != Casella.Type.MAGATZEM
+					&& casella.type != Casella.Type.CONSTRUCTORA) {
 				for (int i = 0; i < Casella.Type.values().length; i++) {
 					Casella.Type tipusCasella = Casella.Type.values()[i];
 					Recurs generador = tipusCasella.generador;
@@ -353,6 +353,38 @@ public class TerrenyDeJoc {
 			}
 
 			break;
+
+		case MERCAT:
+
+			if (casella.treballadors.contains(Recurs.MERCADER)) {
+				boolean venut = false;
+				for (int i = 0; i < casella.recursosEntrants.size(); i++) {
+					Recurs material = casella.recursosEntrants.get(i);
+					if (material.valor > 0) {
+						casella.recursosEntrants.remove(material);
+						for(int j = 0; j < material.valor; j++) {
+							casella.recursosGenerats.add(Recurs.MONEDES);
+						}
+						venut = true;
+					}
+				}
+				if(venut) {
+					return true;
+				}
+			}
+
+			break;
+			
+		case BANC:
+			
+			if (casella.recursosEntrants.contains(Recurs.MONEDES)) {
+				while (casella.recursosEntrants.contains(Recurs.MONEDES)) {
+					casella.recursosEntrants.remove(Recurs.MONEDES);
+					pv += 100;
+				}
+			}
+			
+			
 		default:
 			break;
 		}
