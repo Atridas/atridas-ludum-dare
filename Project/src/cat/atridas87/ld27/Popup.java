@@ -1,5 +1,7 @@
 package cat.atridas87.ld27;
 
+import cat.atridas87.ld27.sounds.Sounds;
+
 public class Popup {
 
 	public enum Type {
@@ -117,28 +119,31 @@ public class Popup {
 			
 			break;
 		case PAUSE:
-			buttonX[0] = buttonX[1] = buttonX[2] = 220;
-			buttonY[0] = 700 - 300;
-			buttonY[1] = 700 - 400;
-			buttonY[2] = 700 - 500;
+			buttonX[0] = 350 - 318 / 2;
+			buttonX[1] = 30;
+			buttonX[2] = 700 - 30 - 318;
+			
+			buttonY[0] = 700 - 400;
+			buttonY[1] = 700 - 580;
+			buttonY[2] = 700 - 580;
 
-			buttonW[0] = buttonW[1] = buttonW[2] = 220;
-			buttonH[0] = buttonH[1] = buttonH[2] = 60;
+			buttonW[0] = buttonW[1] = buttonW[2] = 318;
+			buttonH[0] = buttonH[1] = buttonH[2] = 149;
 
-			buttonS[0] = 767;
-			buttonT[0] = 77;
-			buttonSP[0] = 767;
-			buttonTP[0] = 176;
+			buttonS[0] = 703;
+			buttonT[0] = 70;
+			buttonSP[0] = 703;
+			buttonTP[0] = 222;
 
-			buttonS[1] = 767;
-			buttonT[1] = 303;
-			buttonSP[1] = 767;
-			buttonTP[1] = 411;
+			buttonS[1] = 10;
+			buttonT[1] = 715;
+			buttonSP[1] = 10;
+			buttonTP[1] = 866;
 
-			buttonS[2] = 767;
-			buttonT[2] = 541;
-			buttonSP[2] = 767;
-			buttonTP[2] = 644;
+			buttonS[2] = 700;
+			buttonT[2] = 715;
+			buttonSP[2] = 700;
+			buttonTP[2] = 866;
 
 			break;
 		case TIPS:
@@ -168,16 +173,17 @@ public class Popup {
 			
 			break;
 		case CREDITS:
-			buttonX[0] = 220;
+			buttonX[0] = 350 - 318 / 2;
+			
 			buttonY[0] = 700 - 600;
 
-			buttonW[0] = 220;
-			buttonH[0] = 60;
+			buttonW[0] = 318;
+			buttonH[0] = 149;
 
-			buttonS[0] = 11;
-			buttonT[0] = 777;
-			buttonSP[0] = 11;
-			buttonTP[0] = 885;
+			buttonS[0] = 10;
+			buttonT[0] = 715;
+			buttonSP[0] = 10;
+			buttonTP[0] = 866;
 			
 			break;
 		case YOU_SURE:
@@ -213,6 +219,7 @@ public class Popup {
 	}
 
 	void executarBoto(LD27 ld27, int boto) {
+		Sounds.click.play();
 		switch(type) {
 		case START:
 			switch(boto) {
@@ -274,4 +281,18 @@ public class Popup {
 			break;
 		}
 	}
+
+	/*
+	10, 715
+	10, 866
+	
+	703, 70
+	703,222
+	
+	701,389
+	701,540
+	
+	700,715
+	700,866
+		*/
 }

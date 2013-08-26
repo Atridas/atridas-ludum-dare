@@ -5,6 +5,8 @@ import java.util.Iterator;
 
 import org.lwjgl.opengl.GL11;
 
+import cat.atridas87.ld27.sounds.Sounds;
+
 public class LD27 extends BaseGame {
 
 	final static public int GRAELLA_TAMANY_X = 6;
@@ -127,6 +129,7 @@ public class LD27 extends BaseGame {
 					recursTransportant = llistaOriginal.get(llistaOriginal
 							.size() - 1);
 					llistaOriginal.remove(llistaOriginal.size() - 1);
+					Sounds.pickup.play();
 				} else {
 					dragging = true;
 					llistaOriginal = null;
@@ -152,6 +155,7 @@ public class LD27 extends BaseGame {
 						if (cuantitat > 0) {
 							recursTransportant = recurs;
 							terrenyDeJoc.magatzem.put(recurs, cuantitat - 1);
+							Sounds.pickup.play();
 						}
 						break;
 					}
@@ -202,6 +206,7 @@ public class LD27 extends BaseGame {
 
 				if (llista != null) {
 					llista.add(recursTransportant);
+					Sounds.pickdown.play();
 				} else if (recursTransportant.type == Recurs.Type.OBJECTE) {
 					terrenyDeJoc.magatzem.put(recursTransportant,
 							terrenyDeJoc.magatzem.get(recursTransportant) + 1);
@@ -221,6 +226,7 @@ public class LD27 extends BaseGame {
 			if(mouseX > ZONA_JOC_W + PAUSE_X && mouseX < ZONA_JOC_W + PAUSE_X + PAUSE_S && mouseY > PAUSE_Y && mouseY < PAUSE_Y + PAUSE_S) {
 				if(pausePressed) {
 					popup = new Popup(Popup.Type.PAUSE);
+					Sounds.click.play();
 				}
 			}
 			

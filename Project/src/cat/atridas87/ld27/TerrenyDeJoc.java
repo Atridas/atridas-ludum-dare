@@ -8,6 +8,10 @@ import java.util.LinkedList;
 import java.util.Random;
 import java.util.TreeMap;
 
+import org.newdawn.slick.Sound;
+
+import cat.atridas87.ld27.sounds.Sounds;
+
 public class TerrenyDeJoc {
 
 	final Casella caselles[][] = new Casella[GRAELLA_TAMANY_X][GRAELLA_TAMANY_Y];
@@ -98,6 +102,7 @@ public class TerrenyDeJoc {
 
 			checkReceptes();
 			ticks++;
+			Sounds.tick.play();
 		}
 
 		rnd.nextInt(); // randomize a saco

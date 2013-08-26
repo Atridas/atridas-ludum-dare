@@ -19,7 +19,7 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.util.BufferedImageUtil;
 import org.newdawn.slick.util.ResourceLoader;
 
-import cat.atridas87.ld26.render.ShaderManager;
+import cat.atridas87.ld27.render.ShaderManager;
 
 import static cat.atridas87.ld27.LD27.*;
 
