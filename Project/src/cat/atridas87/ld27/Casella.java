@@ -34,6 +34,7 @@ public class Casella {
 	}
 	public Type type;
 	public final ArrayList<Recurs> recursosEntrants, recursosGenerats, treballadors;
+	public int pvGenerats;
 	
 	{
 		recursosEntrants = new ArrayList<Recurs>();

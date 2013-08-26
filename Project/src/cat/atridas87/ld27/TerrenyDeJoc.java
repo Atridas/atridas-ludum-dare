@@ -120,6 +120,7 @@ public class TerrenyDeJoc {
 		for (int i = 0; i < GRAELLA_TAMANY_X; i++) {
 			for (int j = 0; j < GRAELLA_TAMANY_Y; j++) {
 				Casella casella = caselles[i][j];
+				casella.pvGenerats = 0;
 				if (!executarEdificiEspecial(casella)) {
 					receptesPossibles.clear();
 					for (int r = 0; r < receptes.length; r++) {
@@ -316,6 +317,7 @@ public class TerrenyDeJoc {
 			}
 
 			pv += recepta.pv;
+			casella.pvGenerats = recepta.pv;
 		}
 
 		return haGenerat;
@@ -330,15 +332,18 @@ public class TerrenyDeJoc {
 				if (casella.recursosEntrants.contains(Recurs.PA)) {
 					possibilitats = .5f;
 					casella.recursosEntrants.remove(Recurs.PA);
-					pv += 500;
+					pv += 100;
+					casella.pvGenerats = 100;
 				} else if (casella.recursosEntrants.contains(Recurs.PEIX)) {
 					possibilitats = .25f;
 					casella.recursosEntrants.remove(Recurs.PEIX);
 					pv += 50;
+					casella.pvGenerats = 50;
 				} else if (casella.recursosEntrants.contains(Recurs.FRUITA)) {
 					possibilitats = .25f;
 					casella.recursosEntrants.remove(Recurs.FRUITA);
 					pv += 50;
+					casella.pvGenerats = 50;
 				}
 
 				if (rnd.nextFloat() < possibilitats) {
@@ -409,6 +414,10 @@ public class TerrenyDeJoc {
 				while (casella.recursosEntrants.contains(Recurs.MONEDES)) {
 					casella.recursosEntrants.remove(Recurs.MONEDES);
 					pv += 100;
+					casella.pvGenerats += 100;
+					if(casella.pvGenerats == 300) {
+						break;
+					}
 				}
 			}
 			

@@ -23,12 +23,17 @@ public class LD27 extends BaseGame {
 	
 	final static public int TIMED_MODE_TICKS = 180;
 
+	final static public int PAUSE_S = 32;
+	final static public int PAUSE_X = 300 - 10 - PAUSE_S;
+	final static public int PAUSE_Y = 800 - 10 - PAUSE_S;
+
 	Renderer renderer;
 	TerrenyDeJoc terrenyDeJoc;
 
 	float x, y;
 	float mouseX, mouseY;
 	boolean dragging;
+	boolean pausePressed, mouseOnPause;
 
 	Recurs recursTransportant = null;
 	ArrayList<Recurs> llistaOriginal = null;
@@ -66,11 +71,11 @@ public class LD27 extends BaseGame {
 
 		GL11.glViewport(0, 0, ZONA_JOC_W, ZONA_JOC_H);
 
-		renderer.render((int) x, (int) y, ZONA_JOC_W, ZONA_JOC_H, terrenyDeJoc);
+		renderer.render((int) x, (int) y, ZONA_JOC_W, ZONA_JOC_H, this);
 
 		GL11.glViewport(ZONA_JOC_W, 0, 1280 - ZONA_JOC_W, ZONA_JOC_H);
 
-		renderer.renderHUD(1280 - ZONA_JOC_W, ZONA_JOC_H, terrenyDeJoc);
+		renderer.renderHUD(1280 - ZONA_JOC_W, ZONA_JOC_H, this);
 
 		GL11.glViewport(0, 0, 1280, 800);
 
@@ -78,7 +83,7 @@ public class LD27 extends BaseGame {
 				recursTransportant);
 		
 		if(popup != null) {
-			renderer.renderPopup(1280, 800, terrenyDeJoc, popup);
+			renderer.renderPopup(1280, 800, this);
 		}
 	}
 
@@ -127,8 +132,8 @@ public class LD27 extends BaseGame {
 					llistaOriginal = null;
 				}
 			} else {
-				float dx = 300.f / 3.f;
-				float dy = 450.f / 7.f;
+				float dx = 280.f / 3.f;
+				float dy = 380.f / 7.f;
 
 				int cont = 0;
 				Iterator<Recurs> it = terrenyDeJoc.magatzem.keySet().iterator();
@@ -137,9 +142,9 @@ public class LD27 extends BaseGame {
 					int columna = cont % 3;
 					int fila = cont / 3;
 
-					float left = ZONA_JOC_W + columna * dx;
+					float left = ZONA_JOC_W + 10 + columna * dx;
 					float right = left + dx;
-					float top = ZONA_JOC_H - 350 - fila * dy;
+					float top = ZONA_JOC_H - 410 - fila * dy;
 					float bottom = top - dy;
 
 					if (_x > left && _x < right && _y < top && _y > bottom) {
@@ -153,6 +158,11 @@ public class LD27 extends BaseGame {
 					cont++;
 				}
 
+
+				if(_x > ZONA_JOC_W + PAUSE_X && _x < ZONA_JOC_W + PAUSE_X + PAUSE_S && _y > PAUSE_Y && _y < PAUSE_Y + PAUSE_S) {
+					pausePressed = true;
+				}
+				
 			}
 		} else {
 			int baseX = 1280/2 - 350;
@@ -208,6 +218,13 @@ public class LD27 extends BaseGame {
 				terrenyDeJoc.casellaSeleccionada = terrenyDeJoc.caselles[casellaX][casellaY];
 			}
 
+			if(mouseX > ZONA_JOC_W + PAUSE_X && mouseX < ZONA_JOC_W + PAUSE_X + PAUSE_S && mouseY > PAUSE_Y && mouseY < PAUSE_Y + PAUSE_S) {
+				if(pausePressed) {
+					popup = new Popup(Popup.Type.PAUSE);
+				}
+			}
+			
+			pausePressed=false;
 			dragging = false;
 		} else {
 			int baseX = 1280/2 - 350;
@@ -244,6 +261,11 @@ public class LD27 extends BaseGame {
 				} else if (y > GRAELLA_TAMANY_Y * TAMANY_CASELLA - ZONA_JOC_H) {
 					y = GRAELLA_TAMANY_Y * TAMANY_CASELLA - ZONA_JOC_H;
 				}
+			}
+			if(mouseX > ZONA_JOC_W + PAUSE_X && mouseX < ZONA_JOC_W + PAUSE_X + PAUSE_S && mouseY > PAUSE_Y && mouseY < PAUSE_Y + PAUSE_S) {
+				mouseOnPause = true;
+			} else {
+				mouseOnPause = false;
 			}
 		} else {
 			int baseX = 1280/2 - 350;
