@@ -3,15 +3,19 @@ using System.Collections;
 
 public class PlayerScript : MonoBehaviour {
 
-	public KeyCode left, right, up, down;
+	public KeyCode left, right, up, down, jump;
+	public Transform groundcheck;
 
-	public float speed;
+	public float speed, verticalSpeed, jumpTime;
+
+	private float timeJumping;
 
 	private Quaternion initialRotation;
 
 	// Use this for initialization
 	void Start () {
 		initialRotation = transform.rotation;
+		timeJumping = 0;
 	}
 	
 	// Update is called once per frame
@@ -25,9 +29,21 @@ public class PlayerScript : MonoBehaviour {
 				velocity.x = 0;
 		}
 
-		if(Physics.Linecast(transform.position, transform.position - new Vector3(0,-5,0)))
-		{
-			velocity.y = 10;
+		if (Input.GetKey (jump)) {
+			if(Physics2D.Linecast(transform.position, groundcheck.position, 1 << LayerMask.NameToLayer("Escenari")))
+			{
+				velocity.y = verticalSpeed;
+				timeJumping = jumpTime;
+			} else if(timeJumping > 0) {
+				timeJumping -= Time.deltaTime;
+				velocity.y = verticalSpeed * timeJumping / jumpTime;
+			} else if(velocity.y > 0) {
+				velocity.y = 0;
+				timeJumping = 0;
+			}
+		} else if(velocity.y > 0) {
+			velocity.y = 0;
+			timeJumping = 0;
 		}
 
 		rigidbody2D.velocity = velocity;
