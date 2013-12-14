@@ -11,23 +11,26 @@ public class PlayerScript : MonoBehaviour {
 	private float timeJumping;
 
 	private Quaternion initialRotation;
+	private Animator anim;
 
 	// Use this for initialization
 	void Start () {
 		initialRotation = transform.rotation;
 		timeJumping = 0;
+		anim = GetComponent<Animator>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		Vector2 velocity = rigidbody2D.velocity;
 		if (Input.GetKey (left)) {
-				velocity.x = -speed;
+			velocity.x = -speed;
 		} else if (Input.GetKey (right)) {
-				velocity.x = speed;
+			velocity.x = speed;
 		} else {
-				velocity.x = 0;
+			velocity.x = 0;
 		}
+		anim.SetFloat("Displacement", velocity.x);
 
 		if (Input.GetKey (jump)) {
 			if(Physics2D.Linecast(transform.position, groundcheck.position, 1 << LayerMask.NameToLayer("Escenari")))
