@@ -68,6 +68,12 @@ public class CameraScript : MonoBehaviour {
 
 		float alpha = distancePlayerNode2 * cosAtClosest2 / distanceControlPoints;
 
+		if (alpha < 0) {
+			alpha = 0;
+		} else if(alpha > 1) {
+			alpha = 1;
+		}
+
 		Vector3 desiredCameraPosition = closestGuideNode.transform.position * alpha + closestGuideNode2.transform.position * (1 - alpha);
 		desiredCameraPosition.z = -10;
 		float desiredSize = closestGuideNode.cameraSize * alpha + closestGuideNode2.cameraSize * (1 - alpha);

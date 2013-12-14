@@ -18,7 +18,7 @@ public class CameraGuideNode : MonoBehaviour {
 	void OnDrawGizmos()
 	{
 		Gizmos.color = Color.yellow;
-		Gizmos.DrawSphere(transform.position, 1.0f);
+		Gizmos.DrawSphere(transform.position, 0.5f);
 
 		Gizmos.color = Color.red;
 		if (next != null && next.previous == this) {
