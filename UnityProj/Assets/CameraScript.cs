@@ -8,6 +8,8 @@ public class CameraScript : MonoBehaviour {
 
 	public Transform playerPosition;
 
+	public float timeConstant = 0.333f;
+
 	// Use this for initialization
 	void Start () {
 	
@@ -68,9 +70,11 @@ public class CameraScript : MonoBehaviour {
 
 		Vector3 desiredCameraPosition = closestGuideNode.transform.position * alpha + closestGuideNode2.transform.position * (1 - alpha);
 		desiredCameraPosition.z = -10;
+		float desiredSize = closestGuideNode.cameraSize * alpha + closestGuideNode2.cameraSize * (1 - alpha);
 
+		float updateAlpha = Time.deltaTime / (Time.deltaTime + timeConstant);
 
-		transform.position = desiredCameraPosition;
-		camera.orthographicSize = closestGuideNode.cameraSize * alpha + closestGuideNode2.cameraSize * (1-alpha);
+		transform.position = desiredCameraPosition * updateAlpha + transform.position * (1 - updateAlpha);
+		camera.orthographicSize = desiredSize * updateAlpha + camera.orthographicSize * (1 - updateAlpha);
 	}
 }

@@ -24,8 +24,22 @@ public class PlayerScript : MonoBehaviour {
 		} else {
 				velocity.x = 0;
 		}
+
+		if(Physics.Linecast(transform.position, transform.position - new Vector3(0,-5,0)))
+		{
+			velocity.y = 10;
+		}
+
 		rigidbody2D.velocity = velocity;
 		rigidbody2D.angularVelocity = 0;
 		transform.rotation = initialRotation;
+	}
+
+	void OnCollisionStay(Collision collisionInfo) {
+		// Debug-draw all contact points and normals
+		foreach (ContactPoint contact in collisionInfo.contacts) {
+			Debug.Log("" + contact.point + "-" + contact.normal);
+			//Debug.DrawRay(contact.point, contact.normal, Color.white);
+		}
 	}
 }
