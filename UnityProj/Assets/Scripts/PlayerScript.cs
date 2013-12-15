@@ -4,9 +4,11 @@ using System.Collections;
 public class PlayerScript : MonoBehaviour {
 
 	public KeyCode left, right, jump, shot;
-	public Transform groundcheck;
+	public Transform groundcheck1,groundcheck2,groundcheck3, spawnerLeft, spawnerRight;
 
 	public float speed, verticalSpeed, jumpTime;
+
+	public Rigidbody2D tirPrefab;
 
 	private float timeJumping;
 
@@ -14,7 +16,7 @@ public class PlayerScript : MonoBehaviour {
 	private Animator anim;
 	private bool lookingLeft;
 
-	[ExecuteInEditMode]
+	[HideInInspector]
 	public SpawnerScript lastSpawner;
 
 	// Use this for initialization
@@ -30,12 +32,10 @@ public class PlayerScript : MonoBehaviour {
 		Vector2 velocity = rigidbody2D.velocity;
 		if (Input.GetKey (left)) {
 			velocity.x = -speed;
-			lookingLeft = true;
 			anim.SetBool("Stopped", false);
 			anim.SetFloat("Displacement", velocity.x);
 		} else if (Input.GetKey (right)) {
 			velocity.x = speed;
-			lookingLeft = false;
 			anim.SetBool("Stopped", false);
 			anim.SetFloat("Displacement", velocity.x);
 		} else {
@@ -44,7 +44,15 @@ public class PlayerScript : MonoBehaviour {
 		}
 
 		if (Input.GetKey (jump)) {
-			if(Physics2D.Linecast(transform.position, groundcheck.position, 1 << LayerMask.NameToLayer("Escenari")))
+			bool canJump = Physics2D.Linecast(transform.position, groundcheck1.position, 1 << LayerMask.NameToLayer("Escenari"));
+			if(!canJump) {
+				canJump = Physics2D.Linecast(transform.position, groundcheck2.position, 1 << LayerMask.NameToLayer("Escenari"));
+			}
+			if(!canJump) {
+				canJump = Physics2D.Linecast(transform.position, groundcheck3.position, 1 << LayerMask.NameToLayer("Escenari"));
+			}
+
+			if(canJump)
 			{
 				velocity.y = verticalSpeed;
 				timeJumping = jumpTime;
@@ -67,18 +75,27 @@ public class PlayerScript : MonoBehaviour {
 
 	void Update()
 	{
-		if (Input.GetKey (shot)) {
+		if (Input.GetKeyDown (shot)) {
 			anim.SetTrigger("disparar");
+			if(lookingLeft) {
+				Rigidbody2D bulletInstance = Instantiate(tirPrefab, spawnerLeft.position, Quaternion.Euler(new Vector3(0,0,0))) as Rigidbody2D;
+				bulletInstance.velocity = new Vector3(-1.5f*speed,0,0);
+			} else {
+				Rigidbody2D bulletInstance = Instantiate(tirPrefab, spawnerRight.position, Quaternion.Euler(new Vector3(0,0,0))) as Rigidbody2D;
+				bulletInstance.velocity = new Vector3(+1.5f*speed,0,0);
+			}
 		}
 	}
 
 	public void goLeft()
 	{
+		lookingLeft = true;
 		anim.SetBool("goingLeft", true);
 	}
 	
 	public void goRight()
 	{
+		lookingLeft = false;
 		anim.SetBool("goingLeft", false);
 	}
 
