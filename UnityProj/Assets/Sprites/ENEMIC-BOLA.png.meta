@@ -1,0 +1,193 @@
+fileFormatVersion: 2
+guid: 3b46b7e398523fa41bea6b59169b254e
+TextureImporter:
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 1024
+  textureSettings:
+    filterMode: -1
+    aniso: 1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings:
+  - buildTarget: iPhone
+    maxTextureSize: 1024
+    textureFormat: -2
+    compressionQuality: 50
+  spriteSheet:
+    sprites:
+    - name: ENEMIC-tret_1
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 446
+        width: 76
+        height: 59
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: ENEMIC-tret
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 452
+        width: 52
+        height: 44
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: ENEMIC-tret_0
+      rect:
+        serializedVersion: 2
+        x: 332
+        y: 445
+        width: 48
+        height: 59
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: ENEMIC-BOLA_mort
+      rect:
+        serializedVersion: 2
+        x: 450
+        y: 421
+        width: 48
+        height: 51
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: ENEMIC-BOLA_0_left
+      rect:
+        serializedVersion: 2
+        x: 156
+        y: 294
+        width: 104
+        height: 116
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: ENEMIC-BOLA_1_left
+      rect:
+        serializedVersion: 2
+        x: 154
+        y: 170
+        width: 107
+        height: 108
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: ENEMIC-BOLA_0_right_damage
+      rect:
+        serializedVersion: 2
+        x: 261
+        y: 295
+        width: 105
+        height: 120
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: ENEMIC-BOLA_0_right
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 295
+        width: 106
+        height: 109
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: ENEMIC-BOLA_0_damage
+      rect:
+        serializedVersion: 2
+        x: 404
+        y: 294
+        width: 107
+        height: 108
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: ENEMIC-BOLA_1_right
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 171
+        width: 106
+        height: 109
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: ENEMIC-BOLA_1_right_damage
+      rect:
+        serializedVersion: 2
+        x: 262
+        y: 171
+        width: 107
+        height: 109
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: ENEMIC-BOLA_1_left_damage
+      rect:
+        serializedVersion: 2
+        x: 403
+        y: 170
+        width: 109
+        height: 108
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: ENEMIC-BOLA_2_right
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 28
+        width: 105
+        height: 109
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: ENEMIC-BOLA_2_left
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 28
+        width: 106
+        height: 108
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: ENEMIC-BOLA_2_right_damage
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 29
+        width: 105
+        height: 108
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: ENEMIC-BOLA_2_left_damage
+      rect:
+        serializedVersion: 2
+        x: 396
+        y: 28
+        width: 106
+        height: 108
+      alignment: 0
+      pivot: {x: .5, y: .5}
+  spritePackingTag: 
+  userData: 

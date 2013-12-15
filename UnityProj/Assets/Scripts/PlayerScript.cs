@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerScript : MonoBehaviour {
 
-	public KeyCode left, right, up, down, jump;
+	public KeyCode left, right, jump, shot;
 	public Transform groundcheck;
 
 	public float speed, verticalSpeed, jumpTime;
@@ -63,6 +63,28 @@ public class PlayerScript : MonoBehaviour {
 		rigidbody2D.velocity = velocity;
 		rigidbody2D.angularVelocity = 0;
 		transform.rotation = initialRotation;
+	}
+
+	void Update()
+	{
+		if (Input.GetKey (shot)) {
+			anim.SetTrigger("disparar");
+		}
+	}
+
+	public void goLeft()
+	{
+		anim.SetBool("goingLeft", true);
+	}
+	
+	public void goRight()
+	{
+		anim.SetBool("goingLeft", false);
+	}
+
+	public void fiAnim()
+	{
+		anim.SetTrigger ("fiAnim");
 	}
 
 	public void die()
