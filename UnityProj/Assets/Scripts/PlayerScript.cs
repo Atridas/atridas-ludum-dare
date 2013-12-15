@@ -12,25 +12,36 @@ public class PlayerScript : MonoBehaviour {
 
 	private Quaternion initialRotation;
 	private Animator anim;
+	private bool lookingLeft;
+
+	[ExecuteInEditMode]
+	public SpawnerScript lastSpawner;
 
 	// Use this for initialization
 	void Start () {
 		initialRotation = transform.rotation;
 		timeJumping = 0;
 		anim = GetComponent<Animator>();
+		lookingLeft = true;
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		Vector2 velocity = rigidbody2D.velocity;
 		if (Input.GetKey (left)) {
 			velocity.x = -speed;
+			lookingLeft = true;
+			anim.SetBool("Stopped", false);
+			anim.SetFloat("Displacement", velocity.x);
 		} else if (Input.GetKey (right)) {
 			velocity.x = speed;
+			lookingLeft = false;
+			anim.SetBool("Stopped", false);
+			anim.SetFloat("Displacement", velocity.x);
 		} else {
 			velocity.x = 0;
+			anim.SetBool("Stopped", true);
 		}
-		anim.SetFloat("Displacement", velocity.x);
 
 		if (Input.GetKey (jump)) {
 			if(Physics2D.Linecast(transform.position, groundcheck.position, 1 << LayerMask.NameToLayer("Escenari")))
@@ -54,11 +65,13 @@ public class PlayerScript : MonoBehaviour {
 		transform.rotation = initialRotation;
 	}
 
-	void OnCollisionStay(Collision collisionInfo) {
-		// Debug-draw all contact points and normals
-		foreach (ContactPoint contact in collisionInfo.contacts) {
-			Debug.Log("" + contact.point + "-" + contact.normal);
-			//Debug.DrawRay(contact.point, contact.normal, Color.white);
-		}
+	public void die()
+	{
+		transform.position = lastSpawner.transform.position;
+
+		GameObject camera = GameObject.FindGameObjectWithTag ("MainCamera");
+		CameraScript cameraScript = camera.GetComponent<CameraScript> ();
+		cameraScript.closestGuideNode = lastSpawner.cameraNode1;
+		cameraScript.closestGuideNode2 = lastSpawner.cameraNode2;
 	}
 }

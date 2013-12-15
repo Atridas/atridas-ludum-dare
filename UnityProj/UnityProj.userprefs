@@ -1,12 +1,12 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PlatformNodeScript.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\lavaScript.cs">
     <Files>
-      <File FileName="..\..\..\Users\Atridas\Documents\New Unity Project\Assets\Scripts\PlayerControl.cs" Line="31" Column="35" />
+      <File FileName="Assets\Scripts\lavaScript.cs" Line="6" Column="9" />
       <File FileName="Assets\Scripts\CameraScript.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PlayerScript.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\CameraGuideNode.cs" Line="17" Column="1" />
-      <File FileName="Assets\Scripts\PlatformNodeScript.cs" Line="9" Column="44" />
+      <File FileName="Assets\Scripts\PlayerScript.cs" Line="40" Column="32" />
+      <File FileName="Assets\Scripts\CameraGuideNode.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlatformScript.cs" Line="72" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

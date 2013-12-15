@@ -20,6 +20,10 @@ public class PlatformScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (null == node2 || node1 == null) {
+			return;
+		}
+
 		time += Time.deltaTime;
 
 		switch(state) {
@@ -64,7 +68,9 @@ public class PlatformScript : MonoBehaviour {
 	
 	void OnDrawGizmos()
 	{
-		Gizmos.color = Color.red;
-		Gizmos.DrawLine(node1.position, node2.position);
+		if (null != node2 || node1 != null) {
+			Gizmos.color = Color.blue;
+			Gizmos.DrawLine (node1.position, node2.position);
+		}
 	}
 }
