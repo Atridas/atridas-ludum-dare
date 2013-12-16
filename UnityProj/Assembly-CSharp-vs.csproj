@@ -46,13 +46,15 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\FinishScript.cs" />
      <Compile Include="Assets\Scripts\CameraGuideNode.cs" />
      <Compile Include="Assets\Scripts\CameraScript.cs" />
      <Compile Include="Assets\Scripts\EnemicTretScript.cs" />
+     <Compile Include="Assets\Scripts\EnemyGroupScript.cs" />
      <Compile Include="Assets\Scripts\EnemyNodeScript.cs" />
      <Compile Include="Assets\Scripts\EnemyScript.cs" />
      <Compile Include="Assets\Scripts\EscenariColliderScript.cs" />
+     <Compile Include="Assets\Scripts\FinishScript.cs" />
+     <Compile Include="Assets\Scripts\MusicScript.cs" />
      <Compile Include="Assets\Scripts\PlatformNodeScript.cs" />
      <Compile Include="Assets\Scripts\PlatformScript.cs" />
      <Compile Include="Assets\Scripts\PlayerScript.cs" />

@@ -88,8 +88,8 @@ TextureImporter:
         y: 0
         width: 163
         height: 192
-      alignment: 0
-      pivot: {x: .5, y: .5}
+      alignment: 9
+      pivot: {x: .517959297, y: .159487709}
     - name: anim_final_1
       rect:
         serializedVersion: 2
@@ -97,8 +97,8 @@ TextureImporter:
         y: 15
         width: 114
         height: 237
-      alignment: 0
-      pivot: {x: .5, y: .5}
+      alignment: 9
+      pivot: {x: .585595906, y: .31883955}
     - name: anim_final_2
       rect:
         serializedVersion: 2
@@ -106,7 +106,7 @@ TextureImporter:
         y: 15
         width: 105
         height: 234
-      alignment: 0
-      pivot: {x: .5, y: .5}
+      alignment: 9
+      pivot: {x: .565052986, y: .329027206}
   spritePackingTag: 
   userData: 

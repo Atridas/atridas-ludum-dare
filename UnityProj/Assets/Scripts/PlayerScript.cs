@@ -11,10 +11,11 @@ public class PlayerScript : MonoBehaviour {
 	public Rigidbody2D tirPrefab;
 
 	private float timeJumping;
+	private bool jumping;
 
 	private Quaternion initialRotation;
 	private Animator anim;
-	private bool lookingLeft;
+	private bool lookingLeft, dying;
 
 	[HideInInspector]
 	public SpawnerScript lastSpawner;
@@ -25,10 +26,15 @@ public class PlayerScript : MonoBehaviour {
 		timeJumping = 0;
 		anim = GetComponent<Animator>();
 		lookingLeft = true;
+		dying = false;
+
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+		if (dying) {
+			return;
+		}
 		Vector2 velocity = rigidbody2D.velocity;
 		if (Input.GetKey (left)) {
 			velocity.x = -speed;
@@ -42,18 +48,21 @@ public class PlayerScript : MonoBehaviour {
 			velocity.x = 0;
 			anim.SetBool("Stopped", true);
 		}
+		
+		bool canJump = Physics2D.Linecast(transform.position, groundcheck1.position, 1 << LayerMask.NameToLayer("Escenari"));
+		if(!canJump) {
+			canJump = Physics2D.Linecast(transform.position, groundcheck2.position, 1 << LayerMask.NameToLayer("Escenari"));
+		}
+		if(!canJump) {
+			canJump = Physics2D.Linecast(transform.position, groundcheck3.position, 1 << LayerMask.NameToLayer("Escenari"));
+		}
 
 		if (Input.GetKey (jump)) {
-			bool canJump = Physics2D.Linecast(transform.position, groundcheck1.position, 1 << LayerMask.NameToLayer("Escenari"));
-			if(!canJump) {
-				canJump = Physics2D.Linecast(transform.position, groundcheck2.position, 1 << LayerMask.NameToLayer("Escenari"));
-			}
-			if(!canJump) {
-				canJump = Physics2D.Linecast(transform.position, groundcheck3.position, 1 << LayerMask.NameToLayer("Escenari"));
-			}
 
 			if(canJump)
 			{
+				jumping = true;
+				anim.SetTrigger("jump");
 				velocity.y = verticalSpeed;
 				timeJumping = jumpTime;
 			} else if(timeJumping > 0) {
@@ -63,11 +72,18 @@ public class PlayerScript : MonoBehaviour {
 				velocity.y = 0;
 				timeJumping = 0;
 			}
-		} else if(velocity.y > 0) {
-			velocity.y = 0;
-			timeJumping = 0;
+		} else {
+			if(velocity.y > 0) {
+				velocity.y = 0;
+				timeJumping = 0;
+			}
 		}
-
+		
+		if(canJump) {
+			anim.SetTrigger("endJump");
+			jumping = false;
+		}
+		
 		rigidbody2D.velocity = velocity;
 		rigidbody2D.angularVelocity = 0;
 		transform.rotation = initialRotation;
@@ -104,10 +120,26 @@ public class PlayerScript : MonoBehaviour {
 		anim.SetTrigger ("fiAnim");
 	}
 
+	private float gravity;
+
 	public void die()
 	{
+		if (dying) {
+			return;
+		}
+		dying = true;
+		gravity = rigidbody2D.gravityScale;
+		rigidbody2D.gravityScale = 0;
+		rigidbody2D.velocity = new Vector3 (0, 0, 0);
+		anim.SetTrigger ("die");
+	}
+	
+	public void endDieAnim()
+	{
+		rigidbody2D.gravityScale = gravity;
+		dying = false;
 		transform.position = lastSpawner.transform.position;
-
+		
 		GameObject camera = GameObject.FindGameObjectWithTag ("MainCamera");
 		CameraScript cameraScript = camera.GetComponent<CameraScript> ();
 		cameraScript.closestGuideNode = lastSpawner.cameraNode1;

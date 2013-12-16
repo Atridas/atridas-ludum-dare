@@ -46,6 +46,7 @@ public class EnemyScript : MonoBehaviour {
 					onHitAnimation = true;
 					anim.SetTrigger ("hit");
 				} else {
+					onHitAnimation = true;
 					anim.SetTrigger("die");
 				}
 			}
