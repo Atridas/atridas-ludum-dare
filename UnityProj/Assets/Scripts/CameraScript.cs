@@ -30,9 +30,14 @@ public class CameraScript : MonoBehaviour {
 		float cosAtClosest1 = Vector3.Dot(-vectorToClosest1, vectorControlPoints) / (distancePlayerNode1 * distanceControlPoints);
 		float cosAtClosest2 = Vector3.Dot(-vectorControlPoints, -vectorToClosest2) / (distanceControlPoints * distancePlayerNode2);
 		
-		if (cosAtClosest1 < 0) {
-			CameraGuideNode prev = closestGuideNode.previous;
-			if(prev != null) {
+		CameraGuideNode prev = closestGuideNode.previous;
+		if (prev != null) {
+			Vector3 vectorPrevControlPoints = prev.transform.position - closestGuideNode.transform.position;
+			float distancePrevControlPoints = vectorPrevControlPoints.magnitude;
+
+			float cosAtPrevControlPoints = Vector3.Dot(-vectorToClosest1, vectorPrevControlPoints) / (distancePlayerNode1 * distancePrevControlPoints);
+
+			if(cosAtPrevControlPoints > cosAtClosest1) {
 				closestGuideNode2 = closestGuideNode;
 				closestGuideNode = prev;
 				
@@ -47,9 +52,16 @@ public class CameraScript : MonoBehaviour {
 				cosAtClosest1 = Vector3.Dot(-vectorToClosest1, vectorControlPoints) / (distancePlayerNode1 * distanceControlPoints);
 				cosAtClosest2 = Vector3.Dot(-vectorControlPoints, -vectorToClosest2) / (distanceControlPoints * distancePlayerNode2);
 			}
-		}else if(cosAtClosest2 < 0) {
-			CameraGuideNode next = closestGuideNode2.next;
-			if(next != null) {
+		}
+		
+		CameraGuideNode next = closestGuideNode2.next;
+		if(next != null) {
+			Vector3 vectorNextControlPoints = next.transform.position - closestGuideNode2.transform.position;
+			float distanceNextControlPoints = vectorNextControlPoints.magnitude;
+			
+			float cosAtNextControlPoints = Vector3.Dot(-vectorToClosest2, vectorNextControlPoints) / (distancePlayerNode2 * distanceNextControlPoints);
+
+			if(cosAtNextControlPoints > cosAtClosest2) {
 				closestGuideNode = closestGuideNode2;
 				closestGuideNode2 = next;
 				
