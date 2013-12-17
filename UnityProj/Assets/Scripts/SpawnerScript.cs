@@ -14,16 +14,16 @@ public class SpawnerScript : MonoBehaviour {
 		PlayerScript player = collider.GetComponent<PlayerScript> ();
 		if(player != null) {
 			player.lastSpawner = this;
-		}
-		
-		foreach(GameObject enemyGroup in enemyGroupsToActivate) {
-			if(enemyGroup != null) {
-				enemyGroup.SetActive( true );
+			
+			foreach(GameObject enemyGroup in enemyGroupsToActivate) {
+				if(enemyGroup != null) {
+					enemyGroup.SetActive( true );
+				}
 			}
-		}
-		foreach(GameObject enemyGroup in enemyGroupsToDeactivate) {
-			if(enemyGroup != null) {
-				enemyGroup.SetActive( false );
+			foreach(GameObject enemyGroup in enemyGroupsToDeactivate) {
+				if(enemyGroup != null) {
+					enemyGroup.SetActive( false );
+				}
 			}
 		}
 	}

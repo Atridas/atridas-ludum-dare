@@ -3,6 +3,9 @@ using System.Collections;
 
 public class FinishScript : MonoBehaviour {
 
+	public AudioSource audio;
+	public AudioClip finalClip;
+
 	// Use this for initialization
 	void Start () {
 	
@@ -20,10 +23,18 @@ public class FinishScript : MonoBehaviour {
 			player.gameObject.SetActive(false);
 			GetComponent<Animator>().SetTrigger ("FinalAnimation");
 			GameObject.FindGameObjectWithTag("MainCamera").camera.enabled = false;
+			audio.Stop();
+			audio.clip = finalClip;
+			audio.Play();
 		}
 	}
 
 	void onAnimFinish() {
+		
+		AllDataScript allDataScript = GameObject.FindGameObjectWithTag ("AllData").GetComponent<AllDataScript> ();
+		allDataScript.isEnd = true;
+		allDataScript.isStart = false;
+		Application.LoadLevel (0);
 
 	}
 }

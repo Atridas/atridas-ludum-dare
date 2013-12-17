@@ -1,0 +1,130 @@
+fileFormatVersion: 2
+guid: 036a818f7c4ab49409a3ff98a53ee335
+TextureImporter:
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 1024
+  textureSettings:
+    filterMode: -1
+    aniso: 1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings:
+  - buildTarget: iPhone
+    maxTextureSize: 1024
+    textureFormat: -2
+    compressionQuality: 50
+  spriteSheet:
+    sprites:
+    - name: botons_play
+      rect:
+        serializedVersion: 2
+        x: 563
+        y: 1240
+        width: 452
+        height: 239
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: botons_credits_apretat
+      rect:
+        serializedVersion: 2
+        x: 566
+        y: 1016
+        width: 451
+        height: 225
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: botons_credits
+      rect:
+        serializedVersion: 2
+        x: 565
+        y: 777
+        width: 452
+        height: 224
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: botons_play_apretat
+      rect:
+        serializedVersion: 2
+        x: 571
+        y: 549
+        width: 440
+        height: 220
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: botons_back
+      rect:
+        serializedVersion: 2
+        x: 562
+        y: 315
+        width: 447
+        height: 215
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: botons_back_apretat
+      rect:
+        serializedVersion: 2
+        x: 555
+        y: 77
+        width: 453
+        height: 226
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: botons_exit_game
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 296
+        width: 451
+        height: 221
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: botons_exit_game_apretat
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 61
+        width: 451
+        height: 227
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: controls
+      rect:
+        serializedVersion: 2
+        x: 1031
+        y: 1309
+        width: 257
+        height: 112
+      alignment: 0
+      pivot: {x: .5, y: .5}
+  spritePackingTag: 
+  userData: 

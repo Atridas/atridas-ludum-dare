@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerScript : MonoBehaviour {
 
-	public KeyCode left, right, jump, shot;
+	//public KeyCode left, right, jump, shot;
 	public Transform groundcheck1,groundcheck2,groundcheck3, spawnerLeft, spawnerRight;
 
 	public float speed, verticalSpeed, jumpTime;
@@ -36,11 +36,11 @@ public class PlayerScript : MonoBehaviour {
 			return;
 		}
 		Vector2 velocity = rigidbody2D.velocity;
-		if (Input.GetKey (left)) {
+		if (Input.GetAxis("Horizontal") < 0) {
 			velocity.x = -speed;
 			anim.SetBool("Stopped", false);
 			anim.SetFloat("Displacement", velocity.x);
-		} else if (Input.GetKey (right)) {
+		} else if (Input.GetAxis("Horizontal") > 0) {
 			velocity.x = speed;
 			anim.SetBool("Stopped", false);
 			anim.SetFloat("Displacement", velocity.x);
@@ -57,7 +57,7 @@ public class PlayerScript : MonoBehaviour {
 			canJump = Physics2D.Linecast(transform.position, groundcheck3.position, 1 << LayerMask.NameToLayer("Escenari"));
 		}
 
-		if (Input.GetKey (jump)) {
+		if (Input.GetButton("Jump")) {
 
 			if(canJump)
 			{
@@ -91,7 +91,7 @@ public class PlayerScript : MonoBehaviour {
 
 	void Update()
 	{
-		if (Input.GetKeyDown (shot)) {
+		if (Input.GetButtonDown("Fire1")) {
 			anim.SetTrigger("disparar");
 			if(lookingLeft) {
 				Rigidbody2D bulletInstance = Instantiate(tirPrefab, spawnerLeft.position, Quaternion.Euler(new Vector3(0,0,0))) as Rigidbody2D;
@@ -100,6 +100,12 @@ public class PlayerScript : MonoBehaviour {
 				Rigidbody2D bulletInstance = Instantiate(tirPrefab, spawnerRight.position, Quaternion.Euler(new Vector3(0,0,0))) as Rigidbody2D;
 				bulletInstance.velocity = new Vector3(+1.5f*speed,0,0);
 			}
+		}
+		if(Input.GetButtonDown("Exit")) {
+			AllDataScript allDataScript = GameObject.FindGameObjectWithTag ("AllData").GetComponent<AllDataScript> ();
+			allDataScript.isCredits = true;
+			allDataScript.isStart = false;
+			Application.LoadLevel (0);
 		}
 	}
 
