@@ -93,6 +93,6 @@ public class CameraScript : MonoBehaviour {
 		float updateAlpha = Time.deltaTime / (Time.deltaTime + timeConstant);
 
 		transform.position = desiredCameraPosition * updateAlpha + transform.position * (1 - updateAlpha);
-		camera.orthographicSize = desiredSize * updateAlpha + camera.orthographicSize * (1 - updateAlpha);
+		GetComponent<Camera>().orthographicSize = desiredSize * updateAlpha + GetComponent<Camera>().orthographicSize * (1 - updateAlpha);
 	}
 }

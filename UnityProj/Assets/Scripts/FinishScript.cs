@@ -22,7 +22,7 @@ public class FinishScript : MonoBehaviour {
 		if (player != null) {
 			player.gameObject.SetActive(false);
 			GetComponent<Animator>().SetTrigger ("FinalAnimation");
-			GameObject.FindGameObjectWithTag("MainCamera").camera.enabled = false;
+			GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>().enabled = false;
 			audio.Stop();
 			audio.clip = finalClip;
 			audio.Play();

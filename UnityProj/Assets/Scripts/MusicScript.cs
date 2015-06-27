@@ -7,7 +7,7 @@ public class MusicScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		Invoke ("onIntroEnd", audio.clip.length);
+		Invoke ("onIntroEnd", GetComponent<AudioSource>().clip.length);
 	}
 	
 	// Update is called once per frame
@@ -16,8 +16,8 @@ public class MusicScript : MonoBehaviour {
 	}
 
 	void onIntroEnd() {
-		audio.clip = mainLoop;
-		audio.loop = true;
-		audio.Play ();
+		GetComponent<AudioSource>().clip = mainLoop;
+		GetComponent<AudioSource>().loop = true;
+		GetComponent<AudioSource>().Play ();
 	}
 }

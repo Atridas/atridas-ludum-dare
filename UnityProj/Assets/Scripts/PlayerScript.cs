@@ -35,7 +35,7 @@ public class PlayerScript : MonoBehaviour {
 		if (dying) {
 			return;
 		}
-		Vector2 velocity = rigidbody2D.velocity;
+		Vector2 velocity = GetComponent<Rigidbody2D>().velocity;
 		if (Input.GetAxis("Horizontal") < 0) {
 			velocity.x = -speed;
 			anim.SetBool("Stopped", false);
@@ -84,8 +84,8 @@ public class PlayerScript : MonoBehaviour {
 			jumping = false;
 		}
 		
-		rigidbody2D.velocity = velocity;
-		rigidbody2D.angularVelocity = 0;
+		GetComponent<Rigidbody2D>().velocity = velocity;
+		GetComponent<Rigidbody2D>().angularVelocity = 0;
 		transform.rotation = initialRotation;
 	}
 
@@ -134,15 +134,15 @@ public class PlayerScript : MonoBehaviour {
 			return;
 		}
 		dying = true;
-		gravity = rigidbody2D.gravityScale;
-		rigidbody2D.gravityScale = 0;
-		rigidbody2D.velocity = new Vector3 (0, 0, 0);
+		gravity = GetComponent<Rigidbody2D>().gravityScale;
+		GetComponent<Rigidbody2D>().gravityScale = 0;
+		GetComponent<Rigidbody2D>().velocity = new Vector3 (0, 0, 0);
 		anim.SetTrigger ("die");
 	}
 	
 	public void endDieAnim()
 	{
-		rigidbody2D.gravityScale = gravity;
+		GetComponent<Rigidbody2D>().gravityScale = gravity;
 		dying = false;
 		transform.position = lastSpawner.transform.position;
 		
